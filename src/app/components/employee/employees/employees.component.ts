@@ -103,7 +103,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   editEmployee(values: any){
-    console.log(values, this.id)
     if(this.editForm.valid){
       const employee = {
         name: values.name,

@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="col mt-5">
+        <div class="row my-3">
+            <div class="col d-flex justify-content-end">
+                <input type="search" class="form-control bg-light w-25" placeholder="Buscar proyecto"
+                [(ngModel)]="search">
+                <button class="btn btn-light border">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <table class="table table-borderless bg-light border border-2 shadow">
+            <thead>
+                <tr class="table-success">
+                    <th class="col-1 text-center">Nombre</th>
+                    <th class="col-1 text-center">Tipo</th>
+                    <th class="col-4 text-center">Descripcion</th>
+                    <th class="col-1 text-center">Area</th>
+                    <th class="col-1 text-center">Fecha inicio</th>
+                    <th class="col-1 text-center">Fecha entrega</th>
+                    <th class="col-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of proyects | proyects: search">
+                    <td class="col-1 text-center">{{p.name}}</td>
+                    <td class="col-1 text-center">{{p.type}}</td>
+                    <td class="col-4 text-center">{{p.description}}</td>
+                    <td class="col-1 text-center">{{p.area}}</td>
+                    <td class="col-1 text-center">{{p.dateStart}}</td>
+                    <td class="col-1 text-center">{{p.dateEnd}}</td>
+                    <td class="col-1 text-center d-flex">
+                        <button class="btn btn-success" (click)="tasks(p.id)">
+                            <i class="fas fa-book"></i>
+                            Tareas
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

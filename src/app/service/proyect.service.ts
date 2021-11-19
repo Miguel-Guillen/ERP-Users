@@ -1,9 +1,32 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProyectService {
 
-  constructor() { }
+  constructor(private firestore: AngularFirestore) { }
+
+  get(): Observable<any>{
+    return this.firestore.collection('proyects', ref => ref
+    .orderBy('createdDate', 'asc')).snapshotChanges()
+  }
+
+  getOne(id: string): Observable<any>{
+    return this.firestore.collection('proyects').doc(id).snapshotChanges()
+  }
+
+  add(proyect: any): Promise<any>{
+    return this.firestore.collection('proyects').add(proyect);
+  }
+
+  update(id: string, data: any): Promise<any> {
+    return this.firestore.collection('proyects').doc(id).update(data);
+  }
+
+  delete(id: string): Promise<any> {
+    return this.firestore.collection('proyects').doc(id).delete()
+  }
 }
