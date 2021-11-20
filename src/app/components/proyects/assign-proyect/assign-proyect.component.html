@@ -1,6 +1,6 @@
 <div class="container">
-    <div class="col mt-5">
-        <div class="row my-3">
+    <div class="col mt-4">
+        <div class="row my-4">
             <div class="col d-flex justify-content-end">
                 <input type="search" class="form-control bg-light w-25" placeholder="Buscar proyecto"
                 [(ngModel)]="search">
@@ -9,7 +9,7 @@
                 </button>
             </div>
         </div>
-        <table class="table table-borderless bg-light border border-2 shadow">
+        <table class="table table-borderless bg-light border border-2 shadow" *ngIf="newTask === false">
             <thead>
                 <tr class="table-success">
                     <th class="col-1 text-center">Nombre</th>
@@ -38,5 +38,92 @@
                 </tr>
             </tbody>
         </table>
+
+        <div class="row d-flex justify-content-between tasks" *ngIf="newTask === true">
+
+            <div class="col-4 bg-light border border-2 shadow p-3">
+                <div class="card">
+                    <div class="row px-3 py-2">
+                        <div class="col">
+                            <h5>Proyecto: {{proyect[0].name}}</h5>
+                            <p>Descripcion: {{proyect[0].description}}</p>
+                        </div>
+                    </div>
+                    <div class="row px-3 d-flex align-items-center">
+                        <div class="col-6">
+                            <p>Tipo: {{proyect[0].type}}</p>
+                            <p>Area: {{proyect[0].area}}</p>
+                        </div>
+                        <div class="col-6">
+                            <p>Fecha de inicio: {{proyect[0].dateStart}}</p>
+                            <p>Fecha de cierre: {{proyect[0].dateEnd}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <ul>Encargados
+                                <li>Encargado #1</li>
+                                <li>Encargado #2</li>
+                                <li>Encargado #3</li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul>Puesto
+                                <li>Area #1</li>
+                                <li>Area #2</li>
+                                <li>Area #3</li> 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-7">
+                <div class="col d-flex mx-3 mb-3">
+                    <p class="h5 my-auto fw-bold flex-grow-1">Tareas asignadas</p>
+                    <button class="btn btn-success">Nueva tarea</button>
+                </div>
+                <div class="accordion d-block" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Accordion Item #1
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Accordion Item #2
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Accordion Item #3
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>

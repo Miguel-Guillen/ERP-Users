@@ -10,7 +10,9 @@ import { AssignProyectService } from 'src/app/services/assign-proyect.service';
 })
 export class AssignProyectComponent implements OnInit {
   proyects: any[] = [];
+  proyect: any[] = [];
   search: any;
+  newTask = false;
 
   constructor(private _service: AssignProyectService, private formB: FormBuilder,
     private _serviceProyect: ProyectService) { }
@@ -28,6 +30,12 @@ export class AssignProyectComponent implements OnInit {
   }
 
   tasks(id: string){
-
+    this._serviceProyect.getOne(id).subscribe((res: any) => {
+        this.proyect.push({
+          id: id,
+          ...res.payload.data()
+        });
+    })
+    this.newTask = true;
   }
 }
