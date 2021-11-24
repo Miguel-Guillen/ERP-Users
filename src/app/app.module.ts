@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +17,10 @@ import { DashboardComponent } from './components/dashboard/dashboard/dashboard.c
 import { EditDashboardComponent } from './components/dashboard/edit-dashboard/edit-dashboard.component';
 import { AssignProyectComponent } from './components/proyects/assign-proyect/assign-proyect.component';
 import { ProyectsPipe } from './pipes/proyects.pipe';
+import { TasksComponent } from './components/proyects/tasks/tasks.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditTaskComponent } from './components/proyects/edit-task/edit-task.component';
+import { MyTasksComponent } from './components/dashboard/my-tasks/my-tasks.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +32,10 @@ import { ProyectsPipe } from './pipes/proyects.pipe';
     DashboardComponent,
     EditDashboardComponent,
     AssignProyectComponent,
-    ProyectsPipe
+    ProyectsPipe,
+    TasksComponent,
+    EditTaskComponent,
+    MyTasksComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +43,10 @@ import { ProyectsPipe } from './pipes/proyects.pipe';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
