@@ -1,8 +1,12 @@
-*{
+.ff{
     font-family: 'Times New Roman', Times, serif;
+    font-size: 17px;
 }
 .tasks {
     height: 70vh;
+}
+.t-employee {
+    height: 40vh;
 }
 .proyect {
     height: max-content;

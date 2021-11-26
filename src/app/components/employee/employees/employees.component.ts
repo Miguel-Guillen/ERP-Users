@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from 'src/app/service/employee.service';
+import { Employee } from '../../../models/employee'
 
 @Component({
   selector: 'app-employees',
@@ -9,47 +12,29 @@ import { EmployeeService } from 'src/app/service/employee.service';
 })
 export class EmployeesComponent implements OnInit {
   employeeForm: FormGroup;
-  editForm: FormGroup;
-  formValid: boolean | undefined;
+  employee = new Employee;
   employees: any[] = [];
-  id: string = '';
+  search: any;
 
-  constructor(private formB: FormBuilder, private _service: EmployeeService) {
-    this.employeeForm = this.formB.group({
-      name: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      surnames: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      job: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      area: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      password: new FormControl("", Validators.compose([
-        Validators.required
-      ]))
-    })
-
-    this.editForm = this.formB.group({
-      name: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      surnames: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      job: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      area: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      password: new FormControl("", Validators.compose([
-        Validators.required
-      ]))
-    })
+  constructor(private _service: EmployeeService, private route: Router,
+    private toast: ToastrService, private formB: FormBuilder) {
+      this.employeeForm = this.formB.group({
+        name: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
+        surnames: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
+        job: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
+        area: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
+        password: new FormControl("", Validators.compose([
+          Validators.required
+        ]))
+      })
   }
 
   ngOnInit(): void {
@@ -69,67 +54,36 @@ export class EmployeesComponent implements OnInit {
   }
 
   searchEmployee(id: string){
-    this._service.getOne(id).subscribe((res: any) => {
-      this.editForm.setValue({
-        name: res.payload.data()['name'],
-        surnames: res.payload.data()['surnames'],
-        job: res.payload.data()['job'],
-        area: res.payload.data()['area'],
-        password: ''
-      })
-      this.id = id;
-    })
+    this.route.navigate([`editEmployee/${id}`]);
   }
 
   newEmployee(values: any){
     if(this.employeeForm.valid){
-      const employee = {
-        name: values.name,
-        surnames: values.surnames,
-        job: values.job,
-        area: values.area,
-        password: values.password,
-        createdDate: new Date()
-      };
-      this._service.add(employee).then(() => {
-        alert("empleado guardado exitosamente");
+      this.employee = values;
+      this.employee.createdDate = new Date;
+      this._service.add(this.employee).then(() => {
+        this.toast.success('El empleado ha sido añadido con exito', 'Empleado añadido', 
+        { positionClass: 'toast-bottom-right' })
         this.employeeForm.reset();
       }).catch(err => {
-        console.log(err);
+        this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
+        { positionClass: 'toast-bottom-right' });
       })
     }else {
-      console.log("formulario invalido")
-    }
-  }
-
-  editEmployee(values: any){
-    if(this.editForm.valid){
-      const employee = {
-        name: values.name,
-        surnames: values.surnames,
-        job: values.job,
-        area: values.area,
-        password: values.password,
-      }
-      this._service.update(this.id ,employee).then(() => {
-        alert("empleado actualizado exitosamente");
-        this.employeeForm.reset();
-        this.id = ''
-      }).catch(err => {
-        console.log(err);
-      })
-    }else {
-      console.log("formulario invalido");
+      this.toast.warning('Los datos no son validos o los campos estan vacios'
+      , 'Datos invalidos', { positionClass: 'toast-bottom-right' })
     }
   }
 
   deleteEmployee(id: string){
     this._service.delete(id).then(() => {
-      alert("registro eliminado");
+      this.toast.info('El empleado ha sido borrado con exito', 'Empleado borrado', 
+      { positionClass: 'toast-bottom-right' })
     }).catch(err => {
-      console.log("ha ocurrido un error al eliminar", err);
+      this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
+      { positionClass: 'toast-bottom-right' });
+      console.log(this.employeeForm);
     })
-    this.editForm.reset();
   }
 
 }

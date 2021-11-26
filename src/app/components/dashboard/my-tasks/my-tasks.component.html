@@ -1,1 +1,41 @@
-<p>my-tasks works!</p>
+<div class="container">
+    <div class="row pt-4">
+
+        <div class="col-">
+            <ul class="list-unstyled">
+                <li class="d-inline me-2 btn" (click)="show = false"
+                [ngClass]="show === false ? 'border-on' : 'border-off' ">Asignadas</li>
+                <li class="d-inline btn" (click)="show = true"
+                [ngClass]="show === true ? 'border-on' : 'border-off' ">Completadas</li>
+            </ul>
+        </div>
+
+        <div class="col">
+            <h5 class="my-3 ms-3">Mis tareas</h5>
+            <div *ngIf="show === false; else noShow">
+                <div class="table table-borderless bg-light border border-2 shadow-sm my-1 ff rounded" 
+                type="button" *ngFor="let t of tasks" (click)="infoTask(t.id)">
+                    <div class="row my-1 px-2">
+                        <p class="col-3 mb-1">{{t.title}}</p>
+                        <p class="col-7 mb-1">{{t.description}}</p>
+                        <p class="col-2 mb-1">{{t.dueDate}}</p>
+                        <p class="col-3 my-0">{{t.idProyect}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #noShow>
+    <div class="table table-borderless bg-light border border-2 shadow-sm my-1 ff rounded" 
+    type="button" *ngFor="let td of doneTasks" (click)="infoTask(td.id)">
+        <div class="row my-1 px-2">
+            <p class="col-3 mb-1">{{td.title}}</p>
+            <p class="col-7 mb-1">{{td.description}}</p>
+            <p class="col-2 mb-1">{{td.dueDate}}</p>
+            <p class="col-3 my-0">{{td.idProyect}}</p>
+        </div>
+    </div>
+</ng-template>

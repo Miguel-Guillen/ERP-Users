@@ -34,6 +34,7 @@ export class EditTaskComponent implements OnInit {
         dueDate: new FormControl("", Validators.compose([
           Validators.required
         ])),
+        commentary: new FormControl("", Validators.required),
         responsable: new FormControl("", Validators.compose([
           Validators.required
         ]))
@@ -66,6 +67,7 @@ export class EditTaskComponent implements OnInit {
         description: values.description,
         requirements: values.requirements,
         image: values.image,
+        commentary: values.commentary,
         dueDate: values.dueDate,
         responsable: values.responsable,
       }
@@ -92,7 +94,7 @@ export class EditTaskComponent implements OnInit {
       this.competitor = [];
       res.forEach((element: any) => {
         e.push({
-          id: element.payload.doc.id,
+          id: element.payload.doc.data()['id'],
           name: element.payload.doc.data()['name'],
           idProyect: element.payload.doc.data()['idProyect']
         });
@@ -100,10 +102,7 @@ export class EditTaskComponent implements OnInit {
       for(const competitor of e){
         if(competitor.idProyect == id) this.competitor.push(competitor)
       }
-      if(this.competitor.length > 0){
-        this.taskForm.controls['responsable'].enable();
-        this.competitors = true;
-      }
+      if(this.competitor.length > 0) this.competitors = true;
       else this.competitors = false;
     })
   }

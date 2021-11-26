@@ -1,1 +1,40 @@
-<p>edit-employee works!</p>
+<div class="container">
+    <div class="row d-flex justify-content-center pt-5">
+
+        <div class="col-8 bg-light border border-2 rounded shadow-sm py-3 px-4 ff">
+            <h5 class="fw-bold">Modificar empleado</h5>
+            <form class="mt-4" [formGroup]="editForm" (ngSubmit)="editEmployee(editForm.value)">
+                <div class="row my-1">
+                    <div class="col-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" formControlName="surnames">
+                    </div>
+                </div>
+                <div class="row my-1">
+                    <div class="col-6">
+                        <label class="form-label">Puesto</label>
+                        <input type="text" class="form-control" formControlName="job">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Area de trabajo</label>
+                        <input type="text" class="form-control" formControlName="area">
+                    </div>
+                </div>
+                <div class="row my-1">
+                    <div class="col-6">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" formControlName="password">
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary mt-2 float-end" type="submit">Enviar</button>
+                <button class="btn btn-outline-danger mt-2 me-2 float-end" type="button"
+                [routerLink]="['/employee']">Cancelar</button>
+            </form>
+        </div>
+
+    </div>
+</div>

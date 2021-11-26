@@ -34,13 +34,18 @@
                     </div>
                 </div>
                 <div class="row my-2">
+                    <div class="col-6">
+                        <label class="form-label">Comentarios adicionales</label>
+                        <textarea class="form-control" formControlName="commentary" 
+                        cols="30" rows="3"></textarea>
+                    </div>
                     <div class="col">
                         <label class="form-label">Diagrama o documento</label>
                         <input type="file" class="form-control" formControlName="image">
                     </div>
                 </div>
-                <button class="btn btn-primary mt-2 float-end" type="submit">Enviar</button>
-                <button class="btn btn-danger mt-2 me-2 float-end" type="button"
+                <button class="btn btn-outline-primary mt-2 float-end" type="submit">Enviar</button>
+                <button class="btn btn-outline-danger mt-2 me-2 float-end" type="button"
                 [routerLink]="['/assign-proyect']">Cancelar</button>
             </form>
         </div>

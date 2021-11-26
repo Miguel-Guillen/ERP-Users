@@ -1,0 +1,10 @@
+.ff{
+    font-family: 'Times New Roman', Times, serif;
+}
+.border-on {
+    border-bottom: blueviolet solid;
+    border-radius: 0;
+}
+.border-off {
+    border: none
+}

@@ -17,28 +17,30 @@ export class AssignProyectComponent implements OnInit {
   proyect: any[] = [];
   search: any;
   competitorForm: FormGroup;
-  area: string = ''
-  extras: any[] = [];
   competitor: any[] = [];
   tasks: any[] = [];
   id = ''
+  extras: any[] = [];
+  area: string = ''
 
   constructor(private _service: AssignService, private formB: FormBuilder,
     private _serviceProyect: ProyectService, private _serviceEmployee: EmployeeService,
     private router: Router, private _serviceTask: TaskService,
     private toast: ToastrService) {
       this.competitorForm = this.formB.group({
-        name: new FormControl({value: '', disabled: true}, Validators.required),
-        area: new FormControl("", Validators.compose([
-          Validators.required
-        ])),
-        rol: new FormControl("", Validators.compose([
-          Validators.required
-        ]))
+        name: new FormControl('', Validators.required),
+        id: new FormControl('', Validators.required),
+        area: new FormControl('', Validators.required),
+        job: new FormControl('', Validators.required),
+        rol: new FormControl('', Validators.required)
       })
     }
 
   ngOnInit(): void {
+    this.getProyects();
+  }
+
+  getProyects(){
     this._serviceProyect.get().subscribe((res: any) => {
       this.proyects = [];
       res.forEach((element: any) => {
@@ -47,22 +49,6 @@ export class AssignProyectComponent implements OnInit {
           ...element.payload.doc.data()
         });
       });
-    })
-  }
-
-  getTask(){
-    this._serviceTask.get().subscribe((res: any) => {
-      const t: any = [];
-      this.tasks = [];
-      res.forEach((element: any) => {
-        t.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const task of t){
-        if(task.idProyect == this.id) this.tasks.push(task)
-      }
     })
   }
 
@@ -96,30 +82,37 @@ export class AssignProyectComponent implements OnInit {
   newCompetitor(values: any){
     if(this.competitorForm.valid){
       const competitor = {
-        idProyect: this.id,
         name: values.name,
+        id: values.id,
         area: values.area,
+        job: values.job,
         rol: values.rol,
+        idProyect: this.id,
         createdDate: new Date()
       };
       this._service.add(competitor).then(() => {
-        alert("participante añadido exitosamente");
+        this.toast.success('El colaborador ha sido integrado al proyecto'
+        ,'Colaborador añadido', { positionClass: 'toast-bottom-right'})
         this.competitorForm.reset();
-        this.competitorForm.controls['name'].disable()
+        this.area = '';
       }).catch(err => {
-        console.log(err);
+        this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
+        'Error al añadir el colaborador ', { positionClass: 'toast-bottom-right' });
       })
     }else {
-      console.log("formulario invalido")
+      this.toast.warning('Los valores del formulario son invalidos', 
+      'Formulario invalido', { positionClass: 'toast-bottom-right' })
       console.log(this.competitorForm)
     }
   }
 
   deleteCompetitor(id: string){
     this._service.delete(id).then(() => {
-      alert("registro eliminado");
+      this.toast.info('El colaborado ha sido removido del proyecto con exito',
+      'Colaborador removido', { positionClass: 'toast-bottom-right' })
     }).catch(err => {
-      console.log("ha ocurrido un error al eliminar", err);
+      this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
+      'Error al remover el colaborador', { positionClass: 'toast-bottom-right' })
     })
   }
 
@@ -130,15 +123,41 @@ export class AssignProyectComponent implements OnInit {
       res.forEach((element: any) => {
         e.push({
           id: element.payload.doc.id,
-          name: element.payload.doc.data()['name'],
-          area: element.payload.doc.data()['area']
+          ...element.payload.doc.data()
         });
       });
       for(const employee of e){
         if(employee.area == this.area) this.extras.push(employee)
       }
-      if(this.extras.length > 0) this.competitorForm.controls['name'].enable()
-      else console.log("no se encuentra ningun empleado en esa area")
+      if(this.extras.length == 0){
+        this.toast.warning('No se encontro ningun empleado que pertenezca a la area seleccionada', 
+      'Empleados no encontrados', { positionClass: 'toast-bottom-right' });
+      }
+    })
+  }
+
+  select(id: string, name: string, area: string, job: string){
+    this.competitorForm.controls['name'].setValue(name),
+    this.competitorForm.controls['id'].setValue(id);
+    this.competitorForm.controls['area'].setValue(area);
+    this.competitorForm.controls['job'].setValue(job);
+  }
+
+  // function for the task
+
+  getTask(){
+    this._serviceTask.get().subscribe((res: any) => {
+      const t: any = [];
+      this.tasks = [];
+      res.forEach((element: any) => {
+        t.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
+        });
+      });
+      for(const task of t){
+        if(task.idProyect == this.id) this.tasks.push(task)
+      }
     })
   }
 

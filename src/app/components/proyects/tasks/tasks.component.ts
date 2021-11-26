@@ -30,11 +30,12 @@ export class TasksComponent implements OnInit {
         requirements: new FormControl("", Validators.compose([
           Validators.required
         ])),
-        images: new FormControl(""),
+        image: new FormControl(""),
         dueDate: new FormControl("", Validators.compose([
           Validators.required
         ])),
-        responsable: new FormControl({ value: '', disabled: true }, Validators.required)
+        commentary: new FormControl("", Validators.required),
+        responsable: new FormControl("", Validators.required)
       })
     };
 
@@ -49,10 +50,11 @@ export class TasksComponent implements OnInit {
         title: values.title,
         description: values.description,
         requirements: values.requirements,
-        images: values.images,
+        image: values.image,
         dueDate: values.dueDate,
         responsable: values.responsable,
         idProyect: this.id,
+        commentary: values.commentary,
         createdDate: new Date()
       };
       this._service.add(task).then(() => {
@@ -76,7 +78,7 @@ export class TasksComponent implements OnInit {
       this.competitor = [];
       res.forEach((element: any) => {
         e.push({
-          id: element.payload.doc.id,
+          id: element.payload.doc.data()['id'],
           name: element.payload.doc.data()['name'],
           idProyect: element.payload.doc.data()['idProyect']
         });
@@ -84,10 +86,7 @@ export class TasksComponent implements OnInit {
       for(const competitor of e){
         if(competitor.idProyect == this.id) this.competitor.push(competitor)
       }
-      if(this.competitor.length > 0){
-        this.taskForm.controls['responsable'].enable();
-        this.competitors = true;
-      }
+      if(this.competitor.length > 0) this.competitors = true;
       else this.competitors = false;
     })
   }

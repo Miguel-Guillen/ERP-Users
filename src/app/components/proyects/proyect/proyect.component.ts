@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ProyectService } from 'src/app/service/proyect.service';
+import { Proyect } from '../../../models/proyect'
 
 @Component({
   selector: 'app-proyect',
@@ -9,33 +12,13 @@ import { ProyectService } from 'src/app/service/proyect.service';
 })
 export class ProyectComponent implements OnInit {
   proyectForm: FormGroup;
-  editForm: FormGroup;
+  proyect = new Proyect;
   proyects: any[] = [];
-  id = '';
+  search: any;
 
-  constructor(private formB: FormBuilder, private _service: ProyectService) {
+  constructor(private formB: FormBuilder, private _service: ProyectService,
+    private route: Router, private toast: ToastrService) {
     this.proyectForm = this.formB.group({
-      name: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      type: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      description: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      area: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      dateStart: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      dateEnd: new FormControl("", Validators.compose([
-        Validators.required
-      ]))
-    })
-
-    this.editForm = this.formB.group({
       name: new FormControl("", Validators.compose([
         Validators.required
       ])),
@@ -74,70 +57,35 @@ export class ProyectComponent implements OnInit {
   }
 
   searchProyect(id: string){
-    this._service.getOne(id).subscribe((res: any) => {
-      this.editForm.setValue({
-        name: res.payload.data()['name'],
-        area: res.payload.data()['area'],
-        type: res.payload.data()['type'],
-        description: res.payload.data()['description'],
-        dateStart: '',
-        dateEnd: ''
-      })
-      this.id = id;
-    })
+    this.route.navigate([`editProyect/${id}`]);
   }
 
   newProyect(values: any){
     if(this.proyectForm.valid){
-      const proyect = {
-        name: values.name,
-        type: values.type,
-        description: values.description,
-        area: values.area,
-        dateStart: values.dateStart,
-        dateEnd: values.dateEnd,
-        createdDate: new Date()
-      };
-      this._service.add(proyect).then(() => {
-        alert("proyecto guardado exitosamente");
+      this.proyect = values;
+      this.proyect.createdDate = new Date;
+      this._service.add(this.proyect).then(() => {
+        this.toast.success('El proyecto ha sido añadido con exito', 'Proyecto añadido', 
+        { positionClass: 'toast-bottom-right' })        
         this.proyectForm.reset();
       }).catch(err => {
-        console.log(err);
+        this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
+        { positionClass: 'toast-bottom-right' });
       })
     }else {
-      console.log("formulario invalido")
-    }
-  }
-
-  editProyect(values: any){
-    if(this.editForm.valid){
-      const proyecto = {
-        name: values.name,
-        type: values.type,
-        description: values.description,
-        area: values.area,
-        dateStart: values.dateStart,
-        dateEnd: values.dateEnd
-      }
-      this._service.update(this.id ,proyecto).then(() => {
-        alert("proyecto actualizado exitosamente");
-        this.editForm.reset();
-        this.id = ''
-      }).catch(err => {
-        console.log(err);
-      })
-    }else {
-      console.log("formulario invalido");
+      this.toast.warning('Los datos no son validos o los campos estan vacios'
+      , 'Datos invalidos', { positionClass: 'toast-bottom-right' });
     }
   }
 
   deleteProyect(id: string){
     this._service.delete(id).then(() => {
-      alert("registro eliminado");
+      this.toast.info('El proyecto ha sido borrado con exito', 'Proyecto borrado', 
+      { positionClass: 'toast-bottom-right' })    
     }).catch(err => {
-      console.log("ha ocurrido un error al eliminar", err);
+      this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al borrar el proyecto', 
+      { positionClass: 'toast-bottom-right' });
     })
-    this.editForm.reset();
   }
 
 }

@@ -21,6 +21,8 @@ import { TasksComponent } from './components/proyects/tasks/tasks.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditTaskComponent } from './components/proyects/edit-task/edit-task.component';
 import { MyTasksComponent } from './components/dashboard/my-tasks/my-tasks.component';
+import { SendTaskComponent } from './components/dashboard/send-task/send-task.component';
+import { EmployeePipe } from './pipes/employee.pipe';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { MyTasksComponent } from './components/dashboard/my-tasks/my-tasks.compo
     ProyectsPipe,
     TasksComponent,
     EditTaskComponent,
-    MyTasksComponent
+    MyTasksComponent,
+    SendTaskComponent,
+    EmployeePipe,
   ],
   imports: [
     BrowserModule,
