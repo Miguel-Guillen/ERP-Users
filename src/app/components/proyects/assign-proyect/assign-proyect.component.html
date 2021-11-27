@@ -79,7 +79,7 @@
                       <ng-template ngbPanelContent>
                             <div class="row ff">
                                 <div class="col-12 mb-3 d-flex">
-                                    <p class="flex-grow-1 my-auto">Categoria: </p>
+                                    <p class="flex-grow-1 my-auto">Titulo: {{t.title}}</p>
                                     <button class="btn btn-outline-success me-1" (click)="editTask(t.id)">Editar</button>
                                     <button class="btn btn-outline-danger" (click)="deleteTask(t.id)">Borrar</button>
                                 </div>
@@ -88,6 +88,7 @@
                                     <p>Requerimientos: {{t.requirements}}</p>
                                 </div>
                                 <div class="col-6">
+                                    <p>Prioridad: {{t.priority}}</p>
                                     <p>Responsable: {{t.responsable}}</p>
                                     <p>Fecha de entrega: {{t.dueDate}}</p>
                                     <p>Diagramas o documentos {{t.images}}</p>
@@ -100,7 +101,7 @@
 
                 <!-- competitor table -->
                 <div class="row mt-4 mb-3 mx-auto">
-                    <table class="table table-borderless bg-light border border-2 shadow" *ngIf="competitor.length > 0">
+                    <table class="table table-borderless bg-light border border-2 shadow" *ngIf="competitors.length > 0">
                         <thead>
                             <tr class="table-success ff">
                                 <th class="col-1 text-center">Participante</th>
@@ -110,12 +111,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let c of competitor">
+                            <tr *ngFor="let c of competitors">
                                 <td class="col-1 ff text-center">{{c.name}}</td>
                                 <td class="col-2 ff text-center">{{c.area}}</td>
                                 <td class="col-1 ff text-center">{{c.rol}}</td>
                                 <td class="col-1 text-center">
-                                    <button class="btn btn-danger" (click)="deleteCompetitor(c.id)">
+                                    <button class="btn btn-outline-danger" (click)="deleteCompetitor(c.id)">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>

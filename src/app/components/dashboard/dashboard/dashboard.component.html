@@ -1,1 +1,46 @@
-<p>dashboard works!</p>
+<div class="container-fluid bg-light vh-100">
+    <div class="container">
+        <div class="row d-flex justify-content-between pt-4">
+
+            <div class="col-5 my-2 py-3 px-4 ff border border-3 shadow-sm bg-white rounded">
+                <h5 class="fw-bold border-bottom border-2 pb-2">Proyectos asignados</h5>
+                <div class="mt-2" *ngFor="let p of proyects">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="my-2">{{p.name}}</h5>
+                            <p class="my-2">Descripcion: {{p.description}}</p>
+                            <div class="row">
+                                <p class="col-6 my-1">Tipo: {{p.type}}</p>
+                                <p class="col-6 my-1">Area: {{p.area}}</p>
+                            </div>
+                            <div class="row">
+                                <p class="col-6 my-1"><small class="text-muted me-3">Inicio: {{p.dateStart}}</small></p>
+                                <p class="col-6 my-1"><small class="text-muted">Entrega: {{p.dateEnd}}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-6 my-2 py-3 px-4 ff border border-3 shadow-sm bg-white rounded">
+                <h5 class="pb-2 ms-2 fw-bold border-bottom border-2">Tareas pendientes</h5>
+                <div class="row px-2 d-flex" *ngFor="let t of tasks">
+                    <div class="col-10">
+                        <p class="my-1 fw-bold">{{t.title}}</p>
+                        <div class="row">
+                            <p class="col my-1">Prioridad: {{t.priority}}</p>
+                            <p class="col my-1">Entrega: {{t.dueDate}}</p>
+                        </div>
+                    </div>
+                    <div class="col-2 my-auto px-0">
+                        <button class="btn border border-2 float-right">
+                            <i class="fas fa-check"></i>
+                            <small class="d-block">No visto</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

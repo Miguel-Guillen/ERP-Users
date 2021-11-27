@@ -6,6 +6,7 @@ import { AssignService } from 'src/app/service/assign.service';
 import { Router } from '@angular/router';
 import { TaskService } from 'src/app/service/task.service';
 import { ToastrService } from 'ngx-toastr';
+import { Competitor } from '../../../models/competitor'
 
 @Component({
   selector: 'app-assign-proyect',
@@ -17,9 +18,10 @@ export class AssignProyectComponent implements OnInit {
   proyect: any[] = [];
   search: any;
   competitorForm: FormGroup;
-  competitor: any[] = [];
+  competitor = new Competitor;
+  competitors: any[] = [];
   tasks: any[] = [];
-  id = ''
+  id: string = ''
   extras: any[] = [];
   area: string = ''
 
@@ -66,11 +68,11 @@ export class AssignProyectComponent implements OnInit {
 
   getCompetitor(){
     this._service.get().subscribe((res: any) => {
-      this.competitor = [];
+      this.competitors = [];
       res.forEach((element: any) => {
         const e = element.payload.doc.data()['idProyect'];
         if(e == this.id){
-          this.competitor.push({
+          this.competitors.push({
             id: element.payload.doc.id,
             ...element.payload.doc.data()
           });
@@ -81,16 +83,10 @@ export class AssignProyectComponent implements OnInit {
 
   newCompetitor(values: any){
     if(this.competitorForm.valid){
-      const competitor = {
-        name: values.name,
-        id: values.id,
-        area: values.area,
-        job: values.job,
-        rol: values.rol,
-        idProyect: this.id,
-        createdDate: new Date()
-      };
-      this._service.add(competitor).then(() => {
+      this.competitor = values;
+      this.competitor.idProyect = this.id;
+      this.competitor.createdDate =  new Date
+      this._service.add(this.competitor).then(() => {
         this.toast.success('El colaborador ha sido integrado al proyecto'
         ,'Colaborador añadido', { positionClass: 'toast-bottom-right'})
         this.competitorForm.reset();

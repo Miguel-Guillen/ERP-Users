@@ -23,6 +23,7 @@ import { EditTaskComponent } from './components/proyects/edit-task/edit-task.com
 import { MyTasksComponent } from './components/dashboard/my-tasks/my-tasks.component';
 import { SendTaskComponent } from './components/dashboard/send-task/send-task.component';
 import { EmployeePipe } from './pipes/employee.pipe';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { EmployeePipe } from './pipes/employee.pipe';
     MyTasksComponent,
     SendTaskComponent,
     EmployeePipe,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

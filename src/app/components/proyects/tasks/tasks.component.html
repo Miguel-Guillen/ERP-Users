@@ -13,11 +13,11 @@
                 <div class="row my-2">
                     <div class="col-6">
                         <label class="form-label">Descripcion</label>
-                        <textarea class="form-control" formControlName="description" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" formControlName="description" cols="30" rows="4"></textarea>
                     </div>
                     <div class="col-6">
                         <label class="form-label">Requisitos</label>
-                        <textarea class="form-control" formControlName="requirements" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" formControlName="requirements" cols="30" rows="4"></textarea>
                     </div>
                 </div>
                 <div class="row my-2">
@@ -35,10 +35,20 @@
                 </div>
                 <div class="row my-2">
                     <div class="col-6">
+                        <label class="form-label">Prioridad</label>
+                        <select formControlName="priority" class="form-select">
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
                         <label class="form-label">Comentarios adicionales</label>
                         <textarea class="form-control" formControlName="commentary" 
-                        cols="30" rows="3"></textarea>
+                        cols="30" rows="2"></textarea>
                     </div>
+                </div>
+                <div class="row my-2">
                     <div class="col">
                         <label class="form-label">Diagrama o documento</label>
                         <input type="file" class="form-control" formControlName="image">

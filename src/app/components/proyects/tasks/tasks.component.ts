@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Task } from 'src/app/models/task';
 import { AssignService } from 'src/app/service/assign.service';
 import { TaskService } from 'src/app/service/task.service';
 
@@ -12,7 +13,7 @@ import { TaskService } from 'src/app/service/task.service';
 })
 export class TasksComponent implements OnInit {
   taskForm: FormGroup;
-  task: any[] = [];
+  task = new Task;
   id: any;
   competitor: any[] = [];
   competitors: boolean = false;
@@ -21,20 +22,13 @@ export class TasksComponent implements OnInit {
     private toast: ToastrService, private route: ActivatedRoute, 
     private _serviceAssign: AssignService) {
       this.taskForm = this.formB.group({
-        title: new FormControl("", Validators.compose([
-          Validators.required
-        ])),
-        description: new FormControl("", Validators.compose([
-          Validators.required
-        ])),
-        requirements: new FormControl("", Validators.compose([
-          Validators.required
-        ])),
+        title: new FormControl("", Validators.required),
+        description: new FormControl("", Validators.required),
+        requirements: new FormControl("", Validators.required),
         image: new FormControl(""),
-        dueDate: new FormControl("", Validators.compose([
-          Validators.required
-        ])),
-        commentary: new FormControl("", Validators.required),
+        priority: new FormControl("", Validators.required),
+        dueDate: new FormControl("", Validators.required),
+        commentary: new FormControl(""),
         responsable: new FormControl("", Validators.required)
       })
     };
@@ -46,18 +40,11 @@ export class TasksComponent implements OnInit {
 
   newTask(values: any){
     if(this.taskForm.valid){
-      const task = {
-        title: values.title,
-        description: values.description,
-        requirements: values.requirements,
-        image: values.image,
-        dueDate: values.dueDate,
-        responsable: values.responsable,
-        idProyect: this.id,
-        commentary: values.commentary,
-        createdDate: new Date()
-      };
-      this._service.add(task).then(() => {
+      this.task = values;
+      this.task.createdDate = new Date;
+      this.task.priority = 'Por hacer';
+      this.task.idProyect = this.id,
+      this._service.add(this.task).then(() => {
         this.toast.success('su tarea acaba de ser añadida exitosamente', 'Tarea añadida',
         { positionClass: 'toast-bottom-right' });
         this.taskForm.reset();
