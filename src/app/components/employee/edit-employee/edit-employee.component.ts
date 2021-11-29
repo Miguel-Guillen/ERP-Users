@@ -14,6 +14,11 @@ export class EditEmployeeComponent implements OnInit {
   editForm: FormGroup;
   employee = new Employee;
   id: any;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private formB: FormBuilder, private toast: ToastrService,
     private _service: EmployeeService, private route: ActivatedRoute,
@@ -39,6 +44,7 @@ export class EditEmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.searchEmployee(this.id);
   }
 

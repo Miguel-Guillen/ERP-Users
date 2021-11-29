@@ -23,7 +23,12 @@ export class AssignProyectComponent implements OnInit {
   tasks: any[] = [];
   id: string = ''
   extras: any[] = [];
-  area: string = ''
+  area: string = '';
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _service: AssignService, private formB: FormBuilder,
     private _serviceProyect: ProyectService, private _serviceEmployee: EmployeeService,
@@ -39,6 +44,7 @@ export class AssignProyectComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.getProyects();
   }
 

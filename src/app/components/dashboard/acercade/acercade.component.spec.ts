@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditDashboardComponent } from './edit-dashboard.component';
+import { AcercadeComponent } from './acercade.component';
 
-describe('EditDashboardComponent', () => {
-  let component: EditDashboardComponent;
-  let fixture: ComponentFixture<EditDashboardComponent>;
+describe('AcercadeComponent', () => {
+  let component: AcercadeComponent;
+  let fixture: ComponentFixture<AcercadeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditDashboardComponent ]
+      declarations: [ AcercadeComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditDashboardComponent);
+    fixture = TestBed.createComponent(AcercadeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

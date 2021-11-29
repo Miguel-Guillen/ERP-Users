@@ -1,0 +1,117 @@
+<div class="container-fluid sidebar">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-3 
+            text-white vh-100">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white 
+                text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">ERP System</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center 
+                align-items-sm-start" id="menu" *ngIf="user.rol == 'usuario';else noAdmin">
+                    <li class="nav-item">
+                        <a [routerLink]="['/dashboard']" class="nav-link align-middle px-0 
+                        text-secondary">
+                            <i class="fas fa-home"></i>
+                            <span class="ms-2 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a [routerLink]="['/myTasks']" class="nav-link align-middle px-0
+                        text-secondary">
+                            <i class="fas fa-tasks"></i>
+                            <span class="ms-2 d-none d-sm-inline">Tareas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a [routerLink]="['/myProyects']" class="nav-link align-middle px-0
+                        text-secondary">
+                            <i class="fas fa-folder"></i>
+                            <span class="ms-2 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a [routerLink]="['/acercade']" class="nav-link align-middle px-0
+                        text-secondary">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="ms-2 d-none d-sm-inline">Acerca de</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a [routerLink]="['']" class="nav-link align-middle px-0
+                        text-secondary">
+                            <i class="fas fa-cog"></i>
+                            <span class="ms-2 d-none d-sm-inline">Configuracion</span>
+                        </a>
+                    </li> -->
+                    <!-- <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                            </li>
+                        </ul>
+                    </li> -->
+                </ul>
+                <div class="dropdown pb-3">
+                    <a href="#" (click)="logout()" class="nav-link align-middle px-0
+                    text-secondary">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="d-none d-sm-inline ms-2">Cerrar sesion</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noAdmin>
+    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center 
+    align-items-sm-start" id="menu">
+        <li class="nav-item">
+            <a [routerLink]="['/dashboard']" class="nav-link align-middle px-0 
+            text-secondary">
+                <i class="fas fa-home"></i>
+                <span class="ms-2 d-none d-sm-inline">Inicio</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a [routerLink]="['/employee']" class="nav-link align-middle px-0 
+            text-secondary">
+                <i class="fas fa-user"></i>
+                <span class="ms-2 d-none d-sm-inline">Empleados</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a [routerLink]="['/proyect']" class="nav-link align-middle px-0 
+            text-secondary">
+                <i class="fas fa-file-alt"></i>
+                <span class="ms-2 d-none d-sm-inline">Proyectos</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a [routerLink]="['/assign-proyect']" class="nav-link align-middle px-0 
+            text-secondary">
+                <i class="fas fa-tasks"></i>
+                <span class="ms-1 d-none d-sm-inline">Tareas</span>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a [routerLink]="['']" class="nav-link align-middle px-0 
+            text-secondary">
+                <span class="ms-1 d-none d-sm-inline">Configuracion</span>
+            </a>
+        </li> -->
+        <li class="nav-item">
+            <a [routerLink]="['/acercade']" class="nav-link align-middle px-0
+            text-secondary">
+                <i class="fas fa-info-circle"></i>
+                <span class="ms-2 d-none d-sm-inline">Acerca de</span>
+            </a>
+        </li>
+    </ul>
+</ng-template>

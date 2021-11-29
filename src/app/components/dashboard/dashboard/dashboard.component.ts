@@ -12,12 +12,18 @@ export class DashboardComponent implements OnInit {
   proyects: any[] = [];
   myInfo: any[] = [];
   tasks: any[] = [];
-  id = 'PEu4uT3QCwsAMDPUVHZZ'
+  isAdmin: boolean | undefined;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _serviceProyect: ProyectService, 
     private _serviceCompetitor: AssignService, private _serviceTask: TaskService) { }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || '')
     this.info();
     this.getProyects();
     this.myTasks();
@@ -48,7 +54,7 @@ export class DashboardComponent implements OnInit {
         });
       });
       for(const c of competitors){
-        if(c.id == this.id) this.myInfo.push(c)
+        if(c.id == this.user.id) this.myInfo.push(c)
       }
     })
   }
@@ -64,7 +70,7 @@ export class DashboardComponent implements OnInit {
         });
       });
       for(const task of t){
-        if(task.responsable == this.id && task.estatus != 'Terminado') this.tasks.push(task)
+        if(task.responsable == this.user.id && task.estatus != 'Terminado') this.tasks.push(task)
       }
     })
   }

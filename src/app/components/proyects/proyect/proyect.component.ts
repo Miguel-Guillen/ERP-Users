@@ -15,6 +15,11 @@ export class ProyectComponent implements OnInit {
   proyect = new Proyect;
   proyects: any[] = [];
   search: any;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private formB: FormBuilder, private _service: ProyectService,
     private route: Router, private toast: ToastrService) {
@@ -41,6 +46,7 @@ export class ProyectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.getProyects();
   }
 

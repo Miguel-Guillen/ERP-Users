@@ -1,65 +1,84 @@
-<div class="container">
-    <div class="row d-flex justify-content-center mt-4">
+<div class="container-fluid bg-light overflow-hidden">
+    <div class="row">
 
-        <div class="col-7 bg-light border border-2 shadow p-3">
-            <h5>Agregar tarea</h5>
-            <form class="mt-3" [formGroup]="taskForm" (ngSubmit)="newTask(taskForm.value)">
-                <div class="row my-2">
-                    <div class="col-12">
-                        <label class="form-label">Titulo</label>
-                        <input type="text" class="form-control" formControlName="title">
-                    </div>
+        <div class="col-2 px-0">
+            <app-sidebar></app-sidebar>
+        </div>
+
+        <div class="col-10 px-0">
+            <div class="row d-flex justify-content-center align-items-center ff vh-100"
+            *ngIf="user.rol == 'administrador'; else noAdmin">
+                <div class="col-7 bg-white border border-2 shadow p-3">
+                    <h5>Agregar tarea</h5>
+                    <form class="mt-3" [formGroup]="taskForm" (ngSubmit)="newTask(taskForm.value)">
+                        <div class="row my-2">
+                            <div class="col-12">
+                                <label class="form-label">Titulo</label>
+                                <input type="text" class="form-control" formControlName="title">
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-6">
+                                <label class="form-label">Descripcion</label>
+                                <textarea class="form-control" formControlName="description" cols="30" rows="5"></textarea>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Requisitos</label>
+                                <textarea class="form-control" formControlName="requirements" cols="30" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-6">
+                                <label class="form-label">Asignar responsable</label>
+                                <select class="form-select" formControlName="responsable">
+                                    <option *ngFor="let c of competitor" value="{{c.id}}">{{c.name}}</option>
+                                </select>
+                                <h6 class="mt-1 text-danger" *ngIf="competitors === false">No hay ningun trabajador añadido a este proyecto</h6>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Fecha de vencimiento</label>
+                                <input type="date" class="form-control" formControlName="dueDate">
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-6">
+                                <label class="form-label">Prioridad</label>
+                                <select formControlName="priority" class="form-select">
+                                    <option value="Baja">Baja</option>
+                                    <option value="Media">Media</option>
+                                    <option value="Alta">Alta</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Comentarios adicionales</label>
+                                <textarea class="form-control" formControlName="commentary" 
+                                cols="30" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col">
+                                <label class="form-label">Diagrama o documento</label>
+                                <input type="file" class="form-control" formControlName="image">
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary mt-2 float-end" type="submit">Enviar</button>
+                        <button class="btn btn-outline-danger mt-2 me-2 float-end" type="button"
+                        (click)="taskForm.reset()" [routerLink]="['/assign-proyect']">Cancelar</button>
+                    </form>
                 </div>
-                <div class="row my-2">
-                    <div class="col-6">
-                        <label class="form-label">Descripcion</label>
-                        <textarea class="form-control" formControlName="description" cols="30" rows="4"></textarea>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Requisitos</label>
-                        <textarea class="form-control" formControlName="requirements" cols="30" rows="4"></textarea>
-                    </div>
-                </div>
-                <div class="row my-2">
-                    <div class="col-6">
-                        <label class="form-label">Asignar responsable</label>
-                        <select class="form-select" formControlName="responsable">
-                            <option *ngFor="let c of competitor" value="{{c.id}}">{{c.name}}</option>
-                        </select>
-                        <h6 class="mt-1 text-danger" *ngIf="competitors === false">No hay ningun trabajador añadido a este proyecto</h6>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Fecha de vencimiento</label>
-                        <input type="date" class="form-control" formControlName="dueDate">
-                    </div>
-                </div>
-                <div class="row my-2">
-                    <div class="col-6">
-                        <label class="form-label">Prioridad</label>
-                        <select formControlName="priority" class="form-select">
-                            <option value="Baja">Baja</option>
-                            <option value="Media">Media</option>
-                            <option value="Alta">Alta</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Comentarios adicionales</label>
-                        <textarea class="form-control" formControlName="commentary" 
-                        cols="30" rows="2"></textarea>
-                    </div>
-                </div>
-                <div class="row my-2">
-                    <div class="col">
-                        <label class="form-label">Diagrama o documento</label>
-                        <input type="file" class="form-control" formControlName="image">
-                    </div>
-                </div>
-                <button class="btn btn-outline-primary mt-2 float-end" type="submit">Enviar</button>
-                <button class="btn btn-outline-danger mt-2 me-2 float-end" type="button"
-                (click)="taskForm.reset()" [routerLink]="['/assign-proyect']">Cancelar</button>
-            </form>
+            </div>
+
+            <div class="col px-0 mt-4">
+                <app-footer></app-footer>
+            </div>
+
         </div>
 
     </div>
-    <button class="btn btn-outline-primary" [routerLink]="['/assign-proyect']">Volver</button>
 </div>
+
+<ng-template #noAdmin>
+    <div class="vh-100 p-5">
+        <h1>Error pagina no encontrada</h1>
+    </div>
+</ng-template>

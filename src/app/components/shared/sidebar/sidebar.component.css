@@ -1,0 +1,6 @@
+.sidebar {
+    position: fixed;
+}
+.nav-link:hover {
+    color: white !important
+}

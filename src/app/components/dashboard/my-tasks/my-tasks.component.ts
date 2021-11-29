@@ -12,12 +12,16 @@ export class MyTasksComponent implements OnInit {
   doneTasks: any[] = [];
   selected: boolean = false;
   show = false;
-  id = 'PEu4uT3QCwsAMDPUVHZZ';
-  area = 'Programacion de aplicaciones';
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _serviceTask: TaskService, private route: Router) { }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || '');
     this.myTasks();
   }
 
@@ -33,8 +37,8 @@ export class MyTasksComponent implements OnInit {
         });
       });
       for(const task of t){
-        if(task.responsable == this.id && task.estatus != 'Terminado') this.tasks.push(task)
-        if(task.responsable == this.id && task.estatus == 'Terminado') this.doneTasks.push(task)
+        if(task.responsable == this.user.id && task.estatus != 'Terminado') this.tasks.push(task)
+        if(task.responsable == this.user.id && task.estatus == 'Terminado') this.doneTasks.push(task)
       }
     })
   }

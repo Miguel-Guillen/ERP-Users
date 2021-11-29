@@ -8,3 +8,6 @@
 .border-off {
     border: none
 }
+.vh-task {
+    min-height: 85vh;
+}

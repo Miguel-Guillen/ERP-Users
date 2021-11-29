@@ -14,6 +14,11 @@ export class SendTaskComponent implements OnInit {
   task: any[] = [];
   doneTaskForm: FormGroup;
   corrections = '';
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private route: ActivatedRoute, private _serviceTask: TaskService,
     private formB: FormBuilder, private toast: ToastrService,
@@ -27,6 +32,7 @@ export class SendTaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.idTask = this.route.snapshot.paramMap.get('id');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}')
     this.detailsTask();
   }
 

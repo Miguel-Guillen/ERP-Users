@@ -15,6 +15,11 @@ export class EmployeesComponent implements OnInit {
   employee = new Employee;
   employees: any[] = [];
   search: any;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _service: EmployeeService, private route: Router,
     private toast: ToastrService, private formB: FormBuilder) {
@@ -39,6 +44,7 @@ export class EmployeesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmployees();
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
   }
 
   getEmployees(){

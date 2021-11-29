@@ -17,6 +17,11 @@ export class EditTaskComponent implements OnInit {
   id: any;
   competitor: any[] = [];
   competitors: boolean = false;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _service: TaskService, private formB: FormBuilder,
     private toast: ToastrService, private route: ActivatedRoute,
@@ -35,6 +40,7 @@ export class EditTaskComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.getTask();
   }
 

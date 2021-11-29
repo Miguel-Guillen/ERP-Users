@@ -1,41 +1,65 @@
-<div class="container">
-    <div class="row pt-4">
+<div class="container-fluid bg-light min-vh-100 overflow-hidden">
+    <div class="row">
 
-        <div class="col-">
-            <ul class="list-unstyled">
-                <li class="d-inline me-2 btn" (click)="show = false"
-                [ngClass]="show === false ? 'border-on' : 'border-off' ">Asignadas</li>
-                <li class="d-inline btn" (click)="show = true"
-                [ngClass]="show === true ? 'border-on' : 'border-off' ">Completadas</li>
-            </ul>
+        <div class="col-2 px-0">
+            <app-sidebar></app-sidebar>
         </div>
 
-        <div class="col">
-            <h5 class="my-3 ms-3">Mis tareas</h5>
-            <div *ngIf="show === false; else noShow">
-                <div class="table table-borderless bg-light border border-2 shadow-sm my-1 ff rounded" 
-                type="button" *ngFor="let t of tasks" (click)="infoTask(t.id)">
-                    <div class="row my-1 px-2">
-                        <p class="col-3 mb-1">{{t.title}}</p>
-                        <p class="col-7 mb-1">{{t.description}}</p>
-                        <p class="col-2 mb-1">{{t.dueDate}}</p>
-                        <p class="col-3 my-0">{{t.idProyect}}</p>
+        <div class="col-10 px-0">
+            <div *ngIf="user.rol == 'usuario';else noAdmin" class="row pt-4 px-5">
+
+                <div class="col-12">
+                    <ul class="list-unstyled">
+                        <li class="d-inline me-2 btn" (click)="show = false"
+                        [ngClass]="show === false ? 'border-on' : 'border-off' ">Asignadas</li>
+                        <li class="d-inline btn" (click)="show = true"
+                        [ngClass]="show === true ? 'border-on' : 'border-off' ">Completadas</li>
+                    </ul>
+                </div>
+        
+                <div class="col vh-task ff">
+                    <h5 class="my-4 ms-3 fw-bold">Mis tareas</h5>
+                    <div *ngIf="show === false; else noShow">
+                        <div class="table table-borderless border border-2 shadow-sm my-1 
+                        rounded bg-white" 
+                        type="button" *ngFor="let t of tasks" (click)="infoTask(t.id)">
+                            <div class="row my-1 px-2">
+                                <p class="col-3 mb-1 my-auto">{{t.title}}</p>
+                                <p class="col-7 mb-1 my-auto">{{t.description}}</p>
+                                <p class="col-2 mb-1 my-auto">{{t.dueDate}}</p>
+                                <p class="col-3 mt-1 my-auto">Prioridad: {{t.priority}}</p>
+                                <small class="col-3 mt-1 my-auto text-muted">Proyecto: {{t.idProyect}}</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
+        
             </div>
+
+            <div class="col px-0 pt-3">
+                <app-footer></app-footer>
+            </div>
+
         </div>
 
     </div>
 </div>
 
 <ng-template #noShow>
-    <div class="table table-borderless bg-light border border-2 shadow-sm my-1 ff rounded" 
+    <div class="table table-borderless bg-white border border-2 shadow-sm my-1 ff rounded" 
     type="button" *ngFor="let td of doneTasks" (click)="infoTask(td.id)">
         <div class="row my-1 px-2">
-            <p class="col-3 mb-1">{{td.title}}</p>
-            <p class="col-7 mb-1">{{td.description}}</p>
-            <p class="col-2 mb-1">{{td.dueDate}}</p>
-            <p class="col-3 my-0">{{td.idProyect}}</p>
+            <p class="col-3 mb-1 my-auto">{{td.title}}</p>
+            <p class="col-7 mb-1 my-auto">{{td.description}}</p>
+            <p class="col-2 mb-1 my-auto">{{td.dueDate}}</p>
+            <p class="col-3 mt-1 my-auto">Prioridad: {{td.priority}}</p>
+            <small class="col-3 mt-1 text-muted my-auto">Proyecto: {{td.idProyect}}</small>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #noAdmin>
+    <div class="vh-100 p-5">
+        <h1>Error pagina no encontrada</h1>
     </div>
 </ng-template>

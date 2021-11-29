@@ -17,6 +17,11 @@ export class TasksComponent implements OnInit {
   id: any;
   competitor: any[] = [];
   competitors: boolean = false;
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private _service: TaskService, private formB: FormBuilder,
     private toast: ToastrService, private route: ActivatedRoute, 
@@ -35,6 +40,7 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.info();
   }
 
@@ -42,7 +48,7 @@ export class TasksComponent implements OnInit {
     if(this.taskForm.valid){
       this.task = values;
       this.task.createdDate = new Date;
-      this.task.priority = 'Por hacer';
+      this.task.estatus = 'Por hacer';
       this.task.idProyect = this.id,
       this._service.add(this.task).then(() => {
         this.toast.success('su tarea acaba de ser añadida exitosamente', 'Tarea añadida',

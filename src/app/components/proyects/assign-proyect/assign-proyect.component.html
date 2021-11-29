@@ -1,234 +1,261 @@
-<div class="container">
-    <div class="col mt-4">
-        <div class="row my-4">
-            <div class="col d-flex">
-                <div class="col flex-grow-1">
-                    <button (click)="id = '' " *ngIf="id !== '' " class="btn btn-outline-success ff">Volver</button>
-                </div>
-                <input type="search" class="form-control bg-light w-50 ff" placeholder="Buscar proyecto"
-                [(ngModel)]="search" *ngIf="id === '' ">
-                <button class="btn btn-light border" *ngIf="id === '' ">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+<div class="container-fluid bg-light">
+    <div class="row">
+
+        <div class="col-2 px-0">
+            <app-sidebar></app-sidebar>
         </div>
-        <!-- project table -->
-        <table class="table table-borderless bg-light border border-2 shadow" *ngIf="id === '' ">
-            <thead>
-                <tr class="table-success ff">
-                    <th class="col-1 text-center">Nombre</th>
-                    <th class="col-1 text-center">Tipo</th>
-                    <th class="col-4 text-center">Descripcion</th>
-                    <th class="col-1 text-center">Area</th>
-                    <th class="col-1 text-center">Fecha inicio</th>
-                    <th class="col-1 text-center">Fecha entrega</th>
-                    <th class="col-1 text-center">Detalles</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let p of proyects | proyects: search">
-                    <td class="col-1 text-center ff">{{p.name}}</td>
-                    <td class="col-1 text-center ff">{{p.type}}</td>
-                    <td class="col-4 text-center ff">{{p.description}}</td>
-                    <td class="col-1 text-center ff">{{p.area}}</td>
-                    <td class="col-1 text-center ff">{{p.dateStart}}</td>
-                    <td class="col-1 text-center ff">{{p.dateEnd}}</td>
-                    <td class="col-1 text-center">
-                        <button class="btn btn-outline-success" (click)="getProyect(p.id)">
-                            <i class="fas fa-book"></i>
+
+        <div class="col-10 px-0">
+            <div class="col pt-3 px-5" *ngIf="user.rol == 'administrador'; else noAdmin">
+                <div class="row my-4">
+                    <div class="col d-flex justify-content-end" *ngIf="id === '' ">
+                        <input type="search" class="form-control w-50 ff" placeholder="Buscar proyecto"
+                        [(ngModel)]="search">
+                        <button class="btn border bg-white">
+                            <i class="fas fa-search"></i>
                         </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="row d-flex justify-content-between tasks" *ngIf="id !== '' ">
-            <div class="col-4 bg-light border border-2 shadow p-3 proyect">
-                <div class="card ff">
-                    <div class="row px-3 py-2">
-                        <div class="col">
-                            <h5>Proyecto: {{proyect[0].name}}</h5>
-                            <p>Descripcion: {{proyect[0].description}}</p>
-                        </div>
-                    </div>
-                    <div class="row px-3 d-flex align-items-center">
-                        <div class="col-6">
-                            <p>Tipo: {{proyect[0].type}}</p>
-                            <p>Area: {{proyect[0].area}}</p>
-                        </div>
-                        <div class="col-6">
-                            <p>Fecha de inicio: {{proyect[0].dateStart}}</p>
-                            <p>Fecha de cierre: {{proyect[0].dateEnd}}</p>
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-7">
-                <div class="col d-flex mx-3 mb-3 ff">
-                    <p class="h5 my-auto fw-bold flex-grow-1">Tareas asignadas</p>
-                    <button class="btn btn-outline-primary me-1" data-bs-toggle="modal"
-                    data-bs-target="#employeeModal">Añadir participante</button>
-                    <button class="btn btn-outline-primary" (click)="task()">Nueva tarea</button>
-                </div>
-                <div class="bg-light border border-2 mt-4" *ngIf="tasks.length == 0">
-                    <h5 class="ms-3 py-2 ff my-auto">No hay ninguna tarea asignada al proyecto</h5>
-                </div>
-                <ngb-accordion [closeOthers]="true" activeIds="static-1" *ngIf="tasks.length > 0">
-                    <ngb-panel title="{{t.title}}" *ngFor="let t of tasks">
-                      <ng-template ngbPanelContent>
-                            <div class="row ff">
-                                <div class="col-12 mb-3 d-flex">
-                                    <p class="flex-grow-1 my-auto">Titulo: {{t.title}}</p>
-                                    <button class="btn btn-outline-success me-1" (click)="editTask(t.id)">Editar</button>
-                                    <button class="btn btn-outline-danger" (click)="deleteTask(t.id)">Borrar</button>
-                                </div>
-                                <div class="col-6">
-                                    <p>Descripcion: {{t.description}}</p>
-                                    <p>Requerimientos: {{t.requirements}}</p>
-                                </div>
-                                <div class="col-6">
-                                    <p>Prioridad: {{t.priority}}</p>
-                                    <p>Responsable: {{t.responsable}}</p>
-                                    <p>Fecha de entrega: {{t.dueDate}}</p>
-                                    <p>Diagramas o documentos {{t.images}}</p>
-                                    <p>Comentarios: </p>
-                                </div>
-                            </div>
-                      </ng-template>
-                    </ngb-panel>
-                </ngb-accordion>
-
-                <!-- competitor table -->
-                <div class="row mt-4 mb-3 mx-auto">
-                    <table class="table table-borderless bg-light border border-2 shadow" *ngIf="competitors.length > 0">
+                <!-- project table -->
+                <div class="h-table">
+                    <table class="table table-borderless bg-white border border-2 shadow" 
+                    *ngIf="id === ''; else showProyect">
                         <thead>
                             <tr class="table-success ff">
-                                <th class="col-1 text-center">Participante</th>
-                                <th class="col-2 text-center">Area</th>
-                                <th class="col-1 text-center">Cargo</th>
-                                <th class="col-1 text-center">Remover</th>
+                                <th class="col-1 text-center">Nombre</th>
+                                <th class="col-1 text-center">Tipo</th>
+                                <th class="col-4 text-center">Descripcion</th>
+                                <th class="col-1 text-center">Area</th>
+                                <th class="col-1 text-center">Fecha inicio</th>
+                                <th class="col-1 text-center">Fecha entrega</th>
+                                <th class="col-1 text-center">Detalles</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let c of competitors">
-                                <td class="col-1 ff text-center">{{c.name}}</td>
-                                <td class="col-2 ff text-center">{{c.area}}</td>
-                                <td class="col-1 ff text-center">{{c.rol}}</td>
+                            <tr *ngFor="let p of proyects | proyects: search">
+                                <td class="col-1 text-center ff">{{p.name}}</td>
+                                <td class="col-1 text-center ff">{{p.type}}</td>
+                                <td class="col-4 text-center ff">{{p.description}}</td>
+                                <td class="col-1 text-center ff">{{p.area}}</td>
+                                <td class="col-1 text-center ff">{{p.dateStart}}</td>
+                                <td class="col-1 text-center ff">{{p.dateEnd}}</td>
                                 <td class="col-1 text-center">
-                                    <button class="btn btn-outline-danger" (click)="deleteCompetitor(c.id)">
-                                        <i class="fas fa-trash"></i>
+                                    <button class="btn btn-outline-success" (click)="getProyect(p.id)">
+                                        <i class="fas fa-book"></i>
                                     </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+        
+            </div>
+
+            <div class="col px-0">
+                <app-footer></app-footer>
             </div>
 
         </div>
+    </div>
+</div>
 
-        <!-- Model search employee -->
-        <div class="modal fade" id="employeeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Nuevo colaborador</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<ng-template #noAdmin>
+    <div class="vh-100 p-5">
+        <h1>Error pagina no encontrada</h1>
+    </div>
+</ng-template>
+
+<ng-template #showProyect>
+    <div class="row d-flex justify-content-between tasks">
+
+        <div class="col-4 bg-light border border-2 shadow p-3 proyect">
+            <div class="card ff">
+                <div class="row px-3 py-2">
+                    <div class="col">
+                        <h5>Proyecto: {{proyect[0].name}}</h5>
+                        <p>Descripcion: {{proyect[0].description}}</p>
                     </div>
-                    <div class="modal-body">
-                        <div class="row mb-1 ff">
-                            <div class="col">
-                                <p>Seleccione el area de busqueda</p>
-                                <label class="form-label">Area</label>
-                                <div class="col d-flex">
-                                    <select class="form-select" [(ngModel)]="area">
-                                        <option value="Gestion de proyectos">Gestion de proyectos</option>
-                                        <option value="Diseño de aplicaciones">Diseño de aplicaciones</option>
-                                        <option value="Programacion de aplicaciones">Programacion de aplicaciones</option>
-                                        <option value="Pruebas y Procesos de calidad">Pruebas y Procesos de calidad</option>
-                                    </select>
-                                    <button class="btn btn-outline-success ms-1" type="button" (click)="info()">Buscar</button>
-                                </div>
-                                <div class="col my-2 t-employee overflow-auto">
-                                    <h5 class="fw-bold my-1" *ngIf="extras.length > 0">Empleados encontrados</h5>
-                                    <p *ngIf="extras.length > 0">Seleccione el empleado a añadir</p>
-                                    <div class="row bg-light border border-2 rounded" 
-                                    *ngFor="let e of extras" type="button" data-bs-toggle="modal" 
-                                    data-bs-target="#competitorModal" (click)="select(e.id, e.name, e.area, e.job)">
-                                        <div class="col-6">
-                                            <p class="my-1">Nombre: {{e.name}}</p>
-                                            <p class="my-1">Apellidos: {{e.surnames}}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="my-1">Area: {{e.area}}</p>
-                                            <p class="my-1">Puesto: {{e.job}}</p>
-                                        </div>
+                </div>
+                <div class="row px-3 d-flex align-items-center">
+                    <div class="col-6">
+                        <p>Tipo: {{proyect[0].type}}</p>
+                        <p>Area: {{proyect[0].area}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>Fecha de inicio: {{proyect[0].dateStart}}</p>
+                        <p>Fecha de cierre: {{proyect[0].dateEnd}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accordion -->
+        <div class="col-7">
+            <div class="col d-flex mx-3 mb-3 ff">
+                <p class="h5 my-auto fw-bold flex-grow-1">Tareas asignadas</p>
+                <button class="btn btn-outline-primary me-1" data-bs-toggle="modal"
+                data-bs-target="#employeeModal">Añadir participante</button>
+                <button class="btn btn-outline-primary" (click)="task()">Nueva tarea</button>
+            </div>
+            <div class="bg-light border border-2 mt-4" *ngIf="tasks.length == 0">
+                <h5 class="ms-3 py-2 ff my-auto">No hay ninguna tarea asignada al proyecto</h5>
+            </div>
+            <ngb-accordion [closeOthers]="true" activeIds="static-1" *ngIf="tasks.length > 0">
+                <ngb-panel title="{{t.title}}" *ngFor="let t of tasks">
+                  <ng-template ngbPanelContent>
+                        <div class="row ff">
+                            <div class="col-12 mb-3 d-flex">
+                                <p class="flex-grow-1 my-auto">Titulo: {{t.title}}</p>
+                                <button class="btn btn-outline-success me-1" (click)="editTask(t.id)">Editar</button>
+                                <button class="btn btn-outline-danger" (click)="deleteTask(t.id)">Borrar</button>
+                            </div>
+                            <div class="col-6">
+                                <p>Descripcion: {{t.description}}</p>
+                                <p>Requerimientos: {{t.requirements}}</p>
+                            </div>
+                            <div class="col-6">
+                                <p>Prioridad: {{t.priority}}</p>
+                                <p>Responsable: {{t.responsable}}</p>
+                                <p>Fecha de entrega: {{t.dueDate}}</p>
+                                <p>Diagramas o documentos {{t.images}}</p>
+                                <p>Comentarios: </p>
+                            </div>
+                        </div>
+                  </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+
+            <!-- competitor table -->
+            <div class="row mt-4 mb-3 mx-auto">
+                <table class="table table-borderless bg-light border border-2 shadow" *ngIf="competitors.length > 0">
+                    <thead>
+                        <tr class="table-success ff">
+                            <th class="col-1 text-center">Participante</th>
+                            <th class="col-2 text-center">Area</th>
+                            <th class="col-1 text-center">Cargo</th>
+                            <th class="col-1 text-center">Remover</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of competitors">
+                            <td class="col-1 ff text-center">{{c.name}}</td>
+                            <td class="col-2 ff text-center">{{c.area}}</td>
+                            <td class="col-1 ff text-center">{{c.rol}}</td>
+                            <td class="col-1 text-center">
+                                <button class="btn btn-outline-danger" (click)="deleteCompetitor(c.id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        
+    </div>
+
+    <!-- Model search employee -->
+    <div class="modal fade" id="employeeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-1 ff">
+                        <div class="col">
+                            <p>Seleccione el area de busqueda</p>
+                            <label class="form-label">Area</label>
+                            <div class="col d-flex">
+                                <select class="form-select" [(ngModel)]="area">
+                                    <option value="Gestion de proyectos">Gestion de proyectos</option>
+                                    <option value="Diseño de aplicaciones">Diseño de aplicaciones</option>
+                                    <option value="Programacion de aplicaciones">Programacion de aplicaciones</option>
+                                    <option value="Pruebas y Procesos de calidad">Pruebas y Procesos de calidad</option>
+                                </select>
+                                <button class="btn btn-outline-success ms-1" type="button" (click)="info()">Buscar</button>
+                            </div>
+                            <div class="col my-2 t-employee overflow-auto">
+                                <h5 class="fw-bold my-1" *ngIf="extras.length > 0">Empleados encontrados</h5>
+                                <p *ngIf="extras.length > 0">Seleccione el empleado a añadir</p>
+                                <div class="row bg-light border border-2 rounded" 
+                                *ngFor="let e of extras" type="button" data-bs-toggle="modal" 
+                                data-bs-target="#competitorModal" (click)="select(e.id, e.name, e.area, e.job)">
+                                    <div class="col-6">
+                                        <p class="my-1">Nombre: {{e.name}}</p>
+                                        <p class="my-1">Apellidos: {{e.surnames}}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="my-1">Area: {{e.area}}</p>
+                                        <p class="my-1">Puesto: {{e.job}}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
-
-        <!-- Model Competitor -->
-        <div class="modal fade" id="competitorModal" tabindex="-1"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Nuevo colaborador</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form [formGroup]="competitorForm" (ngSubmit)="newCompetitor(competitorForm.value)">
-                            <div class="row my-1 ff">
-                                <div class="col-6">
-                                    <label class="form-label">Nombre</label>
-                                    <input class="form-control" formControlName="name">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Clave</label>
-                                    <input class="form-control" formControlName="id">
-                                </div>
-                            </div>
-                            <div class="row my-1">
-                                <div class="col-6">
-                                    <label class="form-label">Area</label>
-                                    <input class="form-control" formControlName="area">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Puesto</label>
-                                    <input class="form-control" formControlName="job">
-                                </div>
-                            </div>
-                            <div class="row-my-2">
-                                <div class="col">
-                                    <label class="form-label">Rol</label>
-                                    <select class="form-select" formControlName="rol">
-                                        <option selected>Tipo de cargo</option>
-                                        <option value="Lider de proyecto">Lider de proyecto</option>
-                                        <option value="Control de calidad">Control de calidad</option>
-                                        <option value="Programador">Programador</option>
-                                        <option value="Diseño">Diseño</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-outline-primary" type="submit">Enviar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-</div>
+
+    <!-- Model Competitor -->
+    <div class="modal fade" id="competitorModal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="competitorForm" (ngSubmit)="newCompetitor(competitorForm.value)">
+                        <div class="row my-1 ff">
+                            <div class="col-6">
+                                <label class="form-label">Nombre</label>
+                                <input class="form-control" formControlName="name">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Clave</label>
+                                <input class="form-control" formControlName="id">
+                            </div>
+                        </div>
+                        <div class="row my-1">
+                            <div class="col-6">
+                                <label class="form-label">Area</label>
+                                <input class="form-control" formControlName="area">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Puesto</label>
+                                <input class="form-control" formControlName="job">
+                            </div>
+                        </div>
+                        <div class="row-my-2">
+                            <div class="col">
+                                <label class="form-label">Rol</label>
+                                <select class="form-select" formControlName="rol">
+                                    <option selected>Tipo de cargo</option>
+                                    <option value="Lider de proyecto">Lider de proyecto</option>
+                                    <option value="Control de calidad">Control de calidad</option>
+                                    <option value="Programador">Programador</option>
+                                    <option value="Diseño">Diseño</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-primary" type="submit">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>

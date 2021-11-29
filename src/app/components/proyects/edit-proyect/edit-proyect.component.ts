@@ -14,6 +14,11 @@ export class EditProyectComponent implements OnInit {
   editForm: FormGroup;
   proyect = new Proyect;
   id: any = '';
+  user = {
+    id: '',
+    email: '',
+    rol: ''
+  }
 
   constructor(private formB: FormBuilder, private toast: ToastrService,
     private _service: ProyectService, private route: ActivatedRoute,
@@ -42,6 +47,7 @@ export class EditProyectComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.searchProyect(this.id);
   }
 
@@ -52,8 +58,8 @@ export class EditProyectComponent implements OnInit {
         area: res.payload.data()['area'],
         type: res.payload.data()['type'],
         description: res.payload.data()['description'],
-        dateStart: '',
-        dateEnd: ''
+        dateStart: res.payload.data()['dateStart'],
+        dateEnd: res.payload.data()['dateEnd']
       })
     })
   }

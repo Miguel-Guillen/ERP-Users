@@ -3,11 +3,14 @@
     font-size: 17px;
 }
 .tasks {
-    height: 70vh;
+    min-height: 100vh;
 }
 .t-employee {
     height: 40vh;
 }
 .proyect {
     height: max-content;
+}
+.h-table {
+    min-height: 80vh;
 }
