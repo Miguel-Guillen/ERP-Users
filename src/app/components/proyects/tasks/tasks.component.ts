@@ -50,6 +50,7 @@ export class TasksComponent implements OnInit {
       this.task.createdDate = new Date;
       this.task.estatus = 'Por hacer';
       this.task.idProyect = this.id,
+      this.task.view = '2'
       this._service.add(this.task).then(() => {
         this.toast.success('su tarea acaba de ser añadida exitosamente', 'Tarea añadida',
         { positionClass: 'toast-bottom-right' });
@@ -71,7 +72,7 @@ export class TasksComponent implements OnInit {
       this.competitor = [];
       res.forEach((element: any) => {
         e.push({
-          id: element.payload.doc.data()['id'],
+          idEmployee: element.payload.doc.data()['idEmployee'],
           name: element.payload.doc.data()['name'],
           idProyect: element.payload.doc.data()['idProyect']
         });

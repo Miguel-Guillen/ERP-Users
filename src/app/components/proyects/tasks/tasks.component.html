@@ -30,8 +30,8 @@
                         <div class="row my-2">
                             <div class="col-6">
                                 <label class="form-label">Asignar responsable</label>
-                                <select class="form-select" formControlName="responsable">
-                                    <option *ngFor="let c of competitor" value="{{c.id}}">{{c.name}}</option>
+                                <select class="form-select custom-select" formControlName="responsable">
+                                    <option *ngFor="let c of competitor" value="{{c.idEmployee}}">{{c.name}}</option>
                                 </select>
                                 <h6 class="mt-1 text-danger" *ngIf="competitors === false">No hay ningun trabajador añadido a este proyecto</h6>
                             </div>
@@ -43,7 +43,7 @@
                         <div class="row my-2">
                             <div class="col-6">
                                 <label class="form-label">Prioridad</label>
-                                <select formControlName="priority" class="form-select">
+                                <select formControlName="priority" class="form-select custom-select">
                                     <option value="Baja">Baja</option>
                                     <option value="Media">Media</option>
                                     <option value="Alta">Alta</option>

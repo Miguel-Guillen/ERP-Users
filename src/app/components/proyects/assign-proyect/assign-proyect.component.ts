@@ -36,7 +36,7 @@ export class AssignProyectComponent implements OnInit {
     private toast: ToastrService) {
       this.competitorForm = this.formB.group({
         name: new FormControl('', Validators.required),
-        id: new FormControl('', Validators.required),
+        idEmployee: new FormControl('', Validators.required),
         area: new FormControl('', Validators.required),
         job: new FormControl('', Validators.required),
         rol: new FormControl('', Validators.required)
@@ -62,10 +62,11 @@ export class AssignProyectComponent implements OnInit {
 
   getProyect(id: string){
     this._serviceProyect.getOne(id).subscribe((res: any) => {
-        this.proyect.push({
-          id: id,
-          ...res.payload.data()
-        });
+      this.proyect = [];
+      this.proyect.push({
+        id: id,
+        ...res.payload.data()
+      });
     })
     this.id = id;
     this.getCompetitor();

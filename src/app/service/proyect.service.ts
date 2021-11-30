@@ -18,6 +18,11 @@ export class ProyectService {
     return this.firestore.collection('proyects').doc(id).snapshotChanges()
   }
 
+  getMyProjects(): Observable<any>{
+    return this.firestore.collection('proyects', ref => ref
+    .orderBy('createdDate', 'asc')).snapshotChanges();
+  }
+
   add(proyect: any): Promise<any>{
     return this.firestore.collection('proyects').add(proyect);
   }

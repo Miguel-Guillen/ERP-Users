@@ -10,8 +10,12 @@
     height: 80vh;
 }
 .proyect {
-    height: 65vh;
+    height: 70vh;
 }
 .list-task {
     min-height: 70vh;
+}
+.image {
+    height: 20vh;
+    width: auto;
 }

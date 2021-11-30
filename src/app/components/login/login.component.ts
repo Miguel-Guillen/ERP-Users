@@ -47,27 +47,27 @@ export class LoginComponent implements OnInit {
       const password = values.password;
       this.myPerfil = [];
       this._service.get(email, password).subscribe((res: any) => {
-        res.forEach((element: any) => {
-          this.myPerfil.push({
-            id: element.payload.doc.id,
-            ...element.payload.doc.data()
+        if(res.length > 0){
+          res.forEach((element: any) => {
+            this.myPerfil.push({
+              id: element.payload.doc.id,
+              ...element.payload.doc.data()
+            });
           });
-        });
-        const credentials = {
-          id: this.myPerfil[0].id,
-          email: this.myPerfil[0].email,
-          rol: this.myPerfil[0].rol
-        }
-        if(this.myPerfil.length == 0) {
-          this.loginInvalid = true;
-          this.toast.warning('El correo o la contraseña no son correctos', 
-          'Datos incorrectos', { positionClass: 'toast-bottom-right' })
-        }else {
+          const credentials = {
+            id: this.myPerfil[0].id,
+            email: this.myPerfil[0].email,
+            rol: this.myPerfil[0].rol
+          }
           this.loginForm.reset();
           localStorage.setItem('user', JSON.stringify(credentials));
           this.route.navigate(['dashboard']);
+        }else {
+          this.loginInvalid = true;
+          this.toast.warning('Correo o contraseña incorrectos', 
+          'Datos incorrectos', { positionClass: 'toast-bottom-right' })
         }
-      })
+      });
     }else {
       this.loginInvalid = true;
       this.toast.warning('Los campos estan vacios', 'Datos invalidos', 

@@ -52,9 +52,9 @@ export class EditTaskComponent implements OnInit {
         requirements: res.payload.data()['requirements'],
         image: '',
         dueDate: res.payload.data()['dueDate'],
-        responsable: '',
+        responsable: res.payload.data()['responsable'],
         commentary: '',
-        priority: ''
+        priority: res.payload.data()['priority'],
       });
       this.info(res.payload.data()['idProyect']);
     })
@@ -86,7 +86,7 @@ export class EditTaskComponent implements OnInit {
       this.competitor = [];
       res.forEach((element: any) => {
         e.push({
-          id: element.payload.doc.data()['id'],
+          idEmployee: element.payload.doc.data()['idEmployee'],
           name: element.payload.doc.data()['name'],
           idProyect: element.payload.doc.data()['idProyect']
         });

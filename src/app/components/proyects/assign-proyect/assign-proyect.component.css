@@ -8,9 +8,44 @@
 .t-employee {
     height: 40vh;
 }
+.accordion {
+    max-height: 75vh;
+    overflow: auto;
+}
 .proyect {
     height: max-content;
 }
 .h-table {
     min-height: 80vh;
+}
+.fa-user {
+    font-size: 40px;
+}
+.options:hover {
+    background-color: rgb(161, 178, 196) !important;
+}
+.image {
+    height: 15vh;
+    width: auto;
+}
+
+.accordion::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.accordion::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+.accordion::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+    display: none;
+}
+.accordion::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+.accordion::-webkit-scrollbar-thumb {
+    background-color: #838383;
+    border-radius: 20px;
+    border: solid #9a9a9b 2px;
+}
+.accordion::-webkit-scrollbar-thumb:hover {
+    background-color: #b3b3b3;
 }

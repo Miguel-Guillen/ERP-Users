@@ -36,8 +36,9 @@ export class DashboardComponent implements OnInit {
   }
 
   getProyects(){
-    this._serviceProyect.get().subscribe((res: any) => {
+    this._serviceProyect.getMyProjects().subscribe((res: any) => {
       const proyects: any = [];
+      this.proyects = [];
       res.forEach((element: any) => {
         proyects.push({
           id: element.payload.doc.id,
@@ -45,28 +46,26 @@ export class DashboardComponent implements OnInit {
         });
       });
       for(const p of proyects){
-        if(p.id == this.myInfo[0].idProyect) this.proyects.push(p)
+        for(const i of this.myInfo){
+          if(p.id == i.idProyect) this.proyects.push(p)
+        }
       }
     })
   }
 
   info(){
-    this._serviceCompetitor.get().subscribe((res: any) => {
-      const competitors: any = [];
+    this._serviceCompetitor.getById(this.user.id).subscribe((res: any) => {
       res.forEach((element: any) => {
-        competitors.push({
+        this.myInfo.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      for(const c of competitors){
-        if(c.idEmployee == this.user.id) this.myInfo.push(c)
-      }
     })
   }
 
   myTasks(){
-    this._serviceTask.get().subscribe((res: any) => {
+    this._serviceTask.getMyTasks().subscribe((res: any) => {
       const t: any = [];
       this.tasks = [];
       res.forEach((element: any) => {
@@ -82,7 +81,9 @@ export class DashboardComponent implements OnInit {
   }
 
   task(id: string){
+    const view = '1';
     this.route.navigate([`/sendTask/${id}`]);
+    this._serviceTask.update(id, view).then(() => {});
   }
 
   // section administrator

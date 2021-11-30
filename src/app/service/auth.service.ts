@@ -14,13 +14,4 @@ export class AuthService {
     .where('email', '==', email).where('password', '==', password)).snapshotChanges();
   }
 
-  // authenticated(): boolean{
-  //   const token = localStorage.getItem('user')
-  //   if(!token){
-  //     return false;
-  //   }else {
-  //     return true;
-  //   }
-  // }
-
 }

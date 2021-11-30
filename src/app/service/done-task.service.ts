@@ -9,8 +9,9 @@ export class DoneTaskService {
 
   constructor(private firestore: AngularFirestore) { }
 
-  getOne(id: string): Observable<any>{
-    return this.firestore.collection('doneTask').doc(id).snapshotChanges()
+  getById(id: string): Observable<any>{
+    return this.firestore.collection('doneTask', ref => ref
+    .where('idTask', '==', id)).snapshotChanges()
   }
 
   add(doneTask: any): Promise<any>{

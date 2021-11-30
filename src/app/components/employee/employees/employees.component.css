@@ -3,5 +3,27 @@
     font-size: 17px;
 }
 .h-table {
-    min-height: 75vh;
+    max-height: 180vh;
+    overflow: auto;
+}
+
+.h-table::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.h-table::-webkit-scrollbar:vertical {
+    width: 10px;
+}
+.h-table::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+    display: none;
+}
+.h-table::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+.h-table::-webkit-scrollbar-thumb {
+    background-color: #838383;
+    border-radius: 20px;
+    border: solid #9a9a9b 2px;
+}
+.h-table::-webkit-scrollbar-thumb:hover {
+    background-color: #b3b3b3;
 }

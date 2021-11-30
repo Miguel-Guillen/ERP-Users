@@ -23,8 +23,8 @@
                         <h5 class="my-4 ms-3 fw-bold">Seleccione el proyecto a asignar la tarea</h5>
                         <div>
                             <div class="table table-borderless border border-3 shadow my-1 
-                            rounded bg-white" 
-                            type="button" *ngFor="let p of proyects | proyects: search" (click)="getProyect(p.id)">
+                            rounded bg-white options" type="button" (click)="getProyect(p.id)"
+                            *ngFor="let p of proyects | proyects: search">
                                 <div class="row my-1 p-2">
                                     <p class="col-2 text-center my-auto ff">{{p.name}}</p>
                                     <p class="col-4 text-center my-auto ff">{{p.description}}</p>
@@ -59,8 +59,9 @@
         <div class="col-4 bg-light border border-2 shadow p-3 proyect">
             <div class="card ff">
                 <div class="row px-3 py-2">
-                    <div class="col">
-                        <h5 class="fw-bold">Proyecto: {{proyect[0].name}}</h5>
+                    <div class="col text-center">
+                        <img src="../../../../assets/img/libro.png" class="image" alt="">
+                        <h5 class="fw-bold my-3">Proyecto: {{proyect[0].name}}</h5>
                         <p>Descripcion: {{proyect[0].description}}</p>
                     </div>
                 </div>
@@ -90,46 +91,52 @@
             <div class="bg-light border border-2 mt-4" *ngIf="tasks.length == 0">
                 <h5 class="ms-3 py-2 ff my-auto">No hay ninguna tarea asignada al proyecto</h5>
             </div>
-            <ngb-accordion [closeOthers]="true" activeIds="static-1" *ngIf="tasks.length > 0">
-                <ngb-panel title="{{t.title}}" *ngFor="let t of tasks">
-                  <ng-template ngbPanelContent>
-                        <div class="row ff">
-                            <div class="col-12 mb-3 d-flex">
-                                <p class="flex-grow-1 my-auto">Titulo: {{t.title}}</p>
-                                <button class="btn btn-outline-success me-1" (click)="editTask(t.id)">Editar</button>
-                                <button class="btn btn-outline-danger" (click)="deleteTask(t.id)">Borrar</button>
+            <div class="accordion">
+                <ngb-accordion [closeOthers]="true" activeIds="static-1" *ngIf="tasks.length > 0">
+                    <ngb-panel title="{{t.title}}" *ngFor="let t of tasks">
+                      <ng-template ngbPanelContent>
+                            <div class="row ff">
+                                <div class="col-12 mb-3 d-flex">
+                                    <p class="flex-grow-1 my-auto">Titulo: {{t.title}}</p>
+                                    <button class="btn btn-outline-success me-1" (click)="editTask(t.id)">Editar</button>
+                                    <button class="btn btn-outline-danger" (click)="deleteTask(t.id)">Borrar</button>
+                                </div>
+                                <div class="col-6">
+                                    <p>Descripcion: {{t.description}}</p>
+                                    <p>Requerimientos: {{t.requirements}}</p>
+                                </div>
+                                <div class="col-6">
+                                    <p>Prioridad: {{t.priority}}</p>
+                                    <p>Responsable: {{t.responsable}}</p>
+                                    <p>Fecha de entrega: {{t.dueDate}}</p>
+                                    <p>Diagramas o documentos {{t.images}}</p>
+                                    <p>Comentarios: </p>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <p>Descripcion: {{t.description}}</p>
-                                <p>Requerimientos: {{t.requirements}}</p>
-                            </div>
-                            <div class="col-6">
-                                <p>Prioridad: {{t.priority}}</p>
-                                <p>Responsable: {{t.responsable}}</p>
-                                <p>Fecha de entrega: {{t.dueDate}}</p>
-                                <p>Diagramas o documentos {{t.images}}</p>
-                                <p>Comentarios: </p>
-                            </div>
-                        </div>
-                  </ng-template>
-                </ngb-panel>
-            </ngb-accordion>
+                      </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </div>
 
             <!-- competitor table -->
-            <div class="row mt-4 mb-3 mx-auto">
+            <div class="row mt-4 mb-3 mx-auto accordion">
                 <table class="table table-borderless bg-white border border-2 shadow" *ngIf="competitors.length > 0">
                     <thead>
                         <tr class="table-success ff">
-                            <th class="col-1 text-center">Participante</th>
-                            <th class="col-2 text-center">Area</th>
+                            <th class="col-1 text-center"></th>
+                            <th class="col-1 text-center">Integrantes</th>
+                            <th class="col-1 text-center">Area</th>
                             <th class="col-1 text-center">Cargo</th>
                             <th class="col-1 text-center">Remover</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let c of competitors">
+                            <td class="col-1 text-center">
+                                <i class="fas fa-user text-info"></i>
+                            </td>
                             <td class="col-1 ff text-center">{{c.name}}</td>
-                            <td class="col-2 ff text-center">{{c.area}}</td>
+                            <td class="col-1 ff text-center">{{c.area}}</td>
                             <td class="col-1 ff text-center">{{c.rol}}</td>
                             <td class="col-1 text-center">
                                 <button class="btn btn-outline-danger" (click)="deleteCompetitor(c.id)">
@@ -189,7 +196,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-outline-danger me-2" 
+                    data-bs-dismiss="modal" (click)="extras = []">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -213,7 +221,7 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Clave</label>
-                                <input class="form-control" formControlName="id">
+                                <input class="form-control" formControlName="idEmployee">
                             </div>
                         </div>
                         <div class="row my-1">

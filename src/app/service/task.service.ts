@@ -18,6 +18,11 @@ export class TaskService {
     return this.firestore.collection('task').doc(id).snapshotChanges()
   }
 
+  getMyTasks(): Observable<any>{
+    return this.firestore.collection('task', ref => ref
+    .orderBy('createdDate', 'desc')).snapshotChanges();
+  }
+
   add(empleado: any): Promise<any>{
     return this.firestore.collection('task').add(empleado);
   }

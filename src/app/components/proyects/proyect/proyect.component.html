@@ -29,8 +29,7 @@
                                 <th class="col-1 text-center">Tipo</th>
                                 <th class="col-4 text-center">Descripcion</th>
                                 <th class="col-2 text-center">Area</th>
-                                <th class="col-1 text-center">Fecha inicio</th>
-                                <th class="col-1 text-center">Fecha entrega</th>
+                                <th class="col-2 text-center">Fecha</th>
                                 <th class="col-2 text-center">Detalles</th>
                             </tr>
                         </thead>
@@ -40,8 +39,7 @@
                                 <td class="col-1 text-center ff">{{p.type}}</td>
                                 <td class="col-4 text-center ff">{{p.description}}</td>
                                 <td class="col-2 text-center ff">{{p.area}}</td>
-                                <td class="col-1 text-center ff">{{p.dateStart}}</td>
-                                <td class="col-1 text-center ff">{{p.dateEnd}}</td>
+                                <td class="col-2 text-center ff">Inicio: {{p.dateStart}} Finaliza: {{p.dateEnd}}</td>
                                 <td class="col-2 text-center">
                                     <button class="btn btn-outline-success me-1" (click)="searchProyect(p.id)">
                                         <i class="fas fa-user-edit"></i>
@@ -53,6 +51,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="col border-bottom border-5 px-0" type="button">
+                        <img src="../../../../assets/img/angulo-hacia-abajo.png" height="15px" alt=""
+                        class="me-2">
+                        <p class="d-inline">Mostrar completados</p>
+                    </div>
                 </div>
         
                 <!-- Modal add -->

@@ -30,18 +30,18 @@
                         <h5 class="pb-2 ms-2 fw-bold border-bottom border-3">Tareas pendientes</h5>
                         <div class="row px-2 d-flex" *ngFor="let t of tasks" type="button"
                         (click)="task(t.id)">
+                            <div class="col-2 my-auto px-0">
+                                <button class="btn border border-2" *ngIf="t.view == '2'; view">
+                                    <i class="fas fa-check"></i>
+                                    <small class="d-block">No visto</small>
+                                </button>
+                            </div>
                             <div class="col-10">
                                 <p class="my-1 fw-bold">{{t.title}}</p>
                                 <div class="row">
                                     <p class="col my-1">Prioridad: {{t.priority}}</p>
                                     <p class="col my-1">Entrega: {{t.dueDate}}</p>
                                 </div>
-                            </div>
-                            <div class="col-2 my-auto px-0">
-                                <button class="btn border border-2 float-right">
-                                    <i class="fas fa-check"></i>
-                                    <small class="d-block">No visto</small>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -50,22 +50,22 @@
         
                 <div class="row my-5">
                     <div class="card-group d-flex justify-content-around">
-                        <div class="col-4 border border-3 shadow-sm ff" type="button"
+                        <div class="col-3 border border-3 shadow-sm ff" type="button"
                         [routerLink]="['/myTasks']">
-                            <div class="row bg-primary p-2 border-bottom border-2 text-center">
-                                <h5 class="my-auto">Todas mis tareas</h5>
+                            <div class="row bg-info p-2 border-bottom border-3 text-center">
+                                <img src="../../../../assets/img/tarea.png" class="image mx-auto" alt="">
                             </div>
-                            <div class="row py-2 px-3 text-center">
-                                <p>Ver todas mis tareas asignadas y completadas</p>
+                            <div class="row bg-white py-2 px-3 text-center">
+                                <p>Todas mis tareas asignadas y completadas</p>
                             </div>
                         </div>
-                        <div class="col-4 border border-3 shadow-sm ff" type="button"
+                        <div class="col-3 border border-3 shadow-sm ff" type="button"
                         [routerLink]="['/myProyects']">
-                            <div class="row bg-primary p-2 border-bottom border-2 text-center">
-                                <h5 class="my-auto">Todos mis proyectos</h5>
+                            <div class="row bg-info p-2 border-bottom border-3 text-center">
+                                <img src="../../../../assets/img/carpeta.png" class="image mx-auto" alt="">
                             </div>
                             <div class="row py-2 px-3 text-center">
-                                <p>Ver todas mis proyectos asignadas y completadas</p>
+                                <p>Todos mis proyectos asignados y finalizados</p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
             <div class="row bg-info">
                 <h5 class="my-2 text-center text-white">Finalizada</h5>
             </div>
-            <div class="row border-bottom border-2 py-3" *ngFor="let t of taskToDo">
+            <div class="row border-bottom border-2 py-3" *ngFor="let t of taskDone">
                 <div class="col" type="button" (click)="viewTask()">
                     <p class="fw-bold my-1">{{t.title}}</p>
                     <p class="my-1">Responsable: {{t.responsable}}</p>
@@ -143,4 +143,11 @@
         </div>
 
     </div>
+</ng-template>
+
+<ng-template #view>
+    <button class="btn border border-2">
+        <i class="fas fa-check text-success"></i>
+        <small class="d-block">Visto</small>
+    </button>
 </ng-template>
