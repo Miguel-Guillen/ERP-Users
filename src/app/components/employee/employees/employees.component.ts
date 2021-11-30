@@ -36,7 +36,13 @@ export class EmployeesComponent implements OnInit {
         area: new FormControl("", Validators.compose([
           Validators.required
         ])),
+        email: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
         password: new FormControl("", Validators.compose([
+          Validators.required
+        ])),
+        rol: new FormControl("", Validators.compose([
           Validators.required
         ]))
       })

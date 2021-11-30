@@ -34,8 +34,21 @@
                         </div>
                         <div class="row my-2">
                             <div class="col-6">
+                                <label class="form-label">Correo</label>
+                                <input type="email" class="form-control" formControlName="email">
+                            </div>
+                            <div class="col-6">
                                 <label class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" formControlName="password">
+                            </div>
+                        </div>
+                        <div class="roy my-2">
+                            <div class="col">
+                                <label class="form-label">Privilegios</label>
+                                <select formControlName="rol" class="form-select">
+                                    <option value="usuario">Usuario</option>
+                                    <option value="administrador">Administrador</option>
+                                </select>
                             </div>
                         </div>
                         <button class="btn btn-outline-primary mt-2 float-end" type="submit">Enviar</button>

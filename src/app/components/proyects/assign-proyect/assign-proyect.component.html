@@ -19,35 +19,22 @@
 
                 <!-- project table -->
                 <div class="h-table">
-                    <table class="table table-borderless bg-white border border-2 shadow" 
-                    *ngIf="id === ''; else showProyect">
-                        <thead>
-                            <tr class="table-success ff">
-                                <th class="col-1 text-center">Nombre</th>
-                                <th class="col-1 text-center">Tipo</th>
-                                <th class="col-4 text-center">Descripcion</th>
-                                <th class="col-1 text-center">Area</th>
-                                <th class="col-1 text-center">Fecha inicio</th>
-                                <th class="col-1 text-center">Fecha entrega</th>
-                                <th class="col-1 text-center">Detalles</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let p of proyects | proyects: search">
-                                <td class="col-1 text-center ff">{{p.name}}</td>
-                                <td class="col-1 text-center ff">{{p.type}}</td>
-                                <td class="col-4 text-center ff">{{p.description}}</td>
-                                <td class="col-1 text-center ff">{{p.area}}</td>
-                                <td class="col-1 text-center ff">{{p.dateStart}}</td>
-                                <td class="col-1 text-center ff">{{p.dateEnd}}</td>
-                                <td class="col-1 text-center">
-                                    <button class="btn btn-outline-success" (click)="getProyect(p.id)">
-                                        <i class="fas fa-book"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="col vh-task ff" *ngIf="id === ''; else showProyect">
+                        <h5 class="my-4 ms-3 fw-bold">Seleccione el proyecto a asignar la tarea</h5>
+                        <div>
+                            <div class="table table-borderless border border-3 shadow my-1 
+                            rounded bg-white" 
+                            type="button" *ngFor="let p of proyects | proyects: search" (click)="getProyect(p.id)">
+                                <div class="row my-1 p-2">
+                                    <p class="col-2 text-center my-auto ff">{{p.name}}</p>
+                                    <p class="col-4 text-center my-auto ff">{{p.description}}</p>
+                                    <p class="col-2 text-center my-auto ff">{{p.area}}</p>
+                                    <p class="col-2 text-center my-auto ff">{{p.dateStart}}</p>
+                                    <p class="col-2 text-center my-auto ff">{{p.dateEnd}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
         
             </div>
@@ -73,7 +60,7 @@
             <div class="card ff">
                 <div class="row px-3 py-2">
                     <div class="col">
-                        <h5>Proyecto: {{proyect[0].name}}</h5>
+                        <h5 class="fw-bold">Proyecto: {{proyect[0].name}}</h5>
                         <p>Descripcion: {{proyect[0].description}}</p>
                     </div>
                 </div>
@@ -88,6 +75,8 @@
                     </div>
                 </div>
             </div>
+            <button class="btn btn-outline-success mt-3"
+            (click)="id = '' ">Volver</button>
         </div>
 
         <!-- accordion -->
@@ -128,7 +117,7 @@
 
             <!-- competitor table -->
             <div class="row mt-4 mb-3 mx-auto">
-                <table class="table table-borderless bg-light border border-2 shadow" *ngIf="competitors.length > 0">
+                <table class="table table-borderless bg-white border border-2 shadow" *ngIf="competitors.length > 0">
                     <thead>
                         <tr class="table-success ff">
                             <th class="col-1 text-center">Participante</th>
@@ -176,6 +165,7 @@
                                     <option value="Diseño de aplicaciones">Diseño de aplicaciones</option>
                                     <option value="Programacion de aplicaciones">Programacion de aplicaciones</option>
                                     <option value="Pruebas y Procesos de calidad">Pruebas y Procesos de calidad</option>
+                                    <option value="contabilidad">Contabilidad</option>
                                 </select>
                                 <button class="btn btn-outline-success ms-1" type="button" (click)="info()">Buscar</button>
                             </div>
@@ -199,7 +189,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -232,24 +222,24 @@
                                 <input class="form-control" formControlName="area">
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Puesto</label>
+                                <label class="form-label">Cargo</label>
                                 <input class="form-control" formControlName="job">
                             </div>
                         </div>
-                        <div class="row-my-2">
-                            <div class="col">
-                                <label class="form-label">Rol</label>
+                        <div class="row-my-1">
+                            <div class="col my-2">
+                                <label class="form-label">Puesto de trabajo</label>
                                 <select class="form-select" formControlName="rol">
-                                    <option selected>Tipo de cargo</option>
                                     <option value="Lider de proyecto">Lider de proyecto</option>
                                     <option value="Control de calidad">Control de calidad</option>
                                     <option value="Programador">Programador</option>
                                     <option value="Diseño">Diseño</option>
+                                    <option value="Otro">Otro</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mt-3">
-                            <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
                             <button type="button" class="btn btn-outline-primary" type="submit">Enviar</button>
                         </div>
                     </form>

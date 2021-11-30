@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AssignService } from 'src/app/service/assign.service';
 import { ProyectService } from 'src/app/service/proyect.service';
 import { TaskService } from 'src/app/service/task.service';
@@ -12,6 +13,10 @@ export class DashboardComponent implements OnInit {
   proyects: any[] = [];
   myInfo: any[] = [];
   tasks: any[] = [];
+  taskToDo: any[] = [];
+  taskInProgress: any[] = [];
+  taskReview: any[] = [];
+  taskDone: any[] = [];
   isAdmin: boolean | undefined;
   user = {
     id: '',
@@ -19,7 +24,7 @@ export class DashboardComponent implements OnInit {
     rol: ''
   }
 
-  constructor(private _serviceProyect: ProyectService, 
+  constructor(private _serviceProyect: ProyectService, private route: Router,
     private _serviceCompetitor: AssignService, private _serviceTask: TaskService) { }
 
   ngOnInit(): void {
@@ -27,6 +32,7 @@ export class DashboardComponent implements OnInit {
     this.info();
     this.getProyects();
     this.myTasks();
+    this.getTask();
   }
 
   getProyects(){
@@ -54,7 +60,7 @@ export class DashboardComponent implements OnInit {
         });
       });
       for(const c of competitors){
-        if(c.id == this.user.id) this.myInfo.push(c)
+        if(c.idEmployee == this.user.id) this.myInfo.push(c)
       }
     })
   }
@@ -74,4 +80,39 @@ export class DashboardComponent implements OnInit {
       }
     })
   }
+
+  task(id: string){
+    this.route.navigate([`/sendTask/${id}`]);
+  }
+
+  // section administrator
+
+  getTask(){
+    if(this.user.rol == 'administrador'){
+      this._serviceTask.get().subscribe((res: any) => {
+        const tasks: any = [];
+        this.taskToDo = [];
+        this.taskInProgress = [];
+        this.taskReview = [];
+        this.taskDone = [];
+        res.forEach((element: any) => {
+          tasks.push({
+            id: element.payload.doc.id,
+            ...element.payload.doc.data()
+          });
+        });
+        for(const t of tasks){
+          if(t.estatus == 'Por hacer' || t.estatus == 'Rehacer') this.taskToDo.push(t);
+          if(t.estatus == 'En progreso') this.taskInProgress.push(t);
+          if(t.estatus == 'Revision') this.taskReview.push(t);
+          if(t.estatus == 'Terminado') this.taskDone.push(t);
+        }
+      })
+    }
+  }
+
+  viewTask(){
+    this.route.navigate(['/assign-proyect'])
+  }
+
 }

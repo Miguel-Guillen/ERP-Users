@@ -2,9 +2,16 @@
     font-size: 17px;
     font-family: 'Times New Roman', Times, serif;
 }
+.ffs {
+    font-size: 15px;
+    font-family: 'Times New Roman', Times, serif;
+}
 .task {
     height: 80vh;
 }
 .proyect {
     height: 65vh;
+}
+.list-task {
+    min-height: 70vh;
 }

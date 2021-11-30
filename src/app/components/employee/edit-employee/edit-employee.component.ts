@@ -36,7 +36,13 @@ export class EditEmployeeComponent implements OnInit {
       area: new FormControl("", Validators.compose([
         Validators.required
       ])),
+      email: new FormControl("", Validators.compose([
+        Validators.required
+      ])),
       password: new FormControl("", Validators.compose([
+        Validators.required
+      ])),
+      rol: new FormControl("", Validators.compose([
         Validators.required
       ]))
     })
@@ -55,6 +61,8 @@ export class EditEmployeeComponent implements OnInit {
         surnames: res.payload.data()['surnames'],
         job: res.payload.data()['job'],
         area: res.payload.data()['area'],
+        email: res.payload.data()['email'],
+        rol: res.payload.data()['rol'],
         password: ''
       })
     })
