@@ -10,8 +10,8 @@
             *ngIf="user.rol == 'administrador'; else noAdmin">
 
                 <div class="col-12 mb-4 mt-3 d-flex">
-                    <button class="btn btn-outline-primary ff" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">Nuevo proyecto</button>
+                    <button class="btn border-bottom border-4 me-2 ff">Asignados</button>
+                    <button class="btn border-bottom border-4 ff">Completados</button>
                     <div class="col d-flex justify-content-end p-0">
                         <input type="search" class="form-control w-50" placeholder="buscar por nombre"
                         [(ngModel)]="search">
@@ -21,40 +21,28 @@
                     </div>
                 </div>
         
-                <div class="col h-table">
-                    <table class="table table-borderless bg-white border border-2 shadow">
-                        <thead>
-                            <tr class="table-success ff">
-                                <th class="col-1 text-center">Nombre</th>
-                                <th class="col-1 text-center">Tipo</th>
-                                <th class="col-4 text-center">Descripcion</th>
-                                <th class="col-2 text-center">Area</th>
-                                <th class="col-2 text-center">Fecha</th>
-                                <th class="col-2 text-center">Detalles</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let p of proyects | proyects: search">
-                                <td class="col-1 text-center ff">{{p.name}}</td>
-                                <td class="col-1 text-center ff">{{p.type}}</td>
-                                <td class="col-4 text-center ff">{{p.description}}</td>
-                                <td class="col-2 text-center ff">{{p.area}}</td>
-                                <td class="col-2 text-center ff">Inicio: {{p.dateStart}} Finaliza: {{p.dateEnd}}</td>
-                                <td class="col-2 text-center">
-                                    <button class="btn btn-outline-success me-1" (click)="searchProyect(p.id)">
-                                        <i class="fas fa-user-edit"></i>
-                                    </button>
-                                    <button class="btn btn-outline-danger" (click)="deleteProyect(p.id)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="col border-bottom border-5 px-0" type="button">
-                        <img src="../../../../assets/img/angulo-hacia-abajo.png" height="15px" alt=""
-                        class="me-2">
-                        <p class="d-inline">Mostrar completados</p>
+                <div class="col-12 h-table">
+                    <button class="btn btn-outline-primary ff mb-2 mx-start" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">Nuevo proyecto</button>
+                    <div class="row mt-2 mb-4 d-flex justify-content-center">
+                        <div class="card ff m-1 bg-white border border-3" 
+                        *ngFor="let p of proyects" type="button" (click)="searchProyect(p.id)">
+                            <div class="row px-1 my-2">
+                                <div class="col">
+                                    <p class="fw-bold mt-1 mb-2">{{p.name}}</p>
+                                    <p class="my-1">{{ (p.description.length > 100)? 
+                                        (p.description | slice: 0:200) + '...' : (p.description) }}</p>
+                                </div>
+                            </div>
+                            <div class="row px-1 mb-1 mb-2">
+                                <div class="col">
+                                    <p class="my-1">Tipo: {{p.type}}</p>
+                                    <p class="my-1">Area: {{p.area}}</p>
+                                    <p class="my-1">Estatus: {{p.estatus}}</p>
+                                    <small class="my-1">Entrega: {{p.dateEnd | date: format}}</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
         

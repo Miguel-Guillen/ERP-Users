@@ -28,6 +28,7 @@ import { SidebarComponent } from './components/shared/sidebar/sidebar.component'
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AcercadeComponent } from './components/dashboard/acercade/acercade.component';
+import { ReplacePipe } from './pipes/replace.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { AcercadeComponent } from './components/dashboard/acercade/acercade.comp
     SidebarComponent,
     FooterComponent,
     AcercadeComponent,
+    ReplacePipe,
   ],
   imports: [
     BrowserModule,

@@ -83,63 +83,77 @@
 </div>
 
 <ng-template #noAdmin>
-    <div class="row d-flex justify-content-center pt-5 px-5 pb-2 ffs">
-        <h5 class="mb-3 fw-bold">Todas las actividades</h5>
+    <div class="row d-flex justify-content-center pt-5 px-5 pb-2 ff">
 
-        <div class="col-3 bg-white border border-2 list-task">
-            <div class="row bg-info">
-                <h5 class="my-2 text-center text-white">Por hacer</h5>
-            </div>
-            <div class="row border-bottom border-2 py-3" *ngFor="let td of taskToDo">
-                <div class="col t" type="button" (click)="viewTask()">
-                    <p class="fw-bold my-1">{{td.title}}</p>
-                    <p class="my-1">Responsable: {{td.responsable}}</p>
-                    <p class="my-1">Proyecto: {{td.idProyect}}</p>
-                    <small class="text-muted my-1">Entrega: {{td.dueDate}}</small>
-                </div>
+        <div class="col-12 mb-4 d-flex">
+            <button class="btn border-bottom border-4 me-2">Tablero</button>
+            <button class="btn border-bottom border-4">Graficos</button>
+            <div class="col d-flex justify-content-end p-0">
+                <button class="btn border border-4 rounded-circle px-2 bg-white shadow-sm">
+                    <img src="../../../../assets/img/correo.png" height="30px" alt="">
+                </button>
             </div>
         </div>
 
-        <div class="col-3 bg-white border-top border-bottom border-end">
-            <div class="row bg-info">
-                <h5 class="my-2 text-center text-white">En progreso</h5>
-            </div>
-            <div class="row border-bottom border-2 py-3" *ngFor="let ti of taskInProgress">
-                <div class="col" type="button" (click)="viewTask()">
-                    <p class="fw-bold my-1">{{ti.title}}</p>
-                    <p class="my-1">Responsable: {{ti.responsable}}</p>
-                    <p class="my-1">Proyecto: {{ti.idProyect}}</p>
-                    <small class="text-muted my-1">Entrega: {{ti.dueDate}}</small>
-                </div>
-            </div>
-        </div>
+        <h5 class="mb-3 ms-3 fw-bold">Tablero de actividades</h5>
+        <div class="row dash overflow-auto ffs px-0">
 
-        <div class="col-3 bg-white border-top border-bottom border-end">
-            <div class="row bg-info">
-                <h5 class="my-2 text-center text-white">Revision de calidad</h5>
-            </div>
-            <div class="row border-bottom border-2 py-3" *ngFor="let tr of taskReview">
-                <div class="col" type="button" (click)="viewTask()">
-                    <p class="fw-bold my-1">{{tr.title}}</p>
-                    <p class="my-1">Responsable: {{tr.responsable}}</p>
-                    <p class="my-1">Proyecto: {{tr.idProyect}}</p>
-                    <small class="text-muted my-1">Entrega: {{tr.dueDate}}</small>
+            <div class="col-3 bg-white border border-2">
+                <div class="row bg-info">
+                    <h5 class="my-2 text-center text-white">Por hacer</h5>
+                </div>
+                <div class="row border-bottom border-2 py-1" *ngFor="let td of taskToDo">
+                    <div class="col tasks" type="button" (click)="viewTask()">
+                        <p class="fw-bold my-1">{{td.title}}</p>
+                        <p class="my-1">Asignada: {{td.responsable}}</p>
+                        <p class="my-1">Proyecto: {{td.idProyect}}</p>
+                        <small class="text-muted my-1">Entrega: {{td.dueDate}}</small>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-3 bg-white border-top border-bottom border-end">
-            <div class="row bg-info">
-                <h5 class="my-2 text-center text-white">Finalizada</h5>
-            </div>
-            <div class="row border-bottom border-2 py-3" *ngFor="let t of taskDone">
-                <div class="col" type="button" (click)="viewTask()">
-                    <p class="fw-bold my-1">{{t.title}}</p>
-                    <p class="my-1">Responsable: {{t.responsable}}</p>
-                    <p class="my-1">Proyecto: {{t.idProyect}}</p>
-                    <small class="text-muted my-1">Entrega: {{t.dueDate}}</small>
+            <div class="col-3 bg-white border-top border-bottom border-end">
+                <div class="row bg-info">
+                    <h5 class="my-2 text-center text-white">En progreso</h5>
+                </div>
+                <div class="row border-bottom border-2 py-1" *ngFor="let ti of taskInProgress">
+                    <div class="col tasks" type="button" (click)="viewTask()">
+                        <p class="fw-bold my-1">{{ti.title}}</p>
+                        <p class="my-1">Asignada: {{ti.responsable}}</p>
+                        <p class="my-1">Proyecto: {{ti.idProyect}}</p>
+                        <small class="text-muted my-1">Entrega: {{ti.dueDate}}</small>
+                    </div>
                 </div>
             </div>
+
+            <div class="col-3 bg-white border-top border-bottom border-end">
+                <div class="row bg-info">
+                    <h5 class="my-2 text-center text-white">Revision de calidad</h5>
+                </div>
+                <div class="row border-bottom border-2 py-1" *ngFor="let tr of taskReview">
+                    <div class="col tasks" type="button" (click)="viewTask()">
+                        <p class="fw-bold my-1">{{tr.title}}</p>
+                        <p class="my-1">Asignada: {{tr.responsable}}</p>
+                        <p class="my-1">Proyecto: {{tr.idProyect}}</p>
+                        <small class="text-muted my-1">Entrega: {{tr.dueDate}}</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 bg-white border-top border-bottom border-end">
+                <div class="row bg-info">
+                    <h5 class="my-2 text-center text-white">Finalizada</h5>
+                </div>
+                <div class="row border-bottom border-2 py-1" *ngFor="let t of taskDone">
+                    <div class="col tasks" type="button" (click)="viewTask()">
+                        <p class="fw-bold my-1">{{t.title}}</p>
+                        <p class="my-1">Asignada: {{t.responsable}}</p>
+                        <p class="my-1">Proyecto: {{t.idProyect}}</p>
+                        <small class="text-muted my-1">Entrega: {{t.dueDate}}</small>
+                    </div>
+                </div>
+            </div>
+            
         </div>
 
     </div>

@@ -1,7 +1,10 @@
 .ff {
-    font-size: 17px;
+    font-size: 19x;
     font-family: 'Times New Roman', Times, serif;
 }
 .proyect-form  {
-    height: max-content;
+    height: 90vh;
+}
+i {
+    font-size: 36px !important;
 }

@@ -20,6 +20,7 @@ export class ProyectComponent implements OnInit {
     email: '',
     rol: ''
   }
+  format = 'dd/MM/yyyy';
 
   constructor(private formB: FormBuilder, private _service: ProyectService,
     private route: Router, private toast: ToastrService) {
@@ -69,6 +70,7 @@ export class ProyectComponent implements OnInit {
   newProyect(values: any){
     if(this.proyectForm.valid){
       this.proyect = values;
+      this.proyect.estatus = 'Activo';
       this.proyect.createdDate = new Date;
       this._service.add(this.proyect).then(() => {
         this.toast.success('El proyecto ha sido añadido con exito', 'Proyecto añadido', 
@@ -82,16 +84,6 @@ export class ProyectComponent implements OnInit {
       this.toast.warning('Los datos no son validos o los campos estan vacios'
       , 'Datos invalidos', { positionClass: 'toast-bottom-right' });
     }
-  }
-
-  deleteProyect(id: string){
-    this._service.delete(id).then(() => {
-      this.toast.info('El proyecto ha sido borrado con exito', 'Proyecto borrado', 
-      { positionClass: 'toast-bottom-right' })    
-    }).catch(err => {
-      this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al borrar el proyecto', 
-      { positionClass: 'toast-bottom-right' });
-    })
   }
 
 }

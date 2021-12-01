@@ -5,17 +5,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class EmployeePipe implements PipeTransform {
 
-  transform(value: any, ...arg: any[]): any {
-    const search = [];
-    for(const s of value){
-      if(s.name.toLowerCase().indexOf(arg) > -1 || 
-      s.surnames.toLowerCase().indexOf(arg) > -1 ||
-      s.job.toLowerCase().indexOf(arg) > -1 || 
-      s.area.toLowerCase().indexOf(arg) > -1){
-        search.push(s);
-      }
-    }
-    return search;
+  transform(value: any, arg: any): any {
+    if(arg === undefined) return value;
+
+    return value.filter((data: any) =>{
+      return data.name.toLowerCase().includes(arg.toLowerCase())
+    })
   }
 
 }

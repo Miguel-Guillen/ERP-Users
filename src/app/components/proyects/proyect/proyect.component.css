@@ -1,7 +1,13 @@
 .ff{
     font-family: 'Times New Roman', Times, serif;
-    font-size: 17px;
+    font-size: 16px;
 }
 .h-table {
     min-height: 75vh;
+}
+.card {
+    width: 250px;
+}
+.card:hover {
+    background-color: rgb(229, 234, 238) !important;
 }
