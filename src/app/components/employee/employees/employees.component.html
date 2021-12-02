@@ -10,41 +10,42 @@
             *ngIf="user.rol == 'administrador'; else noAdmin">
 
                 <div class="col-12 mb-4 mt-3 d-flex">
-                    <button class="btn btn-outline-primary ff" data-bs-toggle="modal"
+                    <button class="btn btn-outline-primary ff ms-4" data-bs-toggle="modal"
                     data-bs-target="#exampleModal">Nuevo empleado</button>
-                    <div class="col d-flex justify-content-end p-0">
-                        <input type="search" class="form-control w-50" placeholder="buscar por nombre"
+                    <div class="col d-flex justify-content-end pe-4">
+                        <input type="search" class="form-c ff rounded px-2" placeholder="buscar por nombre"
                         [(ngModel)]="search">
-                        <button class="btn bg-white border">
+                        <button class="btn bg-white border border-2">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
         
                 <div class="col h-table">
-                    <table class="table table-borderless bg-white border border-2 shadow">
+                    <table class="table table-borderless bg-white border border-4 shadow">
                         <thead>
                             <tr class="table-success ff">
-                                <th class="col-2 text-center">Nombre</th>
-                                <th class="col-1 text-center">Puesto</th>
-                                <th class="col-1 text-center">Area</th>
-                                <th class="col-1 text-center">Correo</th>
+                                <th class="col-3 text-center">Nombre</th>
+                                <th class="col-2 text-center">Puesto</th>
+                                <th class="col-2 text-center">Area</th>
+                                <th class="col-2 text-center">Correo</th>
                                 <th class="col-1 text-center">Permisos</th>
-                                <th class="col-1 text-center">Detalles</th>
+                                <th class="col-2 text-center">Detalles</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let e of employees | employee: search">
-                                <td class="col-2 text-center ff">{{e.name}} {{e.surnames}}</td>
-                                <td class="col-1 text-center ff">{{e.job}}</td>
-                                <td class="col-1 text-center ff">{{e.area}}</td>
-                                <td class="col-1 text-center ff">{{e.email}}</td>
+                                <td class="col-3 text-center ff">{{e.name}} {{e.surnames}}</td>
+                                <td class="col-2 text-center ff">{{e.job}}</td>
+                                <td class="col-2 text-center ff">{{e.area}}</td>
+                                <td class="col-2 text-center ff">{{e.email}}</td>
                                 <td class="col-1 text-center ff">{{e.rol}}</td>
-                                <td class="col-1">
+                                <td class="col-2 text-center">
                                     <button class="btn btn-outline-success me-1" (click)="searchEmployee(e.id)">
                                         <i class="fas fa-user-edit"></i>
                                     </button>
-                                    <button class="btn btn-outline-danger" (click)="deleteEmployee(e.id)">
+                                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal" (click)="id = e.id">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -56,60 +57,152 @@
                 <!-- Modal add -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-lg">
                       <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Nuevo empleado</h5>
+                        <div class="modal-header ff">
+                          <h5 class="modal-title text-info ps-3">Nuevo empleado</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body px-4 ff">
-                            <form class="mt-1" [formGroup]="employeeForm" (ngSubmit)="newEmployee(employeeForm.value)">
-                                <div class="row my-1">
+                        <div class="modal-body px-5 ff">
+                            <div class="alert alert-danger" role="alert" *ngIf="formValid === false">
+                                Datos incompletos
+                            </div>
+                            <form class="mt-1" [formGroup]="employeeForm" autocomplete="off"
+                            (ngSubmit)="newEmployee(employeeForm.value)">
+                                <div *ngIf="formValid === false" class="py-1 ps-3 border border-2 border-danger bg-light">
+                                    Formulario invalido
+                                </div>
+                                <div class="row my-2">
                                     <div class="col-6">
-                                        <label class="form-label">Nombre</label>
-                                        <input type="text" class="form-control" formControlName="name">
+                                        <small class="form-label">Nombre</small>
+                                        <input type="text" class="form-control" formControlName="name"
+                                        placeholder="Inserte el nombre" 
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.name">
+                                            <div class="text-danger" *ngIf="employeeForm.get('name').hasError(validation.type) && 
+                                            (employeeForm.get('name').dirty || employeeForm.get('name').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">Apellidos</label>
-                                        <input type="text" class="form-control" formControlName="surnames">
+                                        <small class="form-label">Apellidos</small>
+                                        <input type="text" class="form-control" formControlName="surnames"
+                                        placeholder="Inserte los apellidos" [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.surnames">
+                                            <div class="text-danger" *ngIf="employeeForm.get('surnames').hasError(validation.type) && 
+                                            (employeeForm.get('surnames').dirty || employeeForm.get('surnames').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                 </div>
-                                <div class="row my-1">
+                                <div class="row my-2">
                                     <div class="col-6">
-                                        <label class="form-label">Puesto</label>
-                                        <input type="text" class="form-control" formControlName="job">
+                                        <small class="form-label">Puesto</small>
+                                        <input type="text" class="form-control" formControlName="job"
+                                        placeholder="Inserte puesto de trabajo" 
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.job">
+                                            <div class="text-danger" *ngIf="employeeForm.get('job').hasError(validation.type) && 
+                                            (employeeForm.get('job').dirty || employeeForm.get('job').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">Area de trabajo</label>
-                                        <input type="text" class="form-control" formControlName="area">
+                                        <small class="form-label">Area de trabajo</small>
+                                        <input type="text" class="form-control" formControlName="area"
+                                        placeholder="Inserte el area"
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.area">
+                                            <div class="text-danger" *ngIf="employeeForm.get('area').hasError(validation.type) && 
+                                            (employeeForm.get('area').dirty || employeeForm.get('area').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                 </div>
-                                <div class="row my-1">
+                                <div class="row my-2">
                                     <div class="col-6">
-                                        <label class="form-label">Correo</label>
-                                        <input type="email" class="form-control" formControlName="email">
+                                        <small class="form-label">Correo</small>
+                                        <input type="email" class="form-control" formControlName="email"
+                                        placeholder="Inserte un correo"
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.email">
+                                            <div class="text-danger" *ngIf="employeeForm.get('email').hasError(validation.type) && 
+                                            (employeeForm.get('email').dirty || employeeForm.get('email').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">Contraseña</label>
-                                        <input type="password" class="form-control" formControlName="password">
+                                        <small class="form-label">Contraseña</small>
+                                        <input type="password" class="form-control" formControlName="password"
+                                        placeholder="Inserte una contraseña"
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
+                                        <ng-container *ngFor="let validation of validation_messages.password">
+                                            <div class="text-danger" *ngIf="employeeForm.get('password').hasError(validation.type) && 
+                                            (employeeForm.get('password').dirty || employeeForm.get('password').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                            <div class="text-danger" *ngIf="employeeForm.get('password').hasError('minlength')">
+                                                La contraseña debe contener minimo 5 caracteres
+                                            </div>
+                                        </ng-container>
                                     </div>
                                 </div>
-                                <div class="roy my-2">
-                                    <div class="col">
-                                        <label class="form-label">Privilegios</label>
-                                        <select formControlName="rol" class="form-select custom-select">
+                                <div class="roy my-3 px-0">
+                                    <div class="col px-0">
+                                        <small class="form-label">Privilegios</small>
+                                        <select formControlName="rol" class="form-select custom-select"
+                                        [ngClass]="{'border-bottom border-danger': formValid === false}">
                                             <option value="usuario">Usuario</option>
                                             <option value="administrador">Administrador</option>
                                         </select>
+                                        <ng-container *ngFor="let validation of validation_messages.rol">
+                                            <div class="text-danger" *ngIf="employeeForm.get('rol').hasError(validation.type) && 
+                                            (employeeForm.get('rol').dirty || employeeForm.get('rol').touched)">
+                                                {{validation.message}}
+                                            </div>
+                                        </ng-container>
                                     </div>
                                 </div>
                                 <div class="mt-3 float-right">
-                                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-outline-primary" type="submit">Guardar cambios</button>
+                                    <button type="button" class="btn btn-outline-danger me-2" 
+                                    data-bs-dismiss="modal" (click)="reset()">Cancelar</button>
+                                    <button *ngIf="send === false; else noSend" type="button" 
+                                    class="btn btn-outline-primary" type="submit">Guardar cambios</button>
+                                    <ng-template #noSend>
+                                        <button class="btn btn-outline-secondary" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Guardando...
+                                        </button>
+                                    </ng-template>
                                 </div>
                             </form>
                         </div>
                       </div>
+                    </div>
+                </div>
+
+                <!-- Modal delete -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content ff">
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold">¿Esta seguro de borrar el empleado?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            <p>Esta accion es irreversible y borrara completamente el empleado</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal"
+                                (click)="deleteEmployee()">Borrar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
         

@@ -17,10 +17,33 @@ export class EditTaskComponent implements OnInit {
   id: any;
   competitor: any[] = [];
   competitors: boolean = false;
+  formValid: boolean = true;
+  send: boolean = false;
   user = {
     id: '',
     email: '',
     rol: ''
+  }
+
+  validation_messages = {
+    title: [
+      { type: 'required', message: 'El nombre es requerido' }
+    ],
+    description: [
+      { type: 'required', message: 'La descripcion es requerida' }
+    ],
+    requirements: [
+      { type: 'required', message: 'Los requisitos son requeridos' }
+    ],
+    priority: [
+      { type: 'required', message: 'EL tipo de prioridad es requerida' }
+    ],
+    responsable: [
+      { type: 'required', message: 'El responsable es requerido' }
+    ],
+    dueDate: [
+      { type: 'required', message: 'La fecha de entrega es requerida' }
+    ]
   }
 
   constructor(private _service: TaskService, private formB: FormBuilder,
@@ -62,21 +85,27 @@ export class EditTaskComponent implements OnInit {
 
   editTask(values: any){
     if(this.taskForm.valid){
+      this.send = true;
       this.task = values;
       this._service.update(this.id ,this.task).then(() => {
         this.toast.success('su tarea acaba de ser actualizada exitosamente', 'Tarea actualizada',
         { positionClass: 'toast-bottom-right' });
         this.taskForm.reset();
+        this.send = false;
+        this.formValid = true;
         this.router.navigate(['assign-proyect']);
         this.id = ''
       }).catch(err => {
         this.toast.error(`ha ocurrido un error de tipo ${err} al guardar su tarea`, 
         'error al guardar la tarea', { positionClass: 'toast-bottom-right' });
+        this.send = false;
+        this.formValid = true;
       })
     }else {
       this.toast.warning('los datos del formulario no son validos','Error al añadir la tarea'
       , { positionClass: 'toast-bottom-right'} )
-      console.log(this.taskForm)   
+      console.log(this.taskForm)
+      this.formValid = false;
     }
   }
 
@@ -97,6 +126,10 @@ export class EditTaskComponent implements OnInit {
       if(this.competitor.length > 0) this.competitors = true;
       else this.competitors = false;
     })
+  }
+
+  reset(){
+    this.taskForm.reset();
   }
 
 }

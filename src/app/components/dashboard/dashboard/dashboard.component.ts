@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit {
   taskReview: any[] = [];
   taskDone: any[] = [];
   isAdmin: boolean | undefined;
+  show = false;
   user = {
     id: '',
     email: '',

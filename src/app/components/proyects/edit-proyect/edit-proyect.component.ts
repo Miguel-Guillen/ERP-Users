@@ -17,12 +17,38 @@ export class EditProyectComponent implements OnInit {
   competitors: any[] = [];
   proyect = new Proyect;
   id: any = '';
+  formValid: boolean = true;
+  send: boolean = false;
   user = {
     id: '',
     email: '',
     rol: ''
   }
   format = 'dd/MM/yyyy'
+
+  validation_messages = {
+    name: [
+      { type: 'required', message: 'Nombre requerido' }
+    ],
+    description: [
+      { type: 'required', message: 'Descripcion requerida' }
+    ],
+    type: [
+      { type: 'required', message: 'Tipo de proyecto requerido' }
+    ],
+    area: [
+      { type: 'required', message: 'Area del proyecto requerida' }
+    ],
+    estatus: [
+      { type: 'required', message: 'Estado del proyecto requerido' }
+    ],
+    dateStart: [
+      { type: 'required', message: 'Fecha de inicio requerida' }
+    ],
+    dateEnd: [
+      { type: 'required', message: 'Fecha de entrega requerida' }
+    ]
+  }
 
   constructor(private formB: FormBuilder, private toast: ToastrService,
     private _service: ProyectService, private route: ActivatedRoute,
@@ -79,24 +105,32 @@ export class EditProyectComponent implements OnInit {
 
   editProyect(values: any){
     if(this.editForm.valid){
+      this.send = true;
       this.proyect = values;
       this.proyect.createdDate = new Date
       this._service.update(this.id, this.proyect).then(() => {
         this.toast.success('El proyecto ha sido modificado con exito', 'Proyecto modificafo', 
         { positionClass: 'toast-bottom-right' });
+        this.send = false;
+        this.formValid = true;
       }).catch(err => {
-        console.log(err);
+        this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el proyecto', 
+        { positionClass: 'toast-bottom-right' });
+        this.send = false;
+        this.formValid = true;
       })
     }else {
       this.toast.warning('Los datos no son validos o los campos estan vacios'
-      , 'Datos invalidos', { positionClass: 'toast-bottom-right' });
+      ,'Datos invalidos', { positionClass: 'toast-bottom-right' });
+      this.formValid = false;
     }
   }
 
   deleteProyect(){
     this._service.delete(this.id).then(() => {
       this.toast.info('El proyecto ha sido borrado con exito', 'Proyecto borrado', 
-      { positionClass: 'toast-bottom-right' })    
+      { positionClass: 'toast-bottom-right' })
+      this.router.navigate(['/proyect'])
     }).catch(err => {
       this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al borrar el proyecto', 
       { positionClass: 'toast-bottom-right' });
@@ -116,6 +150,10 @@ export class EditProyectComponent implements OnInit {
         }
       });
     })
+  }
+
+  reset(){
+    this.editForm.reset();
   }
 
 }

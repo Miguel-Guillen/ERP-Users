@@ -21,13 +21,36 @@ export class AssignProyectComponent implements OnInit {
   competitor = new Competitor;
   competitors: any[] = [];
   tasks: any[] = [];
-  id: string = ''
+  id: string = '';
+  idCompetitor = '';
+  idTask = '';
   extras: any[] = [];
   area: string = '';
+  formValid: boolean = true;
+  send: boolean = false;
+  format = 'dd/MM/yyyy';
   user = {
     id: '',
     email: '',
     rol: ''
+  }
+
+  validation_messages = {
+    name: [
+      { type: 'required', message: 'El nombre es requerido' }
+    ],
+    area: [
+      { type: 'required', message: 'El area es requerida' }
+    ],
+    job: [
+      { type: 'required', message: 'El cargo es requerido' }
+    ],
+    idEmployee: [
+      { type: 'required', message: 'La clave es requerida' }
+    ],
+    rol: [
+      { type: 'required', message: 'El puesto es requerido' }
+    ]
   }
 
   constructor(private _service: AssignService, private formB: FormBuilder,
@@ -36,9 +59,9 @@ export class AssignProyectComponent implements OnInit {
     private toast: ToastrService) {
       this.competitorForm = this.formB.group({
         name: new FormControl('', Validators.required),
-        idEmployee: new FormControl('', Validators.required),
         area: new FormControl('', Validators.required),
         job: new FormControl('', Validators.required),
+        idEmployee: new FormControl('', Validators.required),
         rol: new FormControl('', Validators.required)
       })
     }
@@ -90,60 +113,41 @@ export class AssignProyectComponent implements OnInit {
 
   newCompetitor(values: any){
     if(this.competitorForm.valid){
+      this.send = true;
       this.competitor = values;
       this.competitor.idProyect = this.id;
-      this.competitor.createdDate =  new Date
+      this.competitor.createdDate = new Date;
       this._service.add(this.competitor).then(() => {
         this.toast.success('El colaborador ha sido integrado al proyecto'
         ,'Colaborador añadido', { positionClass: 'toast-bottom-right'})
         this.competitorForm.reset();
+        this.send = false;
+        this.formValid = true;
         this.area = '';
       }).catch(err => {
         this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
         'Error al añadir el colaborador ', { positionClass: 'toast-bottom-right' });
+        this.send = false;
+        this.formValid = true;
       })
     }else {
       this.toast.warning('Los valores del formulario son invalidos', 
       'Formulario invalido', { positionClass: 'toast-bottom-right' })
-      console.log(this.competitorForm)
+      console.log(this.competitorForm);
+      this.formValid = false;
     }
   }
 
-  deleteCompetitor(id: string){
-    this._service.delete(id).then(() => {
+  deleteCompetitor(){
+    this._service.delete(this.idCompetitor).then(() => {
       this.toast.info('El colaborado ha sido removido del proyecto con exito',
       'Colaborador removido', { positionClass: 'toast-bottom-right' })
+      this.idCompetitor = '';
     }).catch(err => {
       this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
       'Error al remover el colaborador', { positionClass: 'toast-bottom-right' })
+      this.idCompetitor = '';
     })
-  }
-
-  info(){
-    this._serviceEmployee.get().subscribe((res: any) => {
-      const e: any = [];
-      this.extras = [];
-      res.forEach((element: any) => {
-        e.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const employee of e){
-        if(employee.area == this.area) this.extras.push(employee)
-      }
-      if(this.extras.length == 0){
-        this.toast.warning('No se encontro ningun empleado que pertenezca a la area seleccionada', 
-      'Empleados no encontrados', { positionClass: 'toast-bottom-right' });
-      }
-    })
-  }
-
-  select(id: string, name: string, area: string, job: string){
-    this.competitorForm.controls['name'].setValue(name),
-    this.competitorForm.controls['id'].setValue(id);
-    this.competitorForm.controls['area'].setValue(area);
-    this.competitorForm.controls['job'].setValue(job);
   }
 
   // function for the task
@@ -172,13 +176,53 @@ export class AssignProyectComponent implements OnInit {
     this.router.navigate([`editTask/${id}`]);
   }
 
-  deleteTask(id: string){
-    this._serviceTask.delete(id).then(() => {
+  deleteTask(){
+    this._serviceTask.delete(this.idTask).then(() => {
       this.toast.info('La tarea ha sido borrada con exito', 'Tarea borrada', {
         positionClass: 'toast-bottom-right' });
+      this.id = '';
     }).catch(err => {
       this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al borrar', {
         positionClass: 'toast-bottom-right' });
     })
+  }
+
+  // extras
+
+  info(){
+    if(this.area == ''){
+      this.formValid = false;
+    }else {
+      this._serviceEmployee.get().subscribe((res: any) => {
+        const e: any = [];
+        this.extras = [];
+        res.forEach((element: any) => {
+          e.push({
+            id: element.payload.doc.id,
+            ...element.payload.doc.data()
+          });
+        });
+        for(const employee of e){
+          if(employee.area == this.area) this.extras.push(employee)
+          this.formValid = true;
+        }
+        if(this.extras.length == 0){
+          this.toast.warning('No se encontro ningun empleado que pertenezca a la area seleccionada', 
+          'Empleados no encontrados', { positionClass: 'toast-bottom-right' });
+          this.formValid = true;
+        }
+      })
+    }
+  }
+
+  select(id: string, name: string, area: string, job: string){
+    this.competitorForm.controls['name'].setValue(name);
+    this.competitorForm.controls['area'].setValue(area);
+    this.competitorForm.controls['idEmployee'].setValue(id),
+    this.competitorForm.controls['job'].setValue(job)
+  }
+
+  reset(){
+    this.competitorForm.reset();
   }
 }

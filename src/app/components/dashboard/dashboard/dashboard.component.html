@@ -86,13 +86,15 @@
     <div class="row d-flex justify-content-center pt-5 px-5 pb-2 ff">
 
         <div class="col-12 mb-4 d-flex">
-            <button class="btn border-bottom border-4 me-2">Tablero</button>
-            <button class="btn border-bottom border-4">Graficos</button>
-            <div class="col d-flex justify-content-end p-0">
+            <button class="btn me-2" (click)="show = false"
+            [ngClass]="show === false ? 'border-on' : 'border-off' ">Tablero</button>
+            <button class="btn" (click)="show = true"
+            [ngClass]="show === false ? 'border-off' : 'border-on' ">Graficos</button>
+            <!-- <div class="col d-flex justify-content-end p-0">
                 <button class="btn border border-4 rounded-circle px-2 bg-white shadow-sm">
                     <img src="../../../../assets/img/correo.png" height="30px" alt="">
                 </button>
-            </div>
+            </div> -->
         </div>
 
         <h5 class="mb-3 ms-3 fw-bold">Tablero de actividades</h5>

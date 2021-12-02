@@ -15,10 +15,38 @@ export class EmployeesComponent implements OnInit {
   employee = new Employee;
   employees: any[] = [];
   search: any;
+  formValid: boolean = true;
+  send: boolean = false;
+  id = '';
   user = {
     id: '',
     email: '',
     rol: ''
+  }
+
+  validation_messages = {
+    name: [
+      { type: 'required', message: 'Nombre requerido' }
+    ],
+    surnames: [
+      { type: 'required', message: 'Apellidos requeridos' }
+    ],
+    job: [
+      { type: 'required', message: 'Puesto de trabajo requerido' }
+    ],
+    area: [
+      { type: 'required', message: 'Area de trabajo requerida' }
+    ],
+    email: [
+      { type: 'required', message: 'Correo requerido' },
+      { type: "pattern", message: 'El correo no es valido' }
+    ],
+    password: [
+      { type: 'required', message: 'Contraseña requerida' }
+    ],
+    rol: [
+      { type: 'required', message: 'Privilegios requeridos' }
+    ]
   }
 
   constructor(private _service: EmployeeService, private route: Router,
@@ -37,15 +65,18 @@ export class EmployeesComponent implements OnInit {
           Validators.required
         ])),
         email: new FormControl("", Validators.compose([
-          Validators.required
+          Validators.required,
+          Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
         ])),
         password: new FormControl("", Validators.compose([
-          Validators.required
+          Validators.required,
+          Validators.minLength(5)
         ])),
         rol: new FormControl("", Validators.compose([
           Validators.required
         ]))
       })
+
   }
 
   ngOnInit(): void {
@@ -71,31 +102,42 @@ export class EmployeesComponent implements OnInit {
 
   newEmployee(values: any){
     if(this.employeeForm.valid){
+      this.send = true;
       this.employee = values;
       this.employee.createdDate = new Date;
       this._service.add(this.employee).then(() => {
         this.toast.success('El empleado ha sido añadido con exito', 'Empleado añadido', 
         { positionClass: 'toast-bottom-right' })
         this.employeeForm.reset();
+        this.send = false;
+        this.formValid = true;
       }).catch(err => {
         this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
         { positionClass: 'toast-bottom-right' });
+        this.send = false;
+        this.formValid = true;
       })
     }else {
       this.toast.warning('Los datos no son validos o los campos estan vacios'
-      , 'Datos invalidos', { positionClass: 'toast-bottom-right' })
+      ,'Datos invalidos', { positionClass: 'toast-bottom-right' })
+      this.formValid = false;
     }
   }
 
-  deleteEmployee(id: string){
-    this._service.delete(id).then(() => {
+  deleteEmployee(){
+    this._service.delete(this.id).then(() => {
       this.toast.info('El empleado ha sido borrado con exito', 'Empleado borrado', 
       { positionClass: 'toast-bottom-right' })
+      this.id = '';
     }).catch(err => {
       this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
       { positionClass: 'toast-bottom-right' });
       console.log(this.employeeForm);
     })
+  }
+
+  reset(){
+    this.employeeForm.reset();
   }
 
 }
