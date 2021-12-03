@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssignService } from 'src/app/service/assign.service';
+import { EmployeeService } from 'src/app/service/employee.service';
 import { ProyectService } from 'src/app/service/proyect.service';
 import { TaskService } from 'src/app/service/task.service';
 
@@ -11,14 +12,17 @@ import { TaskService } from 'src/app/service/task.service';
 })
 export class DashboardComponent implements OnInit {
   proyects: any[] = [];
+  actives: any[] = [];
   myInfo: any[] = [];
   tasks: any[] = [];
   taskToDo: any[] = [];
   taskInProgress: any[] = [];
   taskReview: any[] = [];
   taskDone: any[] = [];
-  isAdmin: boolean | undefined;
+  responsables: any [] = [];
+  data: boolean | undefined;
   show = false;
+  format = 'dd/MM/yyyy'
   user = {
     id: '',
     email: '',
@@ -33,7 +37,7 @@ export class DashboardComponent implements OnInit {
     this.info();
     this.getProyects();
     this.myTasks();
-    this.getTask();
+    this.proyectsActive();
   }
 
   getProyects(){
@@ -46,11 +50,6 @@ export class DashboardComponent implements OnInit {
           ...element.payload.doc.data()
         });
       });
-      for(const p of proyects){
-        for(const i of this.myInfo){
-          if(p.id == i.idProyect) this.proyects.push(p)
-        }
-      }
     })
   }
 
@@ -66,19 +65,19 @@ export class DashboardComponent implements OnInit {
   }
 
   myTasks(){
-    this._serviceTask.getMyTasks().subscribe((res: any) => {
-      const t: any = [];
-      this.tasks = [];
-      res.forEach((element: any) => {
-        t.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const task of t){
-        if(task.responsable == this.user.id && task.estatus != 'Terminado') this.tasks.push(task)
-      }
-    })
+    // this._serviceTask.getMyTasks(this.user.id).subscribe((res: any) => {
+    //   const t: any = [];
+    //   this.tasks = [];
+    //   res.forEach((element: any) => {
+    //     t.push({
+    //       id: element.payload.doc.id,
+    //       ...element.payload.doc.data()
+    //     });
+    //   });
+    //   for(const task of t){
+    //     if(task.estatus != 'Terminado') this.tasks.push(task)
+    //   }
+    // })
   }
 
   task(id: string){
@@ -89,32 +88,71 @@ export class DashboardComponent implements OnInit {
 
   // section administrator
 
-  getTask(){
+  proyectsActive(){
+    this._serviceProyect.get().subscribe((res: any) => {
+      this.actives = [];
+      const proyects: any = []
+      res.forEach((element: any) => {
+        proyects.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
+        });
+      });
+      for(const p of proyects){
+        if(p.estatus == 'Activo') this.actives.push(p)
+      }
+    })
+  }
+
+  getTask(id: string){
     if(this.user.rol == 'administrador'){
-      this._serviceTask.get().subscribe((res: any) => {
-        const tasks: any = [];
-        this.taskToDo = [];
-        this.taskInProgress = [];
-        this.taskReview = [];
-        this.taskDone = [];
+      this.taskToDo = [];
+      this.taskInProgress = [];
+      this.taskReview = [];
+      this.taskDone = [];
+      this.tasks = [];
+      this.getResponsables(id);
+      this._serviceTask.getActive(id).subscribe((res: any) => {
         res.forEach((element: any) => {
-          tasks.push({
+          this.tasks.push({
             id: element.payload.doc.id,
             ...element.payload.doc.data()
           });
         });
-        for(const t of tasks){
+        if(this.tasks.length == 0) this.data = false;
+        for(let i = 0; i < this.tasks.length; i++){
+          for(let j = 0; j < this.responsables.length; j++){
+            if(this.tasks[i].responsable == this.responsables[j].idEmployee) 
+            this.tasks[i].name = this.responsables[j].name;
+          }
+        }
+        for(const t of this.tasks){
           if(t.estatus == 'Por hacer' || t.estatus == 'Rehacer') this.taskToDo.push(t);
           if(t.estatus == 'En progreso') this.taskInProgress.push(t);
           if(t.estatus == 'Revision') this.taskReview.push(t);
           if(t.estatus == 'Terminado') this.taskDone.push(t);
         }
       })
+      this.data = true;
     }
   }
 
   viewTask(){
     this.route.navigate(['/assign-proyect'])
+  }
+
+  // extras
+
+  getResponsables(id: string){
+    this._serviceCompetitor.getCompetitors(id).subscribe((res: any) => {
+      this.responsables = [];
+      res.forEach((element: any) => {
+        this.responsables.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
+        });
+      });
+    })
   }
 
 }

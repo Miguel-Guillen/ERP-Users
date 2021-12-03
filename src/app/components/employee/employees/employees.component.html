@@ -21,10 +21,11 @@
                     </div>
                 </div>
         
-                <div class="col h-table">
-                    <table class="table table-borderless bg-white border border-4 shadow">
+                <div class="col h-table ff">
+                    <table class="table table-borderless bg-white border border-4 shadow" 
+                    *ngIf="employees.length > 0; else noEmplo">
                         <thead>
-                            <tr class="table-success ff">
+                            <tr class="table-success">
                                 <th class="col-3 text-center">Nombre</th>
                                 <th class="col-2 text-center">Puesto</th>
                                 <th class="col-2 text-center">Area</th>
@@ -221,4 +222,9 @@
     <div class="vh-100 p-5">
         <h1>Error pagina no encontrada</h1>
     </div>
+</ng-template>
+
+<ng-template #noEmplo>
+    <h5 class="px-3 pt-3">No hay ningun empleado agregado aun</h5>
+    <p class="px-3 py-1">presione el boton <span class="fw-bold">Nuevo empleado</span> para añadir un empleado</p>
 </ng-template>

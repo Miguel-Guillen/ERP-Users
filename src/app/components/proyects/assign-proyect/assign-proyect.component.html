@@ -21,16 +21,24 @@
                 <div class="h-table">
                     <div class="col vh-task ff" *ngIf="id === ''; else showProyect">
                         <h5 class="my-4 ms-3 fw-bold">Seleccione el proyecto a asignar la tarea</h5>
+                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No hay ningun proyecto
+                            añadido todavia</h5>
+                        <p class="px-3" *ngIf="proyects.length == 0">
+                            <a [routerLink]="['/proyect']">agregar nuevo proyecto </a>
                         <div>
                             <div class="table table-borderless border border-3 shadow my-1 
                             rounded bg-white options" type="button" (click)="getProyect(p.id)"
                             *ngFor="let p of proyects | proyects: search">
                                 <div class="row my-1 p-2">
                                     <p class="col-2 text-center my-auto ff">{{p.name}}</p>
-                                    <p class="col-4 text-center my-auto ff">{{p.description}}</p>
-                                    <p class="col-2 text-center my-auto ff">{{p.area}}</p>
-                                    <p class="col-2 text-center my-auto ff">{{p.dateStart}}</p>
-                                    <p class="col-2 text-center my-auto ff">{{p.dateEnd}}</p>
+                                    <p class="col-4 my-auto ff">{{p.description}}</p>
+                                    <p class="col-2 my-auto ff">{{p.area}}</p>
+                                    <p class="col-1 my-auto ff"
+                                    [ngClass]="{'text-danger': p.estatus == 'Cancelado',
+                                    'text-success': p.estatus == 'Finalizado', 
+                                    'text-info': p.estatus == 'Activo' }">{{p.estatus}}</p>
+                                    <p class="col-3 my-auto text-center ff">Entrega: 
+                                        {{p.dateEnd | date: format}}</p>
                                 </div>
                             </div>
                         </div>
@@ -62,6 +70,10 @@
                     <div class="col">
                         <h5 class="fw-bold my-2">Proyecto: {{proyect[0].name}}</h5>
                         <p class="my-1">Descripcion: {{proyect[0].description}}</p>
+                        <p class="my-1" [ngClass]="{'text-danger': proyect[0].estatus == 'Cancelado',
+                        'text-success': proyect[0].estatus == 'Finalizado', 
+                        'text-info': proyect[0].estatus == 'Activo' }">
+                        Estado: {{proyect[0].estatus}}</p>
                     </div>
                 </div>
                 <div class="row px-3 d-flex align-items-center">
@@ -71,7 +83,7 @@
                     </div>
                     <div class="col-6">
                         <p>Fecha de inicio: {{proyect[0].dateStart | date: format}}</p>
-                        <p>Fecha de cierre: {{proyect[0].dateEnd}}</p>
+                        <p>Fecha de cierre: {{proyect[0].dateEnd | date: format}}</p>
                     </div>
                 </div>
             </div>
@@ -102,7 +114,7 @@
 
         <!-- accordion -->
         <div class="col-6">
-            <div class="col d-flex mx-3 mb-3 ff">
+            <div class="col d-flex mx-3 mb-3 ff" *ngIf="proyect[0].estatus == 'Activo';else noTask">
                 <p class="h5 my-auto fw-bold flex-grow-1">Tareas asignadas</p>
                 <button class="btn btn-outline-primary me-1" data-bs-toggle="modal"
                 data-bs-target="#employeeModal">Añadir participante</button>
@@ -129,8 +141,8 @@
                                 <div class="col-6">
                                     <p>Prioridad: {{t.priority}}</p>
                                     <p>Estatus: {{t.estatus}}</p>
-                                    <p>Responsable: {{t.responsable}}</p>
-                                    <p>Fecha de entrega: {{t.dueDate}}</p>
+                                    <p>Responsable: {{t.name}}</p>
+                                    <p>Fecha de entrega: {{t.dueDate | date: format}}</p>
                                     <p>Diagramas o documentos {{t.images}}</p>
                                     <p>Comentarios: </p>
                                 </div>
@@ -344,5 +356,14 @@
 <ng-template #noComp>
     <div class="ff">
         <h5 class="my-4">No hay integrantes en el proyecto aun</h5>
+    </div>
+</ng-template>
+
+<ng-template #noTask>
+    <div class="col p-2 ff">
+        <h5 class="my-2 fw-bold">No se puede añadir mas tareas a este proyecto</h5>
+        <p>El proyecto ha sido cerrado, para agregar mas tareas se debe volver activar
+            el proyecto
+        </p>
     </div>
 </ng-template>

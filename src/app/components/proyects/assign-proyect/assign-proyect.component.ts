@@ -20,6 +20,7 @@ export class AssignProyectComponent implements OnInit {
   competitorForm: FormGroup;
   competitor = new Competitor;
   competitors: any[] = [];
+  responsables: any[] = [];
   tasks: any[] = [];
   id: string = '';
   idCompetitor = '';
@@ -93,6 +94,7 @@ export class AssignProyectComponent implements OnInit {
     })
     this.id = id;
     this.getCompetitor();
+    this.getResponsables(id);
     this.getTask();
   }
 
@@ -165,6 +167,12 @@ export class AssignProyectComponent implements OnInit {
       for(const task of t){
         if(task.idProyect == this.id) this.tasks.push(task)
       }
+      for(let i = 0; i < this.tasks.length; i++){
+        for(let j = 0; j < this.responsables.length; j++){
+          if(this.tasks[i].responsable == this.responsables[j].idEmployee) 
+          this.tasks[i].name = this.responsables[j].name;
+        }
+      }
     })
   }
 
@@ -220,6 +228,18 @@ export class AssignProyectComponent implements OnInit {
     this.competitorForm.controls['area'].setValue(area);
     this.competitorForm.controls['idEmployee'].setValue(id),
     this.competitorForm.controls['job'].setValue(job)
+  }
+
+  getResponsables(id: string){
+    this._service.getCompetitors(id).subscribe((res: any) => {
+      this.responsables = [];
+      res.forEach((element: any) => {
+        this.responsables.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
+        });
+      });
+    })
   }
 
   reset(){

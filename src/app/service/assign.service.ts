@@ -19,6 +19,11 @@ export class AssignService {
     .where('idEmployee', '==', id)).snapshotChanges()
   }
 
+  getCompetitors(id: string): Observable<any>{
+    return this.firestore.collection('competitor', ref => ref
+    .where('idProyect', '==', id)).snapshotChanges()
+  }
+
   add(empleado: any): Promise<any>{
     return this.firestore.collection('competitor').add(empleado);
   }

@@ -87,7 +87,7 @@ export class ProyectComponent implements OnInit {
         });
       });
       for(const p of proyects){
-        if(p.estatus == 'Finalizado') this.proyectsDone.push(p);
+        if(p.estatus == 'Finalizado' || p.estatus == 'Cancelado') this.proyectsDone.push(p);
         else this.proyects.push(p);
       }
     })

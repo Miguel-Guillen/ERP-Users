@@ -6,8 +6,8 @@
     font-size: 15px;
     font-family: 'Times New Roman', Times, serif;
 }
-.task {
-    height: 80vh;
+.tasks {
+    min-height: 65vh;
 }
 .proyect {
     height: 70vh;
@@ -23,12 +23,11 @@
 .border-off {
     border: none
 }
-.tasks:hover {
+.card:hover {
     background-color: rgb(229, 234, 238) !important;
 }
 .dash {
-    min-height: 60vh;
-    max-height: 110vh;
+    min-height: 70vh;
 }
 
 .dash::-webkit-scrollbar {
