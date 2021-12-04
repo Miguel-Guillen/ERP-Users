@@ -24,8 +24,8 @@
 
                 <div class="col-12 mt-2 proyects px-5">
                     <div class="row mt-2 mb-4 d-flex justify-content-start ff"
-                    *ngIf="show === false; show">
-                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No ha sido añadido
+                    *ngIf="show === false;else noShow">
+                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No ha sido agregado
                             a un proyecto aun</h5>
                         <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
                         *ngFor="let p of proyects | proyects: search">
@@ -63,24 +63,24 @@
     </div>
 </ng-template>
 
-<ng-template #show>
+<ng-template #noShow>
     <div class="row mt-2 mb-4 d-flex justify-content-start ff">
         <h5 *ngIf="proyectsDone.length == 0" class="px-3 pt-3">No tiene ningun proyecto 
             finalizado aun</h5>
         <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
-        *ngFor="let p of proyectsDone | proyects: search">
+        *ngFor="let pd of proyectsDone | proyects: search">
             <div class="row px-1 my-1">
                 <div class="col">
-                    <p class="fw-bold my-1">{{p.name}}</p>
-                    <p class="my-1">{{p.description}}</p>
+                    <p class="fw-bold my-1">{{pd.name}}</p>
+                    <p class="my-1">{{pd.description}}</p>
                 </div>
             </div>
             <div class="row px-1 my-1">
                 <div class="col">
-                    <p class="my-1">Tipo: {{p.type}}</p>
-                    <p class="my-1">Area: {{p.area}}</p>
-                    <p class="my-1">Estatus: {{p.estatus}}</p>
-                    <p class="my-1">Entrega: {{p.dateEnd | date: format}}</p>
+                    <p class="my-1">Tipo: {{pd.type}}</p>
+                    <p class="my-1">Area: {{pd.area}}</p>
+                    <p class="my-1">Estatus: {{pd.estatus}}</p>
+                    <p class="my-1">Entrega: {{pd.dateEnd | date: format}}</p>
                 </div>
             </div>
         </div>

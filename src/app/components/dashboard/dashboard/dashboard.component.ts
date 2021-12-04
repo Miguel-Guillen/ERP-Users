@@ -80,6 +80,10 @@ export class DashboardComponent implements OnInit {
     this.route.navigate([`/sendTask/${id}`]);
   }
 
+  proyect(){
+    this.route.navigate([`/myProyects`]);
+  }
+
   // section administrator
 
   proyectsActive(){

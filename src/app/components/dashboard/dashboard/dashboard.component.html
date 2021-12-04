@@ -14,7 +14,8 @@
                         <h5 class="text-info py-2 mb-3 ps-3">Proyectos asignados</h5>
                         <h5 class="px-3" *ngIf="proyects.length == 0">
                             No es parte de ningun proyecto aun</h5>
-                        <div class="my-2 px-3 card" *ngFor="let p of proyects" type="button">
+                        <div class="my-2 px-3 card" *ngFor="let p of proyects" type="button"
+                        (click)="proyect()">
                             <div class="row">
                                 <div class="col">
                                     <h5 class="my-1 fw-bold">{{p.name}}</h5>
