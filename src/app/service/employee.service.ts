@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
+import * as CryptoJS from 'crypto-js'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
+  secretKey = '24@e7_8b*2d'
 
   constructor(private firestore: AngularFirestore) { }
 
@@ -28,6 +30,10 @@ export class EmployeeService {
 
   delete(id: string): Promise<any> {
     return this.firestore.collection('empleados').doc(id).delete()
+  }
+
+  encrypt(pass: string): string{
+    return CryptoJS.AES.encrypt(pass, this.secretKey.trim()).toString()
   }
 
 }

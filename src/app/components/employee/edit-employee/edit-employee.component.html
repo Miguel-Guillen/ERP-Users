@@ -11,9 +11,6 @@
                 <div class="col-8 bg-white border border-2 rounded shadow-sm py-3 px-4 ff user">
                     <div class="d-flex">
                         <h5 class="fw-bold text-info">Modificar empleado</h5>
-                        <div *ngIf="send === true" class="spinner-border ms-3" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
                     </div>
                     <form class="mt-4" [formGroup]="editForm" autocomplete="off" 
                     (ngSubmit)="editEmployee(editForm.value)">

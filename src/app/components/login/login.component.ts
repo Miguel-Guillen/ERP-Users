@@ -46,22 +46,30 @@ export class LoginComponent implements OnInit {
       const email = values.email;
       const password = values.password;
       this.myPerfil = [];
-      this._service.get(email, password).subscribe((res: any) => {
+      this._service.get(email).subscribe((res: any) => {
         if(res.length > 0){
+          let pass = '';
           res.forEach((element: any) => {
-            this.myPerfil.push({
-              id: element.payload.doc.id,
-              ...element.payload.doc.data()
-            });
+            pass = this._service.decrypt(element.payload.doc.data()['password']);
+            if(pass == password){ 
+              this.myPerfil.push({
+                id: element.payload.doc.id,
+                ...element.payload.doc.data()
+              });
+              const credentials = {
+                id: this.myPerfil[0].id,
+                email: this.myPerfil[0].email,
+                rol: this.myPerfil[0].rol
+              }
+              this.loginForm.reset();
+              localStorage.setItem('user', JSON.stringify(credentials));
+              this.route.navigate(['dashboard']);
+            }else {
+              this.loginInvalid = true;
+              this.toast.warning('Correo o contraseña incorrectos', 
+              'Datos incorrectos', { positionClass: 'toast-bottom-right' })
+            }
           });
-          const credentials = {
-            id: this.myPerfil[0].id,
-            email: this.myPerfil[0].email,
-            rol: this.myPerfil[0].rol
-          }
-          this.loginForm.reset();
-          localStorage.setItem('user', JSON.stringify(credentials));
-          this.route.navigate(['dashboard']);
         }else {
           this.loginInvalid = true;
           this.toast.warning('Correo o contraseña incorrectos', 

@@ -101,6 +101,7 @@ export class EditEmployeeComponent implements OnInit {
     if(this.editForm.valid){
       this.send = true;
       this.employee = values
+      this.employee.password = this._service.encrypt(values.password);
       this._service.update(this.id ,this.employee).then(() => {
         this.toast.success('El empleado ha sido modificado con exito', 'Empleado modificado', 
         { positionClass: 'toast-bottom-right' })

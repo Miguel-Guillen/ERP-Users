@@ -105,6 +105,7 @@ export class EmployeesComponent implements OnInit {
       this.send = true;
       this.employee = values;
       this.employee.createdDate = new Date;
+      this.employee.password = this._service.encrypt(values.password);
       this._service.add(this.employee).then(() => {
         this.toast.success('El empleado ha sido añadido con exito', 'Empleado añadido', 
         { positionClass: 'toast-bottom-right' })

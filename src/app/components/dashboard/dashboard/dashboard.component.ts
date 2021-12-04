@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssignService } from 'src/app/service/assign.service';
-import { EmployeeService } from 'src/app/service/employee.service';
 import { ProyectService } from 'src/app/service/proyect.service';
 import { TaskService } from 'src/app/service/task.service';
 
