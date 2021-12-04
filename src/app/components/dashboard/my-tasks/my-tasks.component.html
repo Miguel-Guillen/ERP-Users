@@ -18,17 +18,21 @@
                 </div>
         
                 <div class="col vh-task ff">
-                    <h5 class="my-4 ms-3 fw-bold">Mis tareas</h5>
+                    <h5 class="my-4 ms-3 text-info">Mis tareas</h5>
                     <div *ngIf="show === false; else noShow">
-                        <div class="table table-borderless border border-2 shadow-sm my-1 
-                        rounded bg-white" 
-                        type="button" *ngFor="let t of tasks" (click)="infoTask(t.id)">
+                        <h5 class="px-3 py-3 border border-3 bg-white rounded" *ngIf="tasks.length == 0">
+                            No tiene ninguna tarea pendiente, todas sus tareas fueron entregadas
+                        </h5>
+                        <div class="border border-2 shadow-sm my-1 task
+                        rounded bg-white" type="button" *ngFor="let t of tasks" 
+                        (click)="infoTask(t.id)">
                             <div class="row my-1 px-2">
-                                <p class="col-3 mb-1 my-auto">{{t.title}}</p>
+                                <p class="col-3 mb-1 my-auto fw-bold">{{t.title}}</p>
                                 <p class="col-7 mb-1 my-auto">{{t.description}}</p>
-                                <p class="col-2 mb-1 my-auto">{{t.dueDate}}</p>
+                                <p class="col-2 mb-1 my-auto">{{t.dueDate | date: format}}</p>
                                 <p class="col-3 mt-1 my-auto">Prioridad: {{t.priority}}</p>
-                                <small class="col-3 mt-1 my-auto text-muted">Proyecto: {{t.idProyect}}</small>
+                                <p class="col-7 mt-1 my-auto">Proyecto: {{t.name}}</p>
+                                <p class="col-2 mb-1 my-auto">Estado: {{t.estatus}}</p>
                             </div>
                         </div>
                     </div>
@@ -46,14 +50,17 @@
 </div>
 
 <ng-template #noShow>
-    <div class="table table-borderless bg-white border border-2 shadow-sm my-1 ff rounded" 
+    <h5 class="px-3 py-3 border border-3 bg-white rounded" *ngIf="doneTasks.length == 0">
+        No hay ninguna tarea entregada aun
+    </h5>
+    <div class="bg-white border border-2 shadow-sm my-1 ff rounded task" 
     type="button" *ngFor="let td of doneTasks" (click)="infoTask(td.id)">
         <div class="row my-1 px-2">
-            <p class="col-3 mb-1 my-auto">{{td.title}}</p>
+            <p class="col-3 mb-1 my-auto fw-bold">{{td.title}}</p>
             <p class="col-7 mb-1 my-auto">{{td.description}}</p>
-            <p class="col-2 mb-1 my-auto">{{td.dueDate}}</p>
+            <p class="col-2 mb-1 my-auto">{{td.dueDate | date: format}}</p>
             <p class="col-3 mt-1 my-auto">Prioridad: {{td.priority}}</p>
-            <small class="col-3 mt-1 text-muted my-auto">Proyecto: {{td.idProyect}}</small>
+            <p class="col-7 mt-1 my-auto">Proyecto: {{td.name}}</p>
         </div>
     </div>
 </ng-template>

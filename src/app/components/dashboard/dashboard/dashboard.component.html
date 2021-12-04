@@ -9,38 +9,39 @@
             <div *ngIf="user.rol === 'usuario'; else noAdmin" class="container px-5">
                 <div class="row d-flex justify-content-between pt-4">
         
-                    <div class="col-5 my-2 py-3 px-4 ff border border-3 shadow-sm bg-white rounded
-                    proyect">
-                        <h5 class="fw-bold border-bottom border-2 pb-2">Proyectos asignados</h5>
-                        <div class="mt-2" *ngFor="let p of proyects" type="button">
+                    <div class="col-5 my-3 py-2 px-4 ff border border-3 shadow-sm bg-white
+                    rounded proyect overflow-hidden">
+                        <h5 class="text-info py-2 mb-3 ps-3">Proyectos asignados</h5>
+                        <h5 class="px-3" *ngIf="proyects.length == 0">
+                            No es parte de ningun proyecto aun</h5>
+                        <div class="my-2 px-3 card" *ngFor="let p of proyects" type="button">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="my-1">{{p.name}}</h5>
-                                    <p class="my-1">Descripcion: {{p.description}}</p>
+                                    <h5 class="my-1 fw-bold">{{p.name}}</h5>
+                                    <p class="my-1">Descripcion: {{ (p.description.length > 80)?
+                                        (p.description | slice: 0:80) + '...' : (p.description) }}</p>
                                     <div class="row">
                                         <p class="col-6 my-1">Tipo: {{p.type}}</p>
-                                        <small class="col-6 my-1 text-muted my-auto">Fecha: {{p.dateStart}}</small>
+                                        <small class="col-6 my-1 text-muted my-auto">
+                                            Fecha: {{p.dateStart | date: format}}
+                                        </small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
             
-                    <div class="col-6 my-2 py-3 px-4 ff border border-3 shadow-sm bg-white rounded task">
-                        <h5 class="pb-2 ms-2 fw-bold border-bottom border-3">Tareas pendientes</h5>
-                        <div class="row px-2 d-flex" *ngFor="let t of tasks" type="button"
-                        (click)="task(t.id)">
-                            <div class="col-2 my-auto px-0">
-                                <button class="btn border border-2" *ngIf="t.view == '2'; view">
-                                    <i class="fas fa-check"></i>
-                                    <small class="d-block">No visto</small>
-                                </button>
-                            </div>
-                            <div class="col-10">
+                    <div class="col-6 my-3 py-3 px-4 ff border border-3 shadow-sm bg-white rounded task">
+                        <h5 class="py-1 ps-4 mb-3 text-info">Tareas pendientes</h5>
+                        <h5 class="px-3" *ngIf="myTask.length == 0">No tiene ninguna tarea pendiente</h5>
+                        <div class="row mx-1 my-2 px-2 myTasks border border-3 rounded d-flex" 
+                        *ngFor="let t of myTask" type="button" (click)="task(t.id)">
+                            <div class="col-12 px-1">
                                 <p class="my-1 fw-bold">{{t.title}}</p>
                                 <div class="row">
-                                    <p class="col my-1">Prioridad: {{t.priority}}</p>
-                                    <p class="col my-1">Entrega: {{t.dueDate}}</p>
+                                    <p class="col-4 my-1">Prioridad: {{t.priority}}</p>
+                                    <p class="col-4 my-1">Estado: {{t.estatus}}</p>
+                                    <p class="col-4 my-1 text-center">{{t.dueDate | date: format}}</p>
                                 </div>
                             </div>
                         </div>
@@ -48,17 +49,9 @@
         
                 </div>
         
-                <div class="row my-5">
+                <div class="row my-4">
                     <div class="card-group d-flex justify-content-around">
-                        <div class="col-3 border border-3 shadow-sm ff" type="button"
-                        [routerLink]="['/myTasks']">
-                            <div class="row bg-info p-2 border-bottom border-3 text-center">
-                                <img src="../../../../assets/img/tarea.png" class="image mx-auto" alt="">
-                            </div>
-                            <div class="row bg-white py-2 px-3 text-center">
-                                <p>Todas mis tareas asignadas y completadas</p>
-                            </div>
-                        </div>
+
                         <div class="col-3 border border-3 shadow-sm ff" type="button"
                         [routerLink]="['/myProyects']">
                             <div class="row bg-info p-2 border-bottom border-3 text-center">
@@ -68,6 +61,17 @@
                                 <p>Todos mis proyectos asignados y finalizados</p>
                             </div>
                         </div>
+
+                        <div class="col-3 border border-3 shadow-sm ff" type="button"
+                        [routerLink]="['/myTasks']">
+                            <div class="row bg-info p-2 border-bottom border-3 text-center">
+                                <img src="../../../../assets/img/tarea.png" class="image mx-auto" alt="">
+                            </div>
+                            <div class="row bg-white py-2 px-3 text-center">
+                                <p>Todas mis tareas asignadas y completadas</p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
         

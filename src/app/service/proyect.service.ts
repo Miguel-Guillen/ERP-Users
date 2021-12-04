@@ -20,7 +20,7 @@ export class ProyectService {
 
   getMyProjects(): Observable<any>{
     return this.firestore.collection('proyects', ref => ref
-    .orderBy('createdDate', 'desc')).snapshotChanges();
+    .where('estatus', '==', 'Activo').limit(4).orderBy('createdDate', 'asc')).snapshotChanges();
   }
 
   add(proyect: any): Promise<any>{

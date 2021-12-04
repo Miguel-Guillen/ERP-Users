@@ -23,11 +23,11 @@ export class TaskService {
     .where('idProyect', '==', id).orderBy('createdDate', 'asc')).snapshotChanges()
   }
 
-  // getMyTasks(id: string): Observable<any>{
-  //   return this.firestore.collection('task', ref => ref
-  //   .where('idProyect', '==', id)
-  //   .orderBy('createdDate', 'desc')).snapshotChanges()  
-  // }
+  getMyTasks(id: string): Observable<any>{
+    return this.firestore.collection('task', ref => ref
+    .where('responsable', '==', id).where('estatus', '==', 'Por hacer')
+    .limit(5).orderBy('createdDate', 'asc')).snapshotChanges()  
+  }
 
   add(empleado: any): Promise<any>{
     return this.firestore.collection('task').add(empleado);

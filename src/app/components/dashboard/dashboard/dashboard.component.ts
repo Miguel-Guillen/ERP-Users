@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   proyects: any[] = [];
   actives: any[] = [];
   myInfo: any[] = [];
+  myTask: any[] = [];
   tasks: any[] = [];
   taskToDo: any[] = [];
   taskInProgress: any[] = [];
@@ -42,10 +43,9 @@ export class DashboardComponent implements OnInit {
 
   getProyects(){
     this._serviceProyect.getMyProjects().subscribe((res: any) => {
-      const proyects: any = [];
       this.proyects = [];
       res.forEach((element: any) => {
-        proyects.push({
+        this.proyects.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
@@ -65,25 +65,19 @@ export class DashboardComponent implements OnInit {
   }
 
   myTasks(){
-    // this._serviceTask.getMyTasks(this.user.id).subscribe((res: any) => {
-    //   const t: any = [];
-    //   this.tasks = [];
-    //   res.forEach((element: any) => {
-    //     t.push({
-    //       id: element.payload.doc.id,
-    //       ...element.payload.doc.data()
-    //     });
-    //   });
-    //   for(const task of t){
-    //     if(task.estatus != 'Terminado') this.tasks.push(task)
-    //   }
-    // })
+    this._serviceTask.getMyTasks(this.user.id).subscribe((res: any) => {
+      this.myTask = [];
+      res.forEach((element: any) => {
+        this.myTask.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
+        });
+      });
+    })
   }
 
   task(id: string){
-    const view = '1';
     this.route.navigate([`/sendTask/${id}`]);
-    this._serviceTask.update(id, view).then(() => {});
   }
 
   // section administrator

@@ -10,7 +10,8 @@
     min-height: 65vh;
 }
 .proyect {
-    height: 70vh;
+    min-height: 50vh;
+    max-height: 88vh;
 }
 .image {
     height: 20vh;
@@ -23,8 +24,11 @@
 .border-off {
     border: none
 }
-.card:hover {
+.myTasks:hover {
     background-color: rgb(229, 234, 238) !important;
+}
+.card:hover {
+    background-color: rgb(229, 234, 238);
 }
 .dash {
     min-height: 70vh;

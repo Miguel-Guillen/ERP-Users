@@ -10,7 +10,6 @@ export class Task {
     priority: string | undefined;
     estatus: string | undefined;
     createdDate: Date | undefined;
-    view: string | undefined;
     info: string | undefined;
     evidence: string | undefined;
 }

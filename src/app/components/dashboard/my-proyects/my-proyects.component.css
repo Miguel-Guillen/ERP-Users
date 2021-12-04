@@ -2,3 +2,17 @@
     font-size: 17px;
     font-family: 'Times New Roman', Times, serif;
 }
+.form-c {
+    border: #d3d3d3 solid 1px;
+    width: 35%;
+}
+.proyects {
+    min-height: 80vh;
+}
+.border-on {
+    border-bottom: blueviolet solid;
+    border-radius: 0;
+}
+.border-off {
+    border: none
+}

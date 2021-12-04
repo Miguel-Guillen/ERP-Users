@@ -5,12 +5,46 @@
             <app-sidebar></app-sidebar>
         </div>
 
-        <div class="col-10 ff">
+        <div class="col-10">
             <div class="row" *ngIf="user.rol == 'usuario'; else noAdmin">
 
-                <div class="col-12 my-4">
-                    <h1 class="fw-bold">Coming soon</h1>
-                    <h2>En progreso</h2>
+                <div class="col-12 mt-4 mb-3 px-5 d-flex ff">
+                    <button class="btn me-2" (click)="show = false"
+                    [ngClass]="show === false ? 'border-on' : 'border-off' ">Activos</button>
+                    <button class="btn" (click)="show = true"
+                    [ngClass]="show === false ? 'border-off' : 'border-on' ">Finalizados</button>
+                    <div class="col d-flex justify-content-end px-0 mt-3">
+                        <input type="search" class="form-c ffs px-2 rounded" placeholder="buscar por nombre"
+                        [(ngModel)]="search">
+                        <button class="btn bg-white border border-2">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2 proyects px-5">
+                    <div class="row mt-2 mb-4 d-flex justify-content-start ff"
+                    *ngIf="show === false; show">
+                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No ha sido añadido
+                            a un proyecto aun</h5>
+                        <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
+                        *ngFor="let p of proyects | proyects: search">
+                            <div class="row px-1 my-1">
+                                <div class="col">
+                                    <p class="fw-bold my-1">{{p.name}}</p>
+                                    <p class="my-1">{{p.description}}</p>
+                                </div>
+                            </div>
+                            <div class="row px-1 my-1">
+                                <div class="col">
+                                    <p class="my-1">Tipo: {{p.type}}</p>
+                                    <p class="my-1">Area: {{p.area}}</p>
+                                    <p class="my-1">Estatus: {{p.estatus}}</p>
+                                    <p class="my-1">Entrega: {{p.dateEnd | date: format}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col px-0">
@@ -26,5 +60,29 @@
 <ng-template #noAdmin>
     <div class="vh-100 p-5">
         <h1>Error pagina no encontrada</h1>
+    </div>
+</ng-template>
+
+<ng-template #show>
+    <div class="row mt-2 mb-4 d-flex justify-content-start ff">
+        <h5 *ngIf="proyectsDone.length == 0" class="px-3 pt-3">No tiene ningun proyecto 
+            finalizado aun</h5>
+        <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
+        *ngFor="let p of proyectsDone | proyects: search">
+            <div class="row px-1 my-1">
+                <div class="col">
+                    <p class="fw-bold my-1">{{p.name}}</p>
+                    <p class="my-1">{{p.description}}</p>
+                </div>
+            </div>
+            <div class="row px-1 my-1">
+                <div class="col">
+                    <p class="my-1">Tipo: {{p.type}}</p>
+                    <p class="my-1">Area: {{p.area}}</p>
+                    <p class="my-1">Estatus: {{p.estatus}}</p>
+                    <p class="my-1">Entrega: {{p.dateEnd | date: format}}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </ng-template>
