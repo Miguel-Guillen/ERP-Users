@@ -19,20 +19,20 @@
 
                 <!-- project table -->
                 <div class="h-table">
-                    <div class="col vh-task ff" *ngIf="id === ''; else showProyect">
+                    <div class="col task ff mb-5" *ngIf="id === ''; else showProyect">
                         <h5 class="my-4 ms-3 fw-bold">Seleccione el proyecto a asignar la tarea</h5>
                         <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No hay ningun proyecto
                             añadido todavia</h5>
                         <p class="px-3" *ngIf="proyects.length == 0">
                             <a [routerLink]="['/proyect']">agregar nuevo proyecto </a>
                         <div>
-                            <div class="table table-borderless border border-3 shadow my-1 
-                            rounded bg-white options" type="button" (click)="getProyect(p.id)"
+                            <div class="table table-borderless border border-3 shadow-sm my-1 
+                            rounded bg-white" type="button" (click)="getProyect(p.id)"
                             *ngFor="let p of proyects | proyects: search">
                                 <div class="row my-1 p-2">
                                     <p class="col-2 text-center my-auto ff">{{p.name}}</p>
                                     <p class="col-4 my-auto ff">{{p.description}}</p>
-                                    <p class="col-2 my-auto ff">{{p.area}}</p>
+                                    <p class="col-2 my-auto ff">{{p.type}}</p>
                                     <p class="col-1 my-auto ff"
                                     [ngClass]="{'text-danger': p.estatus == 'Cancelado',
                                     'text-success': p.estatus == 'Finalizado', 
@@ -70,20 +70,19 @@
                     <div class="col">
                         <h5 class="fw-bold my-2">Proyecto: {{proyect[0].name}}</h5>
                         <p class="my-1">Descripcion: {{proyect[0].description}}</p>
+                    </div>
+                </div>
+                <div class="row px-3 pt-2 d-flex align-items-center">
+                    <div class="col-6">
+                        <p class="my-1">Fecha de inicio: {{proyect[0].dateStart | date: format}}</p>
+                        <p class="my-1">Fecha de cierre: {{proyect[0].dateEnd | date: format}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="my-1">Tipo: {{proyect[0].type}}</p>
                         <p class="my-1" [ngClass]="{'text-danger': proyect[0].estatus == 'Cancelado',
                         'text-success': proyect[0].estatus == 'Finalizado', 
                         'text-info': proyect[0].estatus == 'Activo' }">
                         Estado: {{proyect[0].estatus}}</p>
-                    </div>
-                </div>
-                <div class="row px-3 d-flex align-items-center">
-                    <div class="col-6">
-                        <p>Tipo: {{proyect[0].type}}</p>
-                        <p>Area: {{proyect[0].area}}</p>
-                    </div>
-                    <div class="col-6">
-                        <p>Fecha de inicio: {{proyect[0].dateStart | date: format}}</p>
-                        <p>Fecha de cierre: {{proyect[0].dateEnd | date: format}}</p>
                     </div>
                 </div>
             </div>
@@ -174,11 +173,8 @@
                             <p class="form-label px-3">Area</p>
                             <div class="col d-flex">
                                 <select class="form-select" [(ngModel)]="area">
-                                    <option value="Gestion de proyectos">Gestion de proyectos</option>
-                                    <option value="Diseño de aplicaciones">Diseño de aplicaciones</option>
-                                    <option value="Programacion de aplicaciones">Programacion de aplicaciones</option>
-                                    <option value="Pruebas y Procesos de calidad">Pruebas y Procesos de calidad</option>
-                                    <option value="contabilidad">Contabilidad</option>
+                                    <option  *ngFor="let a of areas" value="{{a.area}}">{{a.area}}</option>
+                                    <option value="otros">Otros</option>
                                 </select>
                                 <button class="btn btn-outline-success ms-1" type="button" 
                                 (click)="info()">Buscar</button>
@@ -355,7 +351,7 @@
 
 <ng-template #noComp>
     <div class="ff">
-        <h5 class="my-4">No hay integrantes en el proyecto aun</h5>
+        <h5 class="my-4 ps-2">No hay integrantes en el proyecto aun</h5>
     </div>
 </ng-template>
 

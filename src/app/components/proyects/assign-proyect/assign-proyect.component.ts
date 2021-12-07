@@ -22,6 +22,7 @@ export class AssignProyectComponent implements OnInit {
   competitors: any[] = [];
   responsables: any[] = [];
   tasks: any[] = [];
+  areas: any[] = [];
   id: string = '';
   idCompetitor = '';
   idTask = '';
@@ -70,6 +71,7 @@ export class AssignProyectComponent implements OnInit {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.getProyects();
+    this.getAreas();
   }
 
   getProyects(){
@@ -237,6 +239,18 @@ export class AssignProyectComponent implements OnInit {
         this.responsables.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
+        });
+      });
+    })
+  }
+
+  getAreas(){
+    this._serviceEmployee.get().subscribe((res: any) => {
+      this.areas = [];
+      res.forEach((element: any) => {
+        this.areas.push({
+          id: element.payload.doc.id,
+          area: element.payload.doc.data()['area']
         });
       });
     })

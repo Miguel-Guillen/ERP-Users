@@ -23,7 +23,6 @@
                         </div>
                         <div class="col-6 p-3">
                             <p class="my-1">Tipo: {{myProyect[0].type}}</p>
-                            <p class="my-1">Area: {{myProyect[0].area}}</p>
                             <p class="my-1" [ngClass]="{'text-danger': myProyect[0].estatus == 'Cancelado',
                             'text-success': myProyect[0].estatus == 'Finalizado', 
                             'text-info': myProyect[0].estatus == 'Activo' }">
@@ -46,7 +45,6 @@
                     py-2 my-1" *ngFor="let c of competitors">
                         <p class="col-2 my-1 text-center"><i class="fas fa-user text-info"></i></p>
                         <p class="col-3 my-1 ff text-center">{{c.name}}</p>
-                        <p class="col-4 my-1 ff text-center">{{c.area}}</p>
                         <p class="col-3 my-1 ff text-center">{{c.rol}}</p>
                     </div>
                 </div>
@@ -107,18 +105,6 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-6">
-
-                                        <small class="form-label">Area de trabajo</small>
-                                        <input type="text" class="form-control" formControlName="area"
-                                        [ngClass]="{'border-bottom border-danger': formValid === false}"
-                                        placeholder="Inserte el area">
-                                        <ng-container *ngFor="let validation of validation_messages.area">
-                                            <div class="text-danger ff mb-2" *ngIf="editForm.get('area').hasError(validation.type) && 
-                                            (editForm.get('area').dirty || editForm.get('area').touched)">
-                                                {{validation.message}}
-                                            </div>
-                                        </ng-container>
-                                        <br>
                                         <small class="form-label">Estado</small>
                                         <select class="form-select custom-select" formControlName="estatus"
                                         [ngClass]="{'border-bottom border-danger': formValid === false}">
@@ -126,17 +112,13 @@
                                             <option value="Finalizado">Finalizado</option>
                                             <option value="Cancelado">Cancelado</option>
                                         </select>
+                                        <br>
                                         <ng-container *ngFor="let validation of validation_messages.estatus">
                                             <div class="text-danger ff mb-2" *ngIf="editForm.get('estatus').hasError(validation.type) && 
                                             (editForm.get('estatus').dirty || editForm.get('estatus').touched)">
                                                 {{validation.message}}
                                             </div>
                                         </ng-container>
-
-                                    </div>
-                                </div>
-                                <div class="row my-2">
-                                    <div class="col-6">
                                         <small class="form-label">Fecha Inicio</small>
                                         <input type="date" class="form-control" formControlName="dateStart"
                                         [ngClass]="{'border-bottom border-danger': formValid === false}">
@@ -147,6 +129,8 @@
                                             </div>
                                         </ng-container>
                                     </div>
+                                </div>
+                                <div class="row my-2">
                                     <div class="col-6">
                                         <small class="form-label">Fecha Terminacion</small>
                                         <input type="date" class="form-control" formControlName="dateEnd"

@@ -4,7 +4,6 @@ import { TaskService } from 'src/app/service/task.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Task } from '../../../models/task'
-import { DoneTaskService } from 'src/app/service/done-task.service';
 import { ProyectService } from 'src/app/service/proyect.service';
 
 @Component({

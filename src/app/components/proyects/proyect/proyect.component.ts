@@ -36,9 +36,6 @@ export class ProyectComponent implements OnInit {
     type: [
       { type: 'required', message: 'Tipo de proyecto requerido' }
     ],
-    area: [
-      { type: 'required', message: 'Area del proyecto requerida' }
-    ],
     dateStart: [
       { type: 'required', message: 'Fecha de inicio requerida' }
     ],
@@ -57,9 +54,6 @@ export class ProyectComponent implements OnInit {
         Validators.required
       ])),
       description: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      area: new FormControl("", Validators.compose([
         Validators.required
       ])),
       dateStart: new FormControl("", Validators.compose([

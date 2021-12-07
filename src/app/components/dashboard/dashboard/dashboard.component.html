@@ -30,6 +30,8 @@
                                 </div>
                             </div>
                         </div>
+                        <a *ngIf="proyects.length > 0" class="ps-2" [routerLink]="['/myProyects']">
+                            Ver mas</a>
                     </div>
             
                     <div class="col-6 my-3 py-3 px-4 ff border border-3 shadow-sm bg-white rounded task">
@@ -46,34 +48,10 @@
                                 </div>
                             </div>
                         </div>
+                        <a *ngIf="myTask.length > 0" class="ps-2" [routerLink]="['/myTasks']">
+                            Ver mas</a>
                     </div>
         
-                </div>
-        
-                <div class="row my-4">
-                    <div class="card-group d-flex justify-content-around">
-
-                        <div class="col-3 border border-3 shadow-sm ff" type="button"
-                        [routerLink]="['/myProyects']">
-                            <div class="row bg-info p-2 border-bottom border-3 text-center">
-                                <img src="../../../../assets/img/carpeta.png" class="image mx-auto" alt="">
-                            </div>
-                            <div class="row py-2 px-3 text-center">
-                                <p>Todos mis proyectos asignados y finalizados</p>
-                            </div>
-                        </div>
-
-                        <div class="col-3 border border-3 shadow-sm ff" type="button"
-                        [routerLink]="['/myTasks']">
-                            <div class="row bg-info p-2 border-bottom border-3 text-center">
-                                <img src="../../../../assets/img/tarea.png" class="image mx-auto" alt="">
-                            </div>
-                            <div class="row bg-white py-2 px-3 text-center">
-                                <p>Todas mis tareas asignadas y completadas</p>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
         
             </div>
@@ -111,9 +89,9 @@
 
             <div class="col-3 border border-3 bg-white shadow-sm tasks">
                 <div class="card shadow-sm text-center my-2" *ngFor="let a of actives" 
-                type="button" (click)="getTask(a.id)">
+                type="button" (click)="getData(a.id)">
                     <p class="my-1 fw-bold">{{a.name}}</p>
-                    <p class="my-1">Area: {{a.area}}</p>
+                    <p class="my-1">Tipo: {{a.type}}</p>
                     <p class="my-1">Entrega: {{a.dateEnd | date: format}}</p>
                 </div>
             </div>

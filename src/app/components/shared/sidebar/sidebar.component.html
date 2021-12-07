@@ -11,28 +11,28 @@
                 align-items-sm-start" id="menu" *ngIf="user.rol == 'usuario';else noAdmin">
                     <li class="nav-item">
                         <a [routerLink]="['/dashboard']" class="nav-link align-middle px-0 
-                        text-secondary">
+                        text-white">
                             <i class="fas fa-home"></i>
                             <span class="ms-2 d-none d-sm-inline">Inicio</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a [routerLink]="['/myTasks']" class="nav-link align-middle px-0
-                        text-secondary">
+                        text-white">
                             <i class="fas fa-tasks"></i>
                             <span class="ms-2 d-none d-sm-inline">Tareas</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a [routerLink]="['/myProyects']" class="nav-link align-middle px-0
-                        text-secondary">
+                        text-white">
                             <i class="fas fa-folder"></i>
                             <span class="ms-2 d-none d-sm-inline">Proyectos</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a [routerLink]="['/acercade']" class="nav-link align-middle px-0
-                        text-secondary">
+                        text-white">
                             <i class="fas fa-info-circle"></i>
                             <span class="ms-2 d-none d-sm-inline">Acerca de</span>
                         </a>
@@ -59,7 +59,7 @@
                 </ul>
                 <div class="dropdown pb-3">
                     <a href="#" (click)="logout()" class="nav-link align-middle px-0
-                    text-secondary">
+                    text-white">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="d-none d-sm-inline ms-2">Cerrar sesion</span>
                     </a>
@@ -74,28 +74,28 @@
     align-items-sm-start" id="menu">
         <li class="nav-item">
             <a [routerLink]="['/dashboard']" class="nav-link align-middle px-0 
-            text-secondary">
+            text-white">
                 <i class="fas fa-home"></i>
                 <span class="ms-2 d-none d-sm-inline">Inicio</span>
             </a>
         </li>
         <li class="nav-item">
             <a [routerLink]="['/employee']" class="nav-link align-middle px-0 
-            text-secondary">
+            text-white">
                 <i class="fas fa-user"></i>
                 <span class="ms-2 d-none d-sm-inline">Empleados</span>
             </a>
         </li>
         <li class="nav-item">
             <a [routerLink]="['/proyect']" class="nav-link align-middle px-0 
-            text-secondary">
+            text-white">
                 <i class="fas fa-file-alt"></i>
                 <span class="ms-2 d-none d-sm-inline">Proyectos</span>
             </a>
         </li>
         <li class="nav-item">
             <a [routerLink]="['/assign-proyect']" class="nav-link align-middle px-0 
-            text-secondary">
+            text-white">
                 <i class="fas fa-tasks"></i>
                 <span class="ms-1 d-none d-sm-inline">Tareas</span>
             </a>
@@ -108,7 +108,7 @@
         </li> -->
         <li class="nav-item">
             <a [routerLink]="['/acercade']" class="nav-link align-middle px-0
-            text-secondary">
+            text-white">
                 <i class="fas fa-info-circle"></i>
                 <span class="ms-2 d-none d-sm-inline">Acerca de</span>
             </a>

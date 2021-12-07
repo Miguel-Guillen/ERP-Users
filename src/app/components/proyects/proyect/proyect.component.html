@@ -44,7 +44,6 @@
                             <div class="row px-1 mb-1 mb-2">
                                 <div class="col">
                                     <p class="my-1">Tipo: {{p.type}}</p>
-                                    <p class="my-1">Area: {{p.area}}</p>
                                     <p [ngClass]="{'text-danger': p.estatus == 'Cancelado',
                                     'text-success': p.estatus == 'Finalizado', 
                                     'text-info': p.estatus == 'Activo' }" 
@@ -110,16 +109,6 @@
                                             </ng-container>
                                         </div>
                                         <div class="col-6">
-                                            <small class="form-label">Area de trabajo</small>
-                                            <input type="text" class="form-control" formControlName="area"
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}"
-                                            placeholder="Inserte el area">
-                                            <ng-container *ngFor="let validation of validation_messages.area">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('area').hasError(validation.type) && 
-                                                (proyectForm.get('area').dirty || proyectForm.get('area').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
                                             <small class="form-label">Fecha Inicio</small>
                                             <input type="date" class="form-control" formControlName="dateStart"
                                             [ngClass]="{'border-bottom border-danger': formValid === false}">
@@ -129,10 +118,7 @@
                                                     {{validation.message}}
                                                 </div>
                                             </ng-container>
-                                        </div>
-                                    </div>
-                                    <div class="row my-2">
-                                        <div class="col-6">
+                                            <br>
                                             <small class="form-label">Fecha Terminacion</small>
                                             <input type="date" class="form-control" formControlName="dateEnd"
                                             [ngClass]="{'border-bottom border-danger': formValid === false}">
@@ -199,7 +185,6 @@
             <div class="row px-1 mb-1 mb-2">
                 <div class="col">
                     <p class="my-1">Tipo: {{pd.type}}</p>
-                    <p class="my-1">Area: {{pd.area}}</p>
                     <p class="my-1" [ngClass]="{'text-danger': pd.estatus == 'Cancelado',
                     'text-success': pd.estatus == 'Finalizado', 
                     'text-info': pd.estatus == 'Activo' }">Estatus: {{pd.estatus}}</p>

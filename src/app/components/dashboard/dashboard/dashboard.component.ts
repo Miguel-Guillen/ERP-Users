@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   responsables: any [] = [];
   data: boolean | undefined;
   show = false;
+  id = '';
   format = 'dd/MM/yyyy'
   user = {
     id: '',
@@ -35,20 +36,29 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || '')
     this.info();
-    this.getProyects();
-    this.myTasks();
-    this.proyectsActive();
+    if(this.user.rol == 'administrador'){
+      this.proyectsActive();
+    }else {
+      this.myProyects();
+      this.myTasks();
+    }
   }
 
-  getProyects(){
-    this._serviceProyect.getMyProjects().subscribe((res: any) => {
+  myProyects(){
+    this._serviceProyect.get().subscribe((res: any) => {
+      const proyects: any = []
       this.proyects = [];
       res.forEach((element: any) => {
-        this.proyects.push({
+        proyects.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
+      for(const p of proyects){
+        if(p.estatus == 'Activo' && p.id == this.myInfo[0].idProyect){
+          this.proyects.push(p)
+        }
+      }
     })
   }
 
@@ -86,52 +96,48 @@ export class DashboardComponent implements OnInit {
   // section administrator
 
   proyectsActive(){
-    this._serviceProyect.get().subscribe((res: any) => {
+    this._serviceProyect.projectsActive().subscribe((res: any) => {
       this.actives = [];
-      const proyects: any = []
       res.forEach((element: any) => {
-        proyects.push({
+        this.actives.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      for(const p of proyects){
-        if(p.estatus == 'Activo') this.actives.push(p)
-      }
     })
   }
 
   getTask(id: string){
-    if(this.user.rol == 'administrador'){
-      this.taskToDo = [];
-      this.taskInProgress = [];
-      this.taskReview = [];
-      this.taskDone = [];
-      this.tasks = [];
-      this.getResponsables(id);
-      this._serviceTask.getActive(id).subscribe((res: any) => {
-        res.forEach((element: any) => {
-          this.tasks.push({
-            id: element.payload.doc.id,
-            ...element.payload.doc.data()
-          });
+    this.tasks = [];
+    this.taskToDo = [];
+    this.taskInProgress = [];
+    this.taskReview = [];
+    this.taskDone = [];
+    this._serviceTask.getActive(id).subscribe((res: any) => {
+      for(const element of res){
+        this.tasks.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data()
         });
-        if(this.tasks.length == 0) this.data = false;
-        for(let i = 0; i < this.tasks.length; i++){
-          for(let j = 0; j < this.responsables.length; j++){
-            if(this.tasks[i].responsable == this.responsables[j].idEmployee) 
+      }
+      if(this.tasks.length == 0) this.data = false;
+
+      for(let i = 0; i < this.tasks.length; i++){
+        for(let j = 0; j < this.responsables.length; j++){
+          if(this.tasks[i].responsable === this.responsables[j].idEmployee){
             this.tasks[i].name = this.responsables[j].name;
           }
         }
-        for(const t of this.tasks){
-          if(t.estatus == 'Por hacer' || t.estatus == 'Rehacer') this.taskToDo.push(t);
-          if(t.estatus == 'En progreso') this.taskInProgress.push(t);
-          if(t.estatus == 'Revision') this.taskReview.push(t);
-          if(t.estatus == 'Terminado') this.taskDone.push(t);
-        }
-      })
-      this.data = true;
-    }
+      }
+
+      for(const t of this.tasks){
+        if(t.estatus == 'Por hacer' || t.estatus == 'Rehacer') this.taskToDo.push(t);
+        if(t.estatus == 'En progreso') this.taskInProgress.push(t);
+        if(t.estatus == 'Revision') this.taskReview.push(t);
+        if(t.estatus == 'Terminado') this.taskDone.push(t);
+      }
+    })
+    this.data = true;
   }
 
   viewTask(){
@@ -143,13 +149,19 @@ export class DashboardComponent implements OnInit {
   getResponsables(id: string){
     this._serviceCompetitor.getCompetitors(id).subscribe((res: any) => {
       this.responsables = [];
-      res.forEach((element: any) => {
+      for(const element of res){
         this.responsables.push({
           id: element.payload.doc.id,
-          ...element.payload.doc.data()
+          name: element.payload.doc.data()['name'],
+          idEmployee: element.payload.doc.data()['idEmployee']
         });
-      });
+      };
     })
+  }
+
+  getData(id: string){
+    this.getResponsables(id);
+    this.getTask(id);
   }
 
 }

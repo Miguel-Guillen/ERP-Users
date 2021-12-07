@@ -36,9 +36,6 @@ export class EditProyectComponent implements OnInit {
     type: [
       { type: 'required', message: 'Tipo de proyecto requerido' }
     ],
-    area: [
-      { type: 'required', message: 'Area del proyecto requerida' }
-    ],
     estatus: [
       { type: 'required', message: 'Estado del proyecto requerido' }
     ],
@@ -61,9 +58,6 @@ export class EditProyectComponent implements OnInit {
         Validators.required
       ])),
       description: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      area: new FormControl("", Validators.compose([
         Validators.required
       ])),
       estatus: new FormControl("", Validators.compose([
@@ -93,7 +87,6 @@ export class EditProyectComponent implements OnInit {
       })
       this.editForm.setValue({
         name: res.payload.data()['name'],
-        area: res.payload.data()['area'],
         type: res.payload.data()['type'],
         estatus: res.payload.data()['estatus'],
         description: res.payload.data()['description'],

@@ -18,9 +18,15 @@ export class ProyectService {
     return this.firestore.collection('proyects').doc(id).snapshotChanges()
   }
 
-  getMyProjects(): Observable<any>{
+  getMyProjects(id: string): Observable<any>{
     return this.firestore.collection('proyects', ref => ref
-    .where('estatus', '==', 'Activo').limit(4).orderBy('createdDate', 'asc')).snapshotChanges();
+    .where('estatus', '==', 'Activo').where('id', '==', id)
+    .limit(4).orderBy('createdDate', 'asc')).snapshotChanges();
+  }
+
+  projectsActive(): Observable<any>{
+    return this.firestore.collection('proyects', ref => ref
+    .where('estatus', '==', 'Activo').orderBy('createdDate', 'asc')).snapshotChanges();
   }
 
   add(proyect: any): Promise<any>{
