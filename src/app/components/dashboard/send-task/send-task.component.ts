@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TaskService } from 'src/app/service/task.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TaskService } from 'src/app/core/service/task.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Task } from '../../../models/task'
-import { ProyectService } from 'src/app/service/proyect.service';
+import { ProyectService } from 'src/app/core/service/proyect.service';
+import { UserAuth } from 'src/app/core/models/auth';
+import { Task } from '../../../core/models/task';
+import { Proyect } from 'src/app/core/models/proyect';
+import * as types from '../../../core/enums/task.enum'
 
 @Component({
   selector: 'app-send-task',
@@ -13,102 +16,98 @@ import { ProyectService } from 'src/app/service/proyect.service';
 })
 export class SendTaskComponent implements OnInit {
   idTask: any;
-  task: any[] = [];
-  proyects: any[] = [];
-  doneTaskForm: FormGroup;
-  doneTask = new Task;
-  formValid: boolean = true;
-  send: boolean = false;
-  format = 'dd/MM/yyyy'
-  user = {
-    id: '',
-    email: '',
-    rol: ''
-  }
+  
+  taskForm = new FormGroup({});
+  task = new Task();
+  proyect = new Proyect();
+  user = new UserAuth();
+  formValid = true;
+  send = false;
 
-  constructor(private route: ActivatedRoute, private _serviceTask: TaskService,
-    private formB: FormBuilder, private toast: ToastrService, 
-    private _serviceProyect: ProyectService, private router: Router) {
-    this.doneTaskForm = this.formB.group({
-      estatus: new FormControl ("", Validators.required),
-      info: new FormControl (""),
-      evidence: new FormControl ("")
-    })
+  typeEstatus = types.estatus;
+
+  format = 'dd/MM/yyyy';
+
+  constructor(private route: ActivatedRoute, private _service: TaskService,
+    private _serviceProyect: ProyectService, private router: Router,
+    private formB: FormBuilder, private toast: ToastrService) {
+      this.typeEstatus.shift();
   }
 
   ngOnInit(): void {
     this.idTask = this.route.snapshot.paramMap.get('id');
-    this.user = JSON.parse(localStorage.getItem('user') || '{}')
-    this.detailsTask();
-    this.getProyects();
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
+    this.taskForm = this.createForm(this.task);
+    this.getTask();
+    this.getProyect();
   }
 
-  detailsTask(){
-    this._serviceTask.getOne(this.idTask).subscribe((res: any) => {
-      this.task.push({
-        ...res.payload.data()
-      });
+  createForm(taskForm: Task): FormGroup {
+    return this.formB.group({
+      estatus: [taskForm.estatus, Validators.required],
+      info: [taskForm.info]
     })
   }
 
-  sendTask(values: any){
-    if(this.doneTaskForm.valid){
-      this.send = true;
-      this.doneTask = this.task[0];
-      this.doneTask.estatus = values.estatus;
-      if(values.info == '' && values.evidence == ''){
-        this._serviceTask.update(this.idTask, this.doneTask).then(() => {
-          this.toast.success('La tarea ha sido enviada correctamente'
-          ,'Tarea enviada', { positionClass: 'toast-bottom-right'});
-          this.router.navigate(['myTasks']);
-          this.send = false;
-          this.formValid = true;
-        }).catch(err => {
-          this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
-          'Error al enviar la tarea', { positionClass: 'toast-bottom-right' });
-          this.send = false;
-          this.formValid = true;
-        })
-      }else {
-        this.doneTask.evidence = values.evidence;
-        this.doneTask.info = values.info
-        this._serviceTask.update(this.idTask, this.doneTask).then(() => {
-          this.toast.success('La tarea ha sido enviada correctamente'
-          ,'Tarea enviada', { positionClass: 'toast-bottom-right'});
-          this.router.navigate(['myTasks'])
-          this.send = false;
-          this.formValid = true;
-        }).catch(err => {
-          this.toast.error(`Ha ocurrido un error de tipo ${err}`, 
-          'Error al enviar la tarea', { positionClass: 'toast-bottom-right' });
-          this.send = false;
-          this.formValid = true;
-        })
+  getTask(){
+    this._service.getOne(this.idTask).subscribe((res: any) => {
+      const data: Task = res.cont.task[0];
+      let info;
+ 
+      if(data.blnActivo === true) this.task = data;
+      if(data.info == undefined){
+        info = "" ;
+      }else { info = data.info }
+      this.taskForm.setValue({
+        estatus: data.estatus,
+        info: info,
+      })
+    })
+  }
+
+  
+  getProyect(){
+    this._serviceProyect.get().subscribe((res: any) => {
+      const data = res.cont.project[0];
+
+      if(data.blnActivo === true){
+        this.proyect = data;
       }
+    })
+  }
+        
+  sendTask(values: any){
+    if(this.taskForm.valid){
+      this.send = true;
+      let task = this.task;
+      task.info = values.info;
+      task.estatus = values.estatus;
+      console.log(task);
+
+      this._service.update(this.idTask, task).then(() => {
+        this.toast.success('La tarea ha sido entregada correctamente', '',
+        { positionClass: 'toast-bottom-right'});
+        this.reset();
+        this.router.navigate(['myTask']);
+      }).catch(err => {
+        this.toast.error(`Ha ocurrido un error al mandar la tarea`, '', 
+        { positionClass: 'toast-bottom-right' });
+        this.reset();
+        console.log(err);
+      })
+
     }else {
-      this.toast.warning('Los valores del formulario son invalidos', 
-      'Formulario invalido', { positionClass: 'toast-bottom-right' })
-      console.log(this.doneTaskForm)
+      this.toast.warning('Los valores del formulario son invalidos', '',
+      { positionClass: 'toast-bottom-right' })
       this.formValid = false;
+      console.log(this.taskForm)
     }
   }
 
-  getProyects(){
-    this._serviceProyect.get().subscribe((res: any) => {
-      this.proyects = [];
-      res.forEach((element: any) => {
-        this.proyects.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(let j = 0; j < this.task.length; j++){
-        for(let i = 0; i < this.proyects.length; i++){
-            if(this.task[j].idProyect == this.proyects[i].id) 
-            this.task[j].name = this.proyects[i].name;
-        }
-      }
-    })
+  reset(){
+    this.taskForm.reset();
+    this.formValid = true;
+    this.send = false;
   }
 
 }

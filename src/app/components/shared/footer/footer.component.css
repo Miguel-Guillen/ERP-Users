@@ -1,10 +1,31 @@
-.ff{
+p, span, div, h5, h4, a {
     font-family: 'Times New Roman', Times, serif;
-    font-size: 16px;
+    color: #fff;
+}
+p, span, div, h6, a {
+    font-size: 19px;
+}
+h5 {
+    font-size: 17px;
 }
 .img1 {
     width: 60px;
 }
 .img2 {
     width: 45px;
+}
+
+@media (width < 769px){
+    p, span, div, h6, a {
+        font-size: 13.5px;
+    }
+    h5 {
+        font-size: 14px;
+    }
+    .img1 {
+        width: 35px;
+    }
+    .img2 {
+        width: 35px;
+    }
 }

@@ -1,56 +1,57 @@
-<div class="container-fluid bg-light min-vh-100">
+<div class="container-fluid bg-light">
     <div class="row">
 
         <div class="col-2 px-0">
             <app-sidebar></app-sidebar>
         </div>
 
-        <div class="col-10">
-            <div class="row" *ngIf="user.rol == 'usuario'; else noAdmin">
-
-                <div class="col-12 mt-4 mb-3 px-5 d-flex ff">
-                    <button class="btn me-2" (click)="show = false"
-                    [ngClass]="show === false ? 'border-on' : 'border-off' ">Activos</button>
-                    <button class="btn" (click)="show = true"
-                    [ngClass]="show === false ? 'border-off' : 'border-on' ">Finalizados</button>
-                    <div class="col d-flex justify-content-end px-0 mt-3">
-                        <input type="search" class="form-c ffs px-2 rounded" placeholder="buscar por nombre"
-                        [(ngModel)]="search">
-                        <button class="btn bg-white border border-2">
-                            <i class="fas fa-search"></i>
-                        </button>
+        <div class="col-10 px-0">
+            <div class="row m-lg-5 m-4">
+                <ng-container *ngIf="user.rol === 0; else noAdmin">
+    
+                    <div class="col-12 mt-2 mb-4 d-flex px-0">
+                        <h4 class="fw-bold ms-2">Proyectos asignados</h4>
+                        <div class="col d-flex justify-content-end">
+                            <input type="search" class="form-control rounded w-35 px-2" placeholder="Buscar"
+                            [(ngModel)]="search">
+                            <button class="btn bg-white border border-2 button-search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-12 mt-2 proyects px-5">
-                    <div class="row mt-2 mb-4 d-flex justify-content-start ff"
-                    *ngIf="show === false;else noShow">
-                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No ha sido agregado
-                            a un proyecto aun</h5>
-                        <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
-                        *ngFor="let p of proyects | proyects: search">
-                            <div class="row px-1 my-1">
-                                <div class="col">
-                                    <p class="fw-bold my-1">{{p.name}}</p>
-                                    <p class="my-1">{{p.description}}</p>
+    
+                    <ng-container *ngIf="listProjects.length > 0; else noProjects">
+                        <div class="project-table d-flex mt-4 p-0">
+                            <div *ngFor="let project of listProjects | proyects: search" 
+                            class="card bg-white border border-3 mb-2 mx-1 p-lg-3 p-2" 
+                            (click)="searchTask(project._id)" type="button">
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="fw-bold mt-1 mb-2">{{project.name}}</p>
+                                        <p class="my-1">{{ (project.description.length > 100)? 
+                                        (project.description | slice: 0:100) + '...' : (project.description) }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row px-1 my-1">
-                                <div class="col">
-                                    <p class="my-1">Tipo: {{p.type}}</p>
-                                    <p class="my-1">Estatus: {{p.estatus}}</p>
-                                    <p class="my-1">Entrega: {{p.dateEnd | date: format}}</p>
+                                <div class="row">
+                                    <div class="col">
+                                        <p [ngClass]="{'text-warning': project.estatus == 'Pausado', 
+                                        'text-info': project.estatus == 'En progreso',
+                                        'text-success': project.estatus == 'Cerrado'}" 
+                                        class="my-1">Estatus: {{project.estatus}}</p>
+                                        <small class="my-1">Entrega: {{ project.dateEnd | date: format }}</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </ng-container>
 
-                <div class="col px-0">
-                    <app-footer></app-footer>
-                </div>
-
+                </ng-container>
             </div>
+
+            <div class="col px-0">
+                <app-footer></app-footer>
+            </div>
+
         </div>
 
     </div>
@@ -58,30 +59,14 @@
 
 <ng-template #noAdmin>
     <div class="vh-100 p-5">
-        <h1>Error pagina no encontrada</h1>
+        <h1>Error 404</h1>
+        <h2>pagina no encontrada</h2>
     </div>
 </ng-template>
 
-<ng-template #noShow>
-    <div class="row mt-2 mb-4 d-flex justify-content-start ff">
-        <h5 *ngIf="proyectsDone.length == 0" class="px-3 pt-3">No tiene ningun proyecto 
-            finalizado aun</h5>
-        <div class="col-3 m-1 bg-white border border-3 rounded shadow-sm proy"
-        *ngFor="let pd of proyectsDone | proyects: search">
-            <div class="row px-1 my-1">
-                <div class="col">
-                    <p class="fw-bold my-1">{{pd.name}}</p>
-                    <p class="my-1">{{pd.description}}</p>
-                </div>
-            </div>
-            <div class="row px-1 my-1">
-                <div class="col">
-                    <p class="my-1">Tipo: {{pd.type}}</p>
-                    <p class="my-1">Area: {{pd.area}}</p>
-                    <p class="my-1">Estatus: {{pd.estatus}}</p>
-                    <p class="my-1">Entrega: {{pd.dateEnd | date: format}}</p>
-                </div>
-            </div>
-        </div>
+<ng-template #noProjects>
+    <div class="project-table mx-4">
+        <h5 class="pt-4">No ha sido añadido a ningun proyecto aun</h5>
+        <p>Solicite a su lider de proyecto que lo añada al proyecto</p>
     </div>
 </ng-template>

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ProyectService } from 'src/app/service/proyect.service';
-import { Proyect } from '../../../models/proyect'
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { ProyectService } from 'src/app/core/service/proyect.service';
+import { Proyect } from '../../../core/models/proyect';
+import * as types from '../../../core/enums/proyect.enum';
+import { UserAuth } from 'src/app/core/models/auth';
 
 @Component({
   selector: 'app-proyect',
@@ -12,19 +15,19 @@ import { Proyect } from '../../../models/proyect'
 })
 export class ProyectComponent implements OnInit {
   proyectForm: FormGroup;
-  proyect = new Proyect;
-  proyects: any[] = [];
-  proyectsDone: any[] = [];
+  proyectsProgress: Proyect[] = [];
+  proyectsDone: Proyect[] = [];
+  proyectsDesactivated: Proyect[] = [];
   search: any;
-  show = false;
-  formValid: boolean = true;
-  send: boolean = false;
-  user = {
-    id: '',
-    email: '',
-    rol: ''
-  }
+  
+  user = new UserAuth();
+  formValid = true;
+  send = false;
+  
+  show = 0;
+  closeResult = '';
   format = 'dd/MM/yyyy';
+
 
   validation_messages = {
     name: [
@@ -32,9 +35,6 @@ export class ProyectComponent implements OnInit {
     ],
     description: [
       { type: 'required', message: 'Descripcion requerida' }
-    ],
-    type: [
-      { type: 'required', message: 'Tipo de proyecto requerido' }
     ],
     dateStart: [
       { type: 'required', message: 'Fecha de inicio requerida' }
@@ -45,12 +45,9 @@ export class ProyectComponent implements OnInit {
   }
 
   constructor(private formB: FormBuilder, private _service: ProyectService,
-    private route: Router, private toast: ToastrService) {
+    private modal: NgbModal, private toast: ToastrService, private route: Router) {
     this.proyectForm = this.formB.group({
       name: new FormControl("", Validators.compose([
-        Validators.required
-      ])),
-      type: new FormControl("", Validators.compose([
         Validators.required
       ])),
       description: new FormControl("", Validators.compose([
@@ -66,58 +63,96 @@ export class ProyectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
     this.getProyects();
   }
 
   getProyects(){
     this._service.get().subscribe((res: any) => {
-      this.proyects = [];
-      const proyects: any = [];
-      res.forEach((element: any) => {
-        proyects.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const p of proyects){
-        if(p.estatus == 'Finalizado' || p.estatus == 'Cancelado') this.proyectsDone.push(p);
-        else this.proyects.push(p);
+      const data = res.cont.project;
+      this.proyectsProgress = [];
+      this.proyectsDone = [];
+      this.proyectsDesactivated = [];
+
+      for(const proyect of data){
+        if(proyect.blnActivo === true){
+          if(proyect.estatus == types.TypeEstatus.En_progreso || proyect.estatus == types.TypeEstatus.Pausado) 
+          this.proyectsProgress.push(proyect);
+          if(proyect.estatus == types.TypeEstatus.Cerrado) this.proyectsDone.push(proyect);
+        }else {
+          this.proyectsDesactivated.push(proyect);
+        }
       }
     })
   }
 
   searchProyect(id: string){
-    this.route.navigate([`editProyect/${id}`]);
+    this.route.navigate([`/details/${id}`]);
   }
 
-  newProyect(values: any){
+  newProyect(values: Proyect){
     if(this.proyectForm.valid){
       this.send = true;
-      this.proyect = values;
-      this.proyect.estatus = 'Activo';
-      this.proyect.createdDate = new Date;
-      this._service.add(this.proyect).then(() => {
+      const proyect: Proyect = values;
+
+      this._service.add(proyect).then(() => {
         this.toast.success('El proyecto ha sido añadido con exito', 'Proyecto añadido', 
         { positionClass: 'toast-bottom-right' })        
-        this.proyectForm.reset();
-        this.send = false;
-        this.formValid = true;
+        this.getProyects();
+        this.reset();
       }).catch(err => {
-        this.toast.error(`Ha ocurrido un error de tipo ${err}`, 'Error al añadir el empleado', 
+        this.toast.error(`Ha ocurrido un error al agregar el empleado`, '', 
         { positionClass: 'toast-bottom-right' });
+        console.log(err);
         this.send = false;
         this.formValid = true;
       })
+
     }else {
-      this.toast.warning('Los datos no son validos o los campos estan vacios'
-      , 'Datos invalidos', { positionClass: 'toast-bottom-right' });
+      this.toast.warning('Los datos no son validos o los campos estan vacios', '',
+      { positionClass: 'toast-bottom-right' });
       this.formValid = false;
     }
   }
 
+  openModal(content: any){
+    this.modal.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  get name(){
+    return this.proyectForm.get('name');
+  }
+
+  get description(){
+    return this.proyectForm.get('description');
+  }
+  
+  get dateStart(){
+    return this.proyectForm.get('dateStart');
+  }
+
+  get dateEnd(){
+    return this.proyectForm.get('dateEnd');
+  }
+
   reset(){
     this.proyectForm.reset();
+    this.send = false;
+    this.formValid = true;
   }
 
 }

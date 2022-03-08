@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AssignService } from 'src/app/service/assign.service';
-import { ProyectService } from 'src/app/service/proyect.service';
+import { ProyectService } from 'src/app/core/service/proyect.service';
+import { UserAuth } from 'src/app/core/models/auth';
+import { Proyect } from 'src/app/core/models/proyect';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-proyects',
@@ -8,52 +10,47 @@ import { ProyectService } from 'src/app/service/proyect.service';
   styleUrls: ['./my-proyects.component.css']
 })
 export class MyProyectsComponent implements OnInit {
+  listProjects: Proyect[] = [];
   search: any;
-  proyects: any[] = [];
-  proyectsDone: any[] = [];
-  myInfo: any[] = [];
-  show = false;
+  
+  user = new UserAuth();
+  
   format = 'dd/MM/yyyy';
-  user = {
-    id: '',
-    email: '',
-    rol: ''
-  }
 
-  constructor(private _service: ProyectService, private _serviceCompetitor: AssignService) { }
+  constructor(private _service: ProyectService, private route: Router) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.info();
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
     this.getProyects();
   }
 
-  info(){
-    this._serviceCompetitor.getById(this.user.id).subscribe((res: any) => {
-      res.forEach((element: any) => {
-        this.myInfo.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
+  getProyects(){
+    this._service.getMyProjects(this.user.id).subscribe((res: any) => {
+      const proyects = res.cont.project;
+      const listProjects = [];
+      this.listProjects = [];
+
+      for(const proyect of proyects){
+        if(proyect.blnActivo === true && proyect.responsable == this.user.id){
+          listProjects.push(proyect.projects[0]);
+        }
+      }
+
+      this.listProjects.push(listProjects[0]);
+
+      for(const myProjects of listProjects){
+        for(const project of this.listProjects){
+          if(project._id !== myProjects._id){
+            this.listProjects.push(myProjects);
+          }
+        }
+      }
+
     })
   }
 
-  getProyects(){
-    this._service.get().subscribe((res: any) => {
-      this.proyects = [];
-      const proyects: any = [];
-      res.forEach((element: any) => {
-        proyects.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const p of proyects){
-        if(p.id == this.myInfo[0].idProyect && p.estatus == 'Activo') this.proyects.push(p)
-        if(p.id == this.myInfo[0].idProyect && p.estatus == 'Finalizado') this.proyectsDone.push(p)
-      }
-    })
+  searchTask(id: string){
+    this.route.navigate([`/details-task/${id}`]);
   }
 
 }

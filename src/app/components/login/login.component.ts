@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/service/auth.service';
+import { AuthService } from 'src/app/core/service/auth.service';
+import { Auth } from 'src/app/core/models/auth';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +12,14 @@ import { AuthService } from 'src/app/service/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
-  myPerfil: any[] = [];
-  loginInvalid: boolean | undefined
+
+  loginInvalid = false;
+  send = false;
 
   validation_messages = {
     email: [
       { type: 'required', message: 'Ingrese su correo' },
-      { type: "pattern", message: "Su correo no valido"}
+      { type: "pattern", message: "Su correo no es valido"}
     ],
     password: [
       { type: 'required', message: 'Ingrese su contraseña' }
@@ -29,11 +31,11 @@ export class LoginComponent implements OnInit {
       this.loginForm = this.formB.group({
         email: new FormControl ("", Validators.compose([
           Validators.required,
-          Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+          Validators.pattern("^[a-zA-Z0-9._%+-/ñ]+@[a-z0-9.-]+\\.[a-z]{2,6}$")
         ])),
         password: new FormControl ("", Validators.compose([
           Validators.required,
-          Validators.minLength(5)
+          Validators.minLength(8)
         ]))
       })
     }
@@ -41,46 +43,49 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  login(values: any){
+  login(values: Auth){
     if(this.loginForm.valid){
-      const email = values.email;
-      const password = values.password;
-      this.myPerfil = [];
-      this._service.get(email).subscribe((res: any) => {
-        if(res.length > 0){
-          let pass = '';
-          res.forEach((element: any) => {
-            pass = this._service.decrypt(element.payload.doc.data()['password']);
-            if(pass == password){ 
-              this.myPerfil.push({
-                id: element.payload.doc.id,
-                ...element.payload.doc.data()
-              });
-              const credentials = {
-                id: this.myPerfil[0].id,
-                email: this.myPerfil[0].email,
-                rol: this.myPerfil[0].rol
-              }
-              this.loginForm.reset();
-              localStorage.setItem('user', JSON.stringify(credentials));
-              this.route.navigate(['dashboard']);
-            }else {
-              this.loginInvalid = true;
-              this.toast.warning('Correo o contraseña incorrectos', 
-              'Datos incorrectos', { positionClass: 'toast-bottom-right' })
-            }
-          });
-        }else {
-          this.loginInvalid = true;
-          this.toast.warning('Correo o contraseña incorrectos', 
-          'Datos incorrectos', { positionClass: 'toast-bottom-right' })
-        }
+      const credentials = values;
+      this.send = true;
+      this.loginInvalid = false;
+
+      this._service.login(credentials).then((res: any) => {
+        const data = res.cont;
+        const token = {
+          id: data.employeeFound._id,
+          rol: data.employeeFound.rol,
+          token: data.token
+        };
+
+        this.reset();
+        localStorage.setItem('data', JSON.stringify(token));
+        this.route.navigate(['dashboard']);
+      }).catch(err => {
+        this.toast.error(`Correo o contraseña incorrectos`, '', 
+        { positionClass: 'toast-bottom-right' });
+        this.loginInvalid = true;
+        this.send = false;
+        console.log(err);
       });
     }else {
       this.loginInvalid = true;
-      this.toast.warning('Los campos estan vacios', 'Datos invalidos', 
+      this.toast.warning('Campos vacios o incorrectos', '', 
       { positionClass: 'toast-bottom-right' })
     }
+  }
+
+  get email(){
+    return this.loginForm.get('email');
+  }
+
+  get password(){
+    return this.loginForm.get('password');
+  }
+
+  reset(){
+    this.loginForm.reset();
+    this.send = false;
+    this.loginInvalid = false;
   }
 
 }

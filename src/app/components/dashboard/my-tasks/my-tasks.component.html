@@ -6,41 +6,63 @@
         </div>
 
         <div class="col-10 px-0">
-            <div *ngIf="user.rol == 'usuario';else noAdmin" class="row pt-4 px-5">
+            <div class="row m-5">
+                <ng-container *ngIf="user.rol === 0;else noAdmin">
 
-                <div class="col-12">
-                    <ul class="list-unstyled">
-                        <li class="d-inline me-2 btn" (click)="show = false"
-                        [ngClass]="show === false ? 'border-on' : 'border-off' ">Asignadas</li>
-                        <li class="d-inline btn" (click)="show = true"
-                        [ngClass]="show === true ? 'border-on' : 'border-off' ">Completadas</li>
-                    </ul>
-                </div>
-        
-                <div class="col vh-task ff">
-                    <h5 class="my-4 ms-3 text-info">Mis tareas</h5>
-                    <div *ngIf="show === false; else noShow">
-                        <h5 class="px-3 py-3 border border-3 bg-white rounded" *ngIf="tasks.length == 0">
-                            No tiene ninguna tarea pendiente, todas sus tareas fueron entregadas
-                        </h5>
-                        <div class="border border-2 shadow-sm my-1 task
-                        rounded bg-white" type="button" *ngFor="let t of tasks" 
-                        (click)="infoTask(t.id)">
-                            <div class="row my-1 px-2">
-                                <p class="col-3 mb-1 my-auto fw-bold">{{t.title}}</p>
-                                <p class="col-7 mb-1 my-auto">{{t.description}}</p>
-                                <p class="col-2 mb-1 my-auto">{{t.dueDate | date: format}}</p>
-                                <p class="col-3 mt-1 my-auto">Prioridad: {{t.priority}}</p>
-                                <p class="col-7 mt-1 my-auto">Proyecto: {{t.name}}</p>
-                                <p class="col-2 mb-1 my-auto">Estado: {{t.estatus}}</p>
-                            </div>
+                    <div class="col-12 mb-4 px-0">
+                        <button [ngClass]="show === false ? 'show-desactivated' : 'border-none' " 
+                        (click)="show = false" class="btn me-2">Mostrar todos</button>
+                        <button [ngClass]="show === true ? 'show-desactivated' : 'border-none' " 
+                        (click)="show = true" class="btn">Mostrar completadas</button>
+                    </div>
+    
+                    <div class="col-12 mt-2 mb-4 d-flex px-0">
+                        <h4 class="fw-bold ms-2">Mis tareas</h4>
+                        <div class="col d-flex justify-content-end">
+                            <input type="search" class="form-control rounded w-35 px-2" placeholder="Buscar"
+                            [(ngModel)]="search">
+                            <button class="btn bg-white border border-2 button-search">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-        
+            
+                    <!-- Table -->
+                    <ng-container *ngIf="show === false; else noShow">
+                        <div *ngIf="listTasks.length > 0" class="task-table mt-4 p-0">
+                            <div *ngFor="let task of listTasks | task: search" class="task bg-white border border-3 
+                            shadow-sm rounded mb-2" (click)="searchTask(task._id)">
+                                <div class="row px-3 py-2">
+
+                                    <div class="col-xl-10 col-md-8">
+                                        <h5 class="text-secondary">{{task.title}}</h5>
+                                        <p>{{task.description}}</p>
+                                    </div>
+
+                                    <div class="col-xl-2 col-md-4">
+                                        <p [ngClass]="{'text-danger' : task.priority == 'Alto',
+                                        'text-success' : task.priority == 'Bajo',
+                                        'text-warning' : task.priority == 'Medio'}"
+                                        class="my-1">Prioridad: {{task.priority}}</p>
+                                        <p class="mb-1">Estado: {{task.estatus}}</p>
+                                        <p class="text-mute mb-1">Entrega: {{task.dueDate | date: format}}</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="listTasks.length == 0">
+                            <div class="task-table">
+                                <h5>No tiene ninguna tarea asignada aun</h5>
+                                <p>Para la asignacion de tareas solicite a su lider de proyecto</p>
+                            </div>
+                        </div>
+                    </ng-container>
+            
+                </ng-container>
             </div>
 
-            <div class="col px-0 pt-3">
+            <div class="col px-0">
                 <app-footer></app-footer>
             </div>
 
@@ -49,24 +71,34 @@
     </div>
 </div>
 
-<ng-template #noShow>
-    <h5 class="px-3 py-3 border border-3 bg-white rounded" *ngIf="doneTasks.length == 0">
-        No hay ninguna tarea entregada aun
-    </h5>
-    <div class="bg-white border border-2 shadow-sm my-1 ff rounded task" 
-    type="button" *ngFor="let td of doneTasks" (click)="infoTask(td.id)">
-        <div class="row my-1 px-2">
-            <p class="col-3 mb-1 my-auto fw-bold">{{td.title}}</p>
-            <p class="col-7 mb-1 my-auto">{{td.description}}</p>
-            <p class="col-2 mb-1 my-auto">{{td.dueDate | date: format}}</p>
-            <p class="col-3 mt-1 my-auto">Prioridad: {{td.priority}}</p>
-            <p class="col-7 mt-1 my-auto">Proyecto: {{td.name}}</p>
-        </div>
+<ng-template #noAdmin>
+    <div class="vh-100 p-5">
+        <h1>Error 404</h1>
+        <h2>pagina no encontrada</h2>
     </div>
 </ng-template>
 
-<ng-template #noAdmin>
-    <div class="vh-100 p-5">
-        <h1>Error pagina no encontrada</h1>
+<ng-template #noShow>
+    <div *ngIf="doneTasks.length > 0" class="task-table mt-4 p-0">
+        <div *ngFor="let done of doneTasks | task: search" class="bg-white task border border-3 
+        shadow-sm rounded mb-2" (click)="searchTask(done._id)">
+            <div class="row px-3 py-2">
+
+                <div class="col-xl-10 col-md-8">
+                    <h5 class="text-secondary">{{done.title}}</h5>
+                    <p>{{done.description}}</p>
+                </div>
+
+                <div class="col-xl-2 col-md-4">
+                    <p [ngClass]="{'text-danger' : done.priority == 'Alto',
+                    'text-success' : done.priority == 'Bajo',
+                    'text-warning' : done.priority == 'Medio'}"
+                    class="my-1">Prioridad: {{done.priority}}</p>
+                    <p class="mb-1">Estado: {{done.estatus}}</p>
+                    <p class="text-mute mb-1">Entrega: {{done.dueDate | date: format}}</p>
+                </div>
+
+            </div>
+        </div>
     </div>
 </ng-template>

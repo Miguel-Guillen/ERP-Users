@@ -6,151 +6,183 @@
         </div>
 
         <div class="col-10 px-0">
-            <div class="row d-flex justify-content-between px-5 my-4" 
-            *ngIf="user.rol == 'administrador'; else noAdmin">
+            <ng-container *ngIf="user.rol == 1; else noAdmin">
+                <div class="row d-flex justify-content-between m-lg-5 m-4">
 
-                <div class="col-12 mb-4 mt-3 d-flex">
-                    <button class="btn me-2" (click)="show = false"
-                    [ngClass]="show === false ? 'border-on' : 'border-off' ">Asignados</button>
-                    <button class="btn" (click)="show = true"
-                    [ngClass]="show === false ? 'border-off' : 'border-on' ">Cerrados</button>
-                    <div class="col d-flex justify-content-end px-0">
-                        <input type="search" class="form-c ffs px-2 rounded" placeholder="buscar por nombre"
-                        [(ngModel)]="search">
-                        <button class="btn bg-white border border-2">
-                            <i class="fas fa-search"></i>
-                        </button>
+                    <div class="col-12 mb-4 px-0">
+                        <button [ngClass]="show === 0 ? 'show-desactivated' : 'border-none' " 
+                        class="btn me-2" (click)="show = 0">Mostrar todos</button>
+                        <button [ngClass]="show === 1 ? 'show-desactivated' : 'border-on' " 
+                        class="btn" (click)="show = 1">Mostrar cerrados</button>
+                        <button [ngClass]="show === 2 ? 'show-desactivated' : 'border-on' " 
+                        class="btn" (click)="show = 2">Mostrar desactivados</button>
                     </div>
-                </div>
-        
-                <div class="col-12 mt-2 h-table">
-                    <button class="btn btn-outline-primary ff mb-2 mx-start" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal">Nuevo proyecto</button>
-                    <div class="row mt-2 mb-4 d-flex justify-content-center ff" *ngIf="show === false; else noShow">
-                        <h5 *ngIf="proyects.length == 0" class="px-3 pt-3">No hay ningun proyecto
-                            añadido</h5>
-                        <p class="px-3" *ngIf="proyects.length == 0">presione el boton 
-                            <span class="fw-bold">nuevo proyecto</span> 
-                            para añadir un proyecto</p>
-                        <div class="card ff m-1 bg-white border border-3"
-                        *ngFor="let p of proyects | proyects: search" type="button" (click)="searchProyect(p.id)">
-                            <div class="row px-1 my-2">
-                                <div class="col">
-                                    <p class="fw-bold mt-1 mb-2">{{p.name}}</p>
-                                    <p class="my-1">{{ (p.description.length > 100)? 
-                                        (p.description | slice: 0:200) + '...' : (p.description) }}</p>
-                                </div>
-                            </div>
-                            <div class="row px-1 mb-1 mb-2">
-                                <div class="col">
-                                    <p class="my-1">Tipo: {{p.type}}</p>
-                                    <p [ngClass]="{'text-danger': p.estatus == 'Cancelado',
-                                    'text-success': p.estatus == 'Finalizado', 
-                                    'text-info': p.estatus == 'Activo' }" 
-                                    class="my-1">Estatus: {{p.estatus}}</p>
-                                    <small class="my-1">Entrega: {{p.dateEnd | date: format}}</small>
-                                </div>
-                            </div>
+    
+                    <div class="col-12 mt-2 mb-4 d-flex px-0">
+                        <button class="btn btn-outline-primary" (click)="openModal(addModal)">Nuevo proyecto</button>
+                        <div class="col d-flex justify-content-end">
+                            <input type="search" class="form-control rounded w-35 px-2" placeholder="Buscar"
+                            [(ngModel)]="search">
+                            <button class="btn bg-white border border-2 button-search">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-        
-                <!-- Modal add -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header ffs">
-                                <h5 class="modal-title text-info ps-3">Nuevo proyecto</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    
+                    <!-- Proyects -->
+                    <ng-container *ngIf="show === 0">
+                        <div class="proyect-table d-flex mt-3 p-0">
+                            <div *ngFor="let progress of proyectsProgress | proyects: search" 
+                            class="card bg-white border border-3 mb-2 mx-1 p-lg-3 p-2" (click)="searchProyect(progress._id)" 
+                            type="button">
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="fw-bold mt-1 mb-2">{{progress.name}}</p>
+                                        <p class="my-1">{{ (progress.description.length > 85)? 
+                                        (progress.description | slice: 0:85) + '...' : (progress.description) }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p [ngClass]="{'text-warning': progress.estatus == 'Pausado', 
+                                        'text-info': progress.estatus == 'En progreso' }" 
+                                        class="my-1">Estatus: {{progress.estatus}}</p>
+                                        <small class="my-1">Entrega: {{ progress.dateEnd | date: format }}</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-body px-5">
-                                <form class="ffs" [formGroup]="proyectForm" (ngSubmit)="newProyect(proyectForm.value)">
-                                    <div class="alert alert-danger" role="alert" *ngIf="formValid === false">
-                                        Datos incompletos
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-6">
-                                            <small class="form-label">Nombre</small>
-                                            <input type="text" class="form-control" formControlName="name"
-                                            placeholder="Inserte el nombre" 
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                            <ng-container *ngFor="let validation of validation_messages.name">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('name').hasError(validation.type) && 
-                                                (proyectForm.get('name').dirty || proyectForm.get('name').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="form-label">Tipo</small>
-                                            <input type="text" class="form-control" formControlName="type"
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}"
-                                            placeholder="Inserte el tipo de proyecto">
-                                            <ng-container *ngFor="let validation of validation_messages.type">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('type').hasError(validation.type) && 
-                                                (proyectForm.get('type').dirty || proyectForm.get('type').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                    <div class="row my-2">
-                                        <div class="col-6">
-                                            <small class="form-label">Descripcion</small>
-                                            <textarea type="text" class="form-control" formControlName="description"
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}"
-                                            placeholder="Inserte la descripcion del proyecto" rows="5" cols="30"></textarea>
-                                            <ng-container *ngFor="let validation of validation_messages.description">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('description').hasError(validation.type) && 
-                                                (proyectForm.get('description').dirty || proyectForm.get('description').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                        <div class="col-6">
-                                            <small class="form-label">Fecha Inicio</small>
-                                            <input type="date" class="form-control" formControlName="dateStart"
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                            <ng-container *ngFor="let validation of validation_messages.dateStart">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('dateStart').hasError(validation.type) && 
-                                                (proyectForm.get('dateStart').dirty || proyectForm.get('dateStart').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
-                                            <br>
-                                            <small class="form-label">Fecha Terminacion</small>
-                                            <input type="date" class="form-control" formControlName="dateEnd"
-                                            [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                            <ng-container *ngFor="let validation of validation_messages.dateEnd">
-                                                <div class="text-danger ff" *ngIf="proyectForm.get('dateEnd').hasError(validation.type) && 
-                                                (proyectForm.get('dateEnd').dirty || proyectForm.get('dateEnd').touched)">
-                                                    {{validation.message}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                    <div class="float-right mt-3">
-                                        <button type="button" class="btn btn-outline-danger me-2" 
-                                        data-bs-dismiss="modal" (click)="reset()">Cancelar</button>
-                                        <button *ngIf="send === false; else noSend" type="button" 
-                                        class="btn btn-outline-primary" type="submit">Guardar cambios</button>
-                                        <ng-template #noSend>
-                                            <button class="btn btn-outline-secondary" type="button" disabled>
-                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                                Guardando...
-                                            </button>
-                                        </ng-template>
-                                    </div>
-                                </form>
+                            <div *ngIf="proyectsProgress.length == 0" class="px-3">
+                                <h5>No hay ningun proyecto añadido</h5>
+                                <p>presione el boton 
+                                    <span class="fw-bold">nuevo proyecto</span> 
+                                    para añadir un proyecto
+                                </p>
                             </div>
                         </div>
-                    </div>
+                    </ng-container>
+    
+                    <!-- Proyects Done -->
+                    <ng-container *ngIf="show === 1">
+                        <div class="proyect-table d-flex mt-3">
+                            <div *ngFor="let done of proyectsDone | proyects: search" 
+                            class="card bg-white border border-3 mb-2 mx-1 p-3" (click)="searchProyect(done._id)" 
+                            type="button">
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="fw-bold mt-1 mb-2">{{done.name}}</p>
+                                        <p class="my-1">{{ (done.description.length > 85)? 
+                                        (done.description | slice: 0:85) + '...' : (done.description) }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p [ngClass]="done.estatus == 'Cerrado' ? 'text-success' : 'text-dark' " 
+                                        class="my-1">Estatus: {{done.estatus}}</p>
+                                        <small class="my-1">Entrega: {{ done.dateEnd | date: format }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="proyectsDone.length == 0" class="px-3">
+                                <h5>No hay ningun proyecto cerrado</h5>
+                                <p>para cerrar el proyecto vaya a cambiar el estatus de un proyecto</p>
+                            </div>
+                        </div>
+                    </ng-container>
+    
+                    <!-- Proyects Desactivated -->
+                    <ng-container *ngIf="show === 2">
+                        <div class="proyect-table d-flex mt-3">
+                            <div *ngFor="let desactivated of proyectsDesactivated | proyects: search" 
+                            class="card bg-white border border-3 mb-2 mx-1 p-3" (click)="searchProyect(desactivated._id)" 
+                            type="button">
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="fw-bold mt-1 mb-2">{{desactivated.name}}</p>
+                                        <p class="my-1">{{ (desactivated.description.length > 85)? 
+                                        (desactivated.description | slice: 0:85) + '...' : (desactivated.description) }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="text-danger my-1">Estatus: {{desactivated.estatus}} - Baja</p>
+                                        <small class="my-1">Entrega: {{ desactivated.dateEnd | date: format }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="proyectsDesactivated.length == 0" class="px-3">
+                                <h5>No hay ningun proyecto dado de baja</h5>
+                            </div>
+                        </div>
+                    </ng-container>
+                
+                    <!-- Add Modal -->
+                    <ng-template #addModal let-modal>
+                        <div class="modal-header">
+                          <h5 class="modal-title text-info">Nuevo proyecto</h5>
+                          <button class="btn-close" type="button" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form [formGroup]="proyectForm" (ngSubmit)="newProyect(proyectForm.value)" 
+                            class="form-proyect mt-1" autocomplete="off">
+                                <div *ngIf="formValid === false" class="alert alert-danger" role="alert">
+                                    Campos sin llenar o datos invalidos
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <small class="form-label">Nombre*</small>
+                                        <input [ngClass]="{'border-bottom border-danger': formValid === false && name.errors}"
+                                        formControlName="name" class="form-control" type="text"
+                                        placeholder="Inserte el nombre">
+                                        <ng-container *ngFor="let validation of validation_messages.name">
+                                            <div *ngIf="proyectForm.get('name').hasError(validation.type) && 
+                                            proyectForm.get('name').dirty" class="text-danger">{{validation.message}}</div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="form-label">Descripcion*</small>
+                                        <textarea [ngClass]="{'border-bottom border-danger': formValid === false && description.errors}" 
+                                        formControlName="description" class="form-control" type="text" placeholder="Inserte la descripcion" 
+                                        rows="4" cols="30"></textarea>
+                                        <ng-container *ngFor="let validation of validation_messages.description">
+                                            <div class="text-danger" *ngIf="proyectForm.get('description').hasError(validation.type) && 
+                                            proyectForm.get('description').dirty">{{validation.message}}</div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6">
+                                        <small class="form-label">Fecha Inicio*</small>
+                                        <input [ngClass]="{'border-bottom border-danger': formValid === false && dateStart.errors}" 
+                                        formControlName="dateStart" class="form-control" type="date">
+                                        <ng-container *ngFor="let validation of validation_messages.dateStart">
+                                            <div class="text-danger" *ngIf="proyectForm.get('dateStart').hasError(validation.type) && 
+                                            proyectForm.get('dateStart').dirty">{{validation.message}}</div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="form-label">Fecha Terminacion*</small>
+                                        <input [ngClass]="{'border-bottom border-danger': formValid === false && dateEnd.errors}" 
+                                        formControlName="dateEnd" class="form-control" type="date">
+                                        <ng-container *ngFor="let validation of validation_messages.dateEnd">
+                                            <div class="text-danger" *ngIf="proyectForm.get('dateEnd').hasError(validation.type) && 
+                                            proyectForm.get('dateEnd').dirty">{{validation.message}}</div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="mt-3 float-right">
+                                    <button class="btn btn-outline-secondary me-2" (click)="reset(); modal.dismiss('Button click')"
+                                    type="button">Cancelar</button>
+                                    <button *ngIf="send === false; else noSend" class="btn btn-outline-primary" 
+                                    type="submit">Agregar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </ng-template>
+            
                 </div>
-        
-            </div>
+            </ng-container>
 
-            <div class="col px-0 mt-3">
+            <div class="col p-0">
                 <app-footer></app-footer>
             </div>
 
@@ -161,36 +193,14 @@
 
 <ng-template #noAdmin>
     <div class="vh-100 p-5">
-        <h1>Error pagina no encontrada</h1>
+        <h1>Error 404</h1>
+        <h2>pagina no encontrada</h2>
     </div>
 </ng-template>
 
-<ng-template #noShow>
-    <div class="row mt-2 mb-4 d-flex justify-content-center ff">
-        <h5 *ngIf="proyectsDone.length == 0" class="px-3 pt-4">No hay ningun proyecto
-            añadido</h5>
-        <p class="px-3" *ngIf="proyectsDone.length == 0">presione el boton 
-            <span class="fw-bold">nuevo proyecto</span> 
-            para añadir un proyecto</p>
-        <div class="card ff m-1 bg-white border border-3"
-        *ngFor="let pd of proyectsDone | proyects: search" type="button" 
-        (click)="searchProyect(pd.id)">
-            <div class="row px-1 my-2">
-                <div class="col">
-                    <p class="fw-bold mt-1 mb-2">{{pd.name}}</p>
-                    <p class="my-1">{{ (pd.description.length > 100)? 
-                        (pd.description | slice: 0:200) + '...' : (pd.description) }}</p>
-                </div>
-            </div>
-            <div class="row px-1 mb-1 mb-2">
-                <div class="col">
-                    <p class="my-1">Tipo: {{pd.type}}</p>
-                    <p class="my-1" [ngClass]="{'text-danger': pd.estatus == 'Cancelado',
-                    'text-success': pd.estatus == 'Finalizado', 
-                    'text-info': pd.estatus == 'Activo' }">Estatus: {{pd.estatus}}</p>
-                    <small class="my-1">Entrega: {{pd.dateEnd | date: format}}</small>
-                </div>
-            </div>
-        </div>
-    </div>
+<ng-template #noSend>
+    <button class="btn btn-outline-secondary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Guardando...
+    </button>
 </ng-template>

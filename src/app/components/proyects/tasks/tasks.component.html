@@ -6,121 +6,60 @@
         </div>
 
         <div class="col-10 px-0">
-            <div class="row d-flex justify-content-center align-items-center ff forms"
-            *ngIf="user.rol == 'administrador'; else noAdmin">
-                <div class="col-7 bg-white border border-2 shadow p-3">
-                    <h5 class="text-info">Agregar tarea</h5>
-                    <form class="mt-3 px-2" [formGroup]="taskForm" (ngSubmit)="newTask(taskForm.value)">
-                        <div class="alert alert-danger" role="alert" *ngIf="formValid === false">
-                            Datos incompletos
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-12">
-                                <small class="form-label">Titulo</small>
-                                <input type="text" class="form-control" formControlName="title"
-                                [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                <ng-container *ngFor="let validation of validation_messages.title">
-                                    <div class="text-danger" *ngIf="taskForm.get('title').hasError(validation.type) && 
-                                    (taskForm.get('title').dirty || taskForm.get('title').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-6">
-                                <small class="form-label">Descripcion</small>
-                                <textarea class="form-control" formControlName="description" cols="30" 
-                                rows="5" [ngClass]="{'border-bottom border-danger': formValid === false}"></textarea>
-                                <ng-container *ngFor="let validation of validation_messages.description">
-                                    <div class="text-danger" *ngIf="taskForm.get('description').hasError(validation.type) && 
-                                    (taskForm.get('description').dirty || taskForm.get('description').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                            </div>
-                            <div class="col-6">
-                                <small class="form-label">Requisitos</small>
-                                <textarea class="form-control" formControlName="requirements" cols="30"
-                                rows="5" [ngClass]="{'border-bottom border-danger': formValid === false}"></textarea>
-                                <ng-container *ngFor="let validation of validation_messages.requirements">
-                                    <div class="text-danger" *ngIf="taskForm.get('requirements').hasError(validation.type) && 
-                                    (taskForm.get('requirements').dirty || taskForm.get('requirements').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-6">
-                                <small class="form-label">Asignar responsable</small>
-                                <select class="form-select custom-select" formControlName="responsable"
-                                [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                    <option *ngFor="let c of competitor" value="{{c.idEmployee}}">{{c.name}}</option>
-                                </select>
-                                <ng-container *ngFor="let validation of validation_messages.responsable">
-                                    <div class="text-danger" *ngIf="taskForm.get('responsable').hasError(validation.type) && 
-                                    (taskForm.get('responsable').dirty || taskForm.get('responsable').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                                <h6 class="mt-1 text-danger" *ngIf="competitors === false">No hay ningun trabajador añadido a este proyecto</h6>
-                            </div>
-                            <div class="col-6">
-                                <small class="form-label">Fecha de vencimiento</small>
-                                <input type="date" class="form-control" formControlName="dueDate"
-                                [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                <ng-container *ngFor="let validation of validation_messages.dueDate">
-                                    <div class="text-danger" *ngIf="taskForm.get('dueDate').hasError(validation.type) && 
-                                    (taskForm.get('dueDate').dirty || taskForm.get('dueDate').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-6">
-                                <small class="form-label">Prioridad</small>
-                                <select formControlName="priority" class="form-select custom-select"
-                                [ngClass]="{'border-bottom border-danger': formValid === false}">
-                                    <option value="Baja">Baja</option>
-                                    <option value="Media">Media</option>
-                                    <option value="Alta">Alta</option>
-                                </select>
-                                <ng-container *ngFor="let validation of validation_messages.priority">
-                                    <div class="text-danger" *ngIf="taskForm.get('priority').hasError(validation.type) && 
-                                    (taskForm.get('priority').dirty || taskForm.get('priority').touched)">
-                                        {{validation.message}}
-                                    </div>
-                                </ng-container>
-                            </div>
-                            <div class="col-6">
-                                <small class="form-label">Comentarios adicionales</small>
-                                <textarea class="form-control" formControlName="commentary" cols="30" 
-                                rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col">
-                                <small class="form-label">Diagrama o documento</small>
-                                <input type="file" class="form-control" formControlName="image">
-                            </div>
-                        </div>
-                        <div class="mt-2 float-right">
-                            <button type="button" class="btn btn-outline-danger me-2" 
-                            data-bs-dismiss="modal" (click)="reset()"
-                            [routerLink]="['/assign-proyect']">Cancelar</button>
-                            <button *ngIf="send === false; else noSend" type="button" 
-                            class="btn btn-outline-primary" type="submit">Guardar cambios</button>
-                            <ng-template #noSend>
-                                <button class="btn btn-outline-secondary" type="button">
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    Guardando...
-                                </button>
-                            </ng-template>
-                        </div>
-                    </form>
+            <div class="row d-flex m-lg-5 m-md-4 mx-3 my-4">
+
+                <div class="search-bar2 px-1 mb-2">
+                    <input [(ngModel)]="search" class="form-control rounded px-2" type="search" placeholder="Buscar">
                 </div>
+
+                <div class="col-12 filters mt-2 mb-lg-4 mb-2 p-0">
+                    <select [(ngModel)]="filterPriority" class="form-select custom-select">
+                        <option *ngFor="let priority of typePriority" [value]="priority">
+                            {{ priority }}
+                        </option>
+                    </select>
+                    <select [(ngModel)]="filterEstatus" class="form-select custom-select">
+                        <option *ngFor="let estatus of typeEstatus" [value]="estatus">
+                            {{ estatus }}
+                        </option>
+                    </select>
+                    <div class="col d-flex justify-content-end search-bar">
+                        <input [(ngModel)]="search" class="form-control rounded w-35 px-2" 
+                        type="search" placeholder="Buscar">
+                        <button class="btn bg-white border border-2 button-search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <ng-container *ngIf="listTasks.length > 0; else noTask">
+                    <div class="task-table overflow-auto mt-4 p-0">
+                        <table class="table table-borderless bg-white border border-4 shadow-sm">
+                            <thead>
+                                <tr class="table-info">
+                                    <th class="col-4 text-center">Titulo</th>
+                                    <th class="col-5 text-center">Descripcion</th>
+                                    <!-- <th class="col-4 text-center">Requisitos</th> -->
+                                    <th class="col-1 text-center">Prioridad</th>
+                                    <th class="col-1 text-center">Estatus</th>
+                                    <th class="col-1 text-center">Entrega</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let task of listTasks | task: search" (click)="searchTask(task.idProject)">
+                                    <td class="col-4 text-center">{{task.title}}</td>
+                                    <td class="col-5 text-center">{{task.description}}</td>
+                                    <!-- <td class="col-4 text-center">{{task.requeriments}}</td> -->
+                                    <td class="col-1 text-center">{{task.priority}}</td>
+                                    <td class="col-1 text-center">{{task.estatus}}</td>
+                                    <td class="col-1 text-center">{{task.dueDate | date: format}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-container>
+
             </div>
 
             <div class="col px-0 mt-4">
@@ -134,6 +73,14 @@
 
 <ng-template #noAdmin>
     <div class="vh-100 p-5">
-        <h1>Error pagina no encontrada</h1>
+        <h1>Error 404</h1>
+        <h2>Pagina no encontrada</h2>
+    </div>
+</ng-template>
+
+<ng-template #noTask>
+    <div class="mx-4 mt-3">
+        <h5>No hay ninguna tarea en la base de datos</h5>
+        <p class="py-1">Dirijase a la seccion de proyectos para agregar una tarea</p>
     </div>
 </ng-template>

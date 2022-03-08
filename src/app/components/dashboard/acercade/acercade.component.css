@@ -1,11 +1,24 @@
-.ff {
-    font-size: 18px;
+p, span, div, h1, h2, h3, h4, h5 {
     font-family: 'Times New Roman', Times, serif;
 }
-.h-acercade {
-    height: 80vh;
+p, span, div {
+    font-size: 15px;
 }
 i {
-    font-size: 4em;
+    font-size: 3em;
     color: steelblue;
+}
+.h-acercade {
+    min-height: 80vh;
+    height: max-content;
+}
+
+@media (width > 767px){
+    p, span, div {
+        font-size: 17px;
+    }
+    i {
+        font-size: 4em;
+        color: steelblue;
+    }
 }

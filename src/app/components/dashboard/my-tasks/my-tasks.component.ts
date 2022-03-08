@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProyectService } from 'src/app/service/proyect.service';
-import { TaskService } from 'src/app/service/task.service';
+import { TaskService } from 'src/app/core/service/task.service';
+import { UserAuth } from 'src/app/core/models/auth';
+import { Task } from 'src/app/core/models/task';
 
 @Component({
   selector: 'app-my-tasks',
@@ -9,70 +10,41 @@ import { TaskService } from 'src/app/service/task.service';
   styleUrls: ['./my-tasks.component.css']
 })
 export class MyTasksComponent implements OnInit {
-  tasks: any[] = [];
+  listTasks: Task[] = [];
   doneTasks: any[] = [];
-  proyects: any[] = [];
-  selected: boolean = false;
-  show = false;
-  format = 'dd/MM/yyyy';
-  user = {
-    id: '',
-    email: '',
-    rol: ''
-  }
+  search: any;
 
-  constructor(private _serviceTask: TaskService, private route: Router,
-    private _serviceProyect: ProyectService) { }
+  user = new UserAuth();
+  show = false;
+
+  format = 'dd/MM/yyyy';
+
+  constructor(private _service: TaskService, private route: Router) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || '');
-    this.myTasks();
-    this.getProyects();
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
+    this.getTasks();
   }
 
-  myTasks(){
-    this._serviceTask.get().subscribe((res: any) => {
-      const t: any = [];
-      this.tasks = [];
+  getTasks(){
+    this._service.getMyTasks(this.user.id).subscribe((res: any) => {
+      const data: Task[] = res.cont.task;
+      this.listTasks = [];
       this.doneTasks = [];
-      res.forEach((element: any) => {
-        t.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(const task of t){
-        if(task.responsable == this.user.id && task.estatus != 'Terminado') this.tasks.push(task)
-        if(task.responsable == this.user.id && task.estatus == 'Terminado') this.doneTasks.push(task)
+
+      for(const task of data){
+        if(task.blnActivo === true && task.estatus !== 'Terminado' ){
+          this.listTasks.push(task);
+        }else {
+          this.doneTasks.push(task);
+        }
       }
+
     })
   }
 
-  infoTask(id: string){
+  searchTask(id: string){
     this.route.navigate([`sendTask/${id}`]);
   }
 
-  getProyects(){
-    this._serviceProyect.get().subscribe((res: any) => {
-      this.proyects = [];
-      res.forEach((element: any) => {
-        this.proyects.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      for(let j = 0; j < this.tasks.length; j++){
-        for(let i = 0; i < this.proyects.length; i++){
-            if(this.tasks[j].idProyect == this.proyects[i].id) 
-            this.tasks[j].name = this.proyects[i].name;
-        }
-      }
-      for(let j = 0; j < this.doneTasks.length; j++){
-        for(let i = 0; i < this.proyects.length; i++){
-            if(this.doneTasks[j].idProyect == this.proyects[i].id) 
-            this.doneTasks[j].name = this.proyects[i].name;
-        }
-      }
-    })
-  }
 }

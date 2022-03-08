@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserAuth } from 'src/app/core/models/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,20 +8,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  user = {
-    id: '',
-    email: '',
-    rol: ''
-  }
+  user = new UserAuth();
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
   }
 
   logout(){
-    localStorage.removeItem('user');
+    localStorage.removeItem('data');
     this.router.navigate(['/login']);
   }
 

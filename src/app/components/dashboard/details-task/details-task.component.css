@@ -1,0 +1,20 @@
+p, span, div, h1, h2, h3, h4, h5, button {
+    font-family: 'Times New Roman', Times, serif;
+}
+p, span, div {
+    font-size: 17px;
+}
+
+.project-form {
+    min-height: 90vh;
+    height: max-content;
+}
+
+@media (width < 769px) {
+    p, span, div, button {
+        font-size: 14px;
+    }
+    h5, ngb-panel {
+        font-size: 17px;
+    }
+}
