@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskService } from 'src/app/core/service/task.service';
 import { Task } from 'src/app/core/models/task';
+import { UserAuth } from 'src/app/core/models/auth';
 import * as types from '../../../core/enums/task.enum'
 
 @Component({
@@ -12,35 +13,31 @@ import * as types from '../../../core/enums/task.enum'
 export class TasksComponent implements OnInit {
   listTasks: Task[] = [];
   search: any;
-  filterPriority: string = 'Todo';
-  filterEstatus: string = 'Todo';
-
+  user = new UserAuth();
+  
   format = 'dd/MM/yyyy';
-
+  
+  filterEstatus = types.TypeEstatus.Select;
+  filterPriority = types.TypePriority.Select;
   typePriority = types.priority;
   typeEstatus = types.estatus;
 
-  // user = {
-  //   id: '',
-  //   email: '',
-  //   rol: ''
-  // }
-
-  constructor(private _service: TaskService, private route: Router) {
-    this.typePriority.unshift('Todo');
-    this.typeEstatus.unshift('Todo');
-  };
+  constructor(private _service: TaskService, private route: Router) {};
 
   ngOnInit(): void {
-    // this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.user = JSON.parse(localStorage.getItem('data') || '{}');
     this.getTasks();
+  }
+
+  filters(value: string){
+    this.getTasks(value);
   }
 
   searchTask(id: string){
     this.route.navigate([`/details/${id}`]);
   }
 
-  getTasks(){
+  getTasks(value?: string){
     this._service.get().subscribe((res: any) => {
       const data = res.cont.task;
       this.listTasks = [];
@@ -50,7 +47,15 @@ export class TasksComponent implements OnInit {
           this.listTasks.push(task);
         }
       }
-
+      
+      if(value && value !== types.TypePriority.Select){
+        if(value == "Alto" || value == "Medio" || value == "Bajo"){
+          this.listTasks = this.listTasks.filter(tarea => tarea.priority == value);
+        }else {
+          this.listTasks = this.listTasks.filter(tarea => tarea.estatus == value);
+        }
+      }
+      
     })
   }
 

@@ -28,10 +28,14 @@ p, span, div, td, th, button {
 .w-35 {
     width: 35%;
 }
+.w-45 {
+    width: 30%;
+    max-width: 200px;
+}
 
 @media (width < 1025px) {
     .w-35 {
-        width: 50%;
+        width: 45%;
     }
 }
 
@@ -43,7 +47,7 @@ p, span, div, td, th, button {
         display: none;
     }
     .w-35 {
-        width: 75%;
+        width: 50%;
     }
 }
 

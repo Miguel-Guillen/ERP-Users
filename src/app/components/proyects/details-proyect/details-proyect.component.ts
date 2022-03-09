@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -19,9 +19,10 @@ import * as typesTask from '../../../core/enums/task.enum';
   styleUrls: ['./details-proyect.component.css']
 })
 export class DetailsProyectComponent implements OnInit {
-  editForm: FormGroup;
   employees: Employee[] = [];
   listTasks: Task[] = [];
+  editForm: FormGroup;
+  // secondForm = new FormGroup({});
   taskForm = new FormGroup({});
   proyect = new Proyect();
   task = new Task();
@@ -66,14 +67,14 @@ export class DetailsProyectComponent implements OnInit {
     description: [
       { type: 'required', message: 'La descripcion es requerida' }
     ],
+    requeriments: [
+          { type: 'required', message: 'Los requisitos son requeridos' }
+    ],
     estatus: [
       { type: 'required', message: 'Estado de la tarea requerido' }
     ],
-    requeriments: [
-      { type: 'required', message: 'Los requisitos son requeridos' }
-    ],
     priority: [
-      { type: 'required', message: 'EL tipo de prioridad es requerida' }
+      { type: 'required', message: 'El tipo de prioridad es requerida' }
     ],
     dueDate: [
       { type: 'required', message: 'La fecha de entrega es requerida' }
@@ -82,6 +83,12 @@ export class DetailsProyectComponent implements OnInit {
       { type: 'required', message: 'El responsable es requerido' }
     ]
   }
+
+  // validation_messages3 = {
+  //   requeriments: [
+  //     { type: 'required', message: 'Los requisitos son requeridos' }
+  //   ]
+  // }
 
   constructor(private formB: FormBuilder, private toast: ToastrService,
     private _service: ProyectService, private _taskService: TaskService,
@@ -107,6 +114,10 @@ export class DetailsProyectComponent implements OnInit {
   }
 
   createForm(taskForm: Task): FormGroup {
+    // this.secondForm = this.formB.group({
+    //   requeriments: this.formB.array([])
+    // })
+
     return this.formB.group({
       title: [taskForm.title, Validators.required],
       description: [taskForm.description, Validators.required],
@@ -118,6 +129,20 @@ export class DetailsProyectComponent implements OnInit {
       commentary: [taskForm.commentary]
     })
   }
+
+  // addRequeriment(values?: any){
+  //   if(values){
+  //     this.task = values;
+  //   }
+  //   const requeriment = this.formB.group({
+  //     requeriment: new FormControl('', Validators.required)
+  //   });
+  //   this.requeriments.push(requeriment);
+  // }
+
+  // remove(index: number){
+  //   this.requeriments.removeAt(index);
+  // }
 
   searchProyect(id: string){
     this._service.getOne(id).subscribe((res: any) => {
@@ -144,6 +169,7 @@ export class DetailsProyectComponent implements OnInit {
       this._service.update(this.id, proyect).then(() => {
         this.toast.success('El proyecto ha sido modificado con exito', '', 
         { positionClass: 'toast-bottom-right' });
+        this.modal.dismissAll('Save click');
         this.searchProyect(this.id);
         this.reset();
       }).catch(err => {
@@ -209,16 +235,29 @@ export class DetailsProyectComponent implements OnInit {
     })
   }
 
-  newTask(values: Task){
-    if(this.taskForm.valid && this.taskForm.get('priority')?.value != 'Seleccionar'
-    && this.taskForm.get('estatus')?.value != 'Seleccionar'){
+  // checkData(nameModal: any){
+  //   if(this.taskForm.valid && this.priority?.value != 'Seleccionar' && 
+  //   this.estatus2?.value != 'Seleccionar'){
+  //     this.modal.open(nameModal);
+  //   }else {
+  //     this.toast.warning('Los datos no son validos o los campos estan vacios', '', 
+  //     { positionClass: 'toast-bottom-right' });
+  //     this.formValid = false;
+  //   }
+  // }
+
+  newTask(taskFormValues: Task){
+    if(this.taskForm.valid && this.priority?.value != 'Seleccionar'
+    && this.estatus2?.value != 'Seleccionar'){
       this.send = true;
-      let task: Task = values;
+      let task: Task = taskFormValues;
+      // task.requeriments = secondFormValues.requeriments
       task.idProject = this.id;
 
       this._taskService.add(task).then(() => {
         this.toast.success('La tarea ha sido agregada con exito', '', 
         { positionClass: 'toast-bottom-right' });
+        this.modal.dismissAll('Save click');
         this.getTask();
         this.reset();
       }).catch(err => {
@@ -236,16 +275,17 @@ export class DetailsProyectComponent implements OnInit {
     }
   }
 
-  editTask(values: Task) {
-    if(this.taskForm.valid && this.taskForm.get('priority')?.value != 'Seleccionar'
-    && this.taskForm.get('priority')?.value != 'Seleccionar'){
+  editTask(taskFormValues: Task) {
+    if(this.taskForm.valid && this.priority?.value != 'Seleccionar'
+    && this.estatus2?.value != 'Seleccionar'){
       this.send = true;
-      let task: Task = values;
+      let task: Task = taskFormValues;
       task.idProject = this.id;
 
       this._taskService.update(this.idTask ,task).then(() => {
         this.toast.success('La tarea ha sido modificada con exito', '', 
         { positionClass: 'toast-bottom-right' });
+        this.modal.dismissAll('Save click');
         this.getTask();
         this.reset();
       }).catch(err => {
@@ -338,6 +378,10 @@ export class DetailsProyectComponent implements OnInit {
     return this.taskForm.get('requeriments');
   }
 
+  // get requeriments(): FormArray {
+  //   return this.secondForm.get('requeriments') as FormArray;
+  // }
+
   get estatus2(){
     return this.taskForm.get('estatus');
   }
@@ -355,7 +399,7 @@ export class DetailsProyectComponent implements OnInit {
   }
 
   reset(){
-    this.taskForm.reset();
+    this.taskForm = this.createForm(this.task);
     this.send = false;
     this.formValid = true;
     this.edit = false;

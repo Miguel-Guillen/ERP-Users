@@ -1,4 +1,4 @@
-p, span, div, h1, h2, h3, h4, h5, button {
+p, span, div, h1, h2, h3, h4, h5, button, ngb-panel {
     font-family: 'Times New Roman', Times, serif;
 }
 p, span, div, button {
@@ -8,7 +8,7 @@ a:hover {
     cursor: pointer;
 }
 .proyect-form  {
-    min-height: 100vh;
+    min-height: 80vh;
     height: max-content;
 }
 .form-proyect .form-control {
@@ -23,7 +23,7 @@ a:hover {
 }
 
 @media (width < 769px){
-    p, span, div, button {
+    p, span, div, button, ngb-panel {
         font-size: 15.5px;
     }
     h5 {

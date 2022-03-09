@@ -24,10 +24,11 @@ export class EmployeesComponent implements OnInit {
   formValid = true;
   send = false;
   isEdit = false;
-
+  
   idEmployee = '';
   closeResult = '';
-
+  
+  filter = types.TypeAreas.Select;
   typeArea = types.areas;
   typeRol = types.users
 
@@ -73,19 +74,27 @@ export class EmployeesComponent implements OnInit {
       area: [employeeForm.area, Validators.required],
       email: [
         employeeForm.email,
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9._%+-/ñ]+@[a-z0-9.-]+\\.[a-z]{2,6}$")
+        Validators.compose([
+          Validators.required,
+          Validators.pattern("^[a-zA-Z0-9._%+-/ñ]+@[a-z0-9.-]+\\.[a-z]{2,6}$")
+        ])
       ],
       password: [
         employeeForm.password,
-        Validators.required,
-        Validators.minLength(8)
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(8)
+        ])
       ],
       rol: [employeeForm.rol, Validators.required]
     })
   }
 
-  getEmployees(){
+  filters(value: string){
+    this.getEmployees(value);
+  }
+
+  getEmployees(value?: string){
     this._service.get().subscribe((res: any) => {
       const data = res.cont.employee;
       this.listEmployees = [];
@@ -97,6 +106,10 @@ export class EmployeesComponent implements OnInit {
         }else {
           this.employeeDesactivated.push(employee);
         }
+      }
+
+      if(value && value !== types.TypeAreas.Select){
+        this.listEmployees = this.listEmployees.filter(employee => employee.area == value);
       }
     })
   }
@@ -119,7 +132,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   newEmployee(values: Employee){
-    if(this.employeeForm.valid && this.employeeForm.get('estatus')?.value != 'Seleccionar'){
+    if(this.employeeForm.valid && this.area?.value != 'Seleccionar'){
       this.send = true;
       this.formValid = true;
       const employee: Employee = values;
@@ -127,6 +140,7 @@ export class EmployeesComponent implements OnInit {
       this._service.add(employee).then(() => {
         this.toast.success('El empleado ha sido añadido con exito', '', 
         { positionClass: 'toast-bottom-right' })
+        this.modal.dismissAll('Save click');
         this.getEmployees();
         this.reset();
       }).catch(err => {
@@ -145,14 +159,15 @@ export class EmployeesComponent implements OnInit {
   }
 
   updateEmployee(values: any){
-    if(this.employeeForm.valid && this.employeeForm.get('estatus')?.value != 'Seleccionar'){
+    if(this.employeeForm.valid && this.area?.value != 'Seleccionar'){
       this.send = true;
       this.formValid = true;
       const updateEmployee: Employee = values;
       
       this._service.update(this.idEmployee, updateEmployee).then(() => {
         this.toast.info('El empleado ha sido modificado con exito', '', 
-        { positionClass: 'toast-bottom-right' })
+        { positionClass: 'toast-bottom-right' });
+        this.modal.dismissAll('Save click');
         this.getEmployees();
         this.reset();
       }).catch(err => {

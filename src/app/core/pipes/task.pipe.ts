@@ -7,10 +7,11 @@ import { Task } from '../models/task';
 export class TaskPipe implements PipeTransform {
 
   transform(value: Task[], arg: string): Task[] {
-    if(arg === undefined) return value;
+    if(arg === undefined || arg == "") return value;
 
-    return value.filter((data: any) =>{
+    return value.filter((data: any) => {
       return data.title.toLowerCase().includes(arg.toLowerCase())
+      // data.priority.toLowerCase().includes(arg.toLowerCase());
     })
   }
 

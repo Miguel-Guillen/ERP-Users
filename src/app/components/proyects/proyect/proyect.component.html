@@ -63,7 +63,7 @@
     
                     <!-- Proyects Done -->
                     <ng-container *ngIf="show === 1">
-                        <div class="proyect-table d-flex mt-3">
+                        <div class="proyect-table d-flex mt-3 p-0">
                             <div *ngFor="let done of proyectsDone | proyects: search" 
                             class="card bg-white border border-3 mb-2 mx-1 p-3" (click)="searchProyect(done._id)" 
                             type="button">
@@ -91,7 +91,7 @@
     
                     <!-- Proyects Desactivated -->
                     <ng-container *ngIf="show === 2">
-                        <div class="proyect-table d-flex mt-3">
+                        <div class="proyect-table d-flex mt-3 p-0">
                             <div *ngFor="let desactivated of proyectsDesactivated | proyects: search" 
                             class="card bg-white border border-3 mb-2 mx-1 p-3" (click)="searchProyect(desactivated._id)" 
                             type="button">
@@ -131,21 +131,21 @@
                                     <div class="col-6">
                                         <small class="form-label">Nombre*</small>
                                         <input [ngClass]="{'border-bottom border-danger': formValid === false && name.errors}"
-                                        formControlName="name" class="form-control" type="text"
+                                        formControlName="name" class="form-control" type="text" maxlength="70"
                                         placeholder="Inserte el nombre">
                                         <ng-container *ngFor="let validation of validation_messages.name">
-                                            <div *ngIf="proyectForm.get('name').hasError(validation.type) && 
-                                            proyectForm.get('name').dirty" class="text-danger">{{validation.message}}</div>
+                                            <div *ngIf="name.hasError(validation.type) && name.dirty" 
+                                            class="text-danger">{{validation.message}}</div>
                                         </ng-container>
                                     </div>
                                     <div class="col-6">
                                         <small class="form-label">Descripcion*</small>
                                         <textarea [ngClass]="{'border-bottom border-danger': formValid === false && description.errors}" 
                                         formControlName="description" class="form-control" type="text" placeholder="Inserte la descripcion" 
-                                        rows="4" cols="30"></textarea>
+                                        rows="4" cols="30" maxlength="300"></textarea>
                                         <ng-container *ngFor="let validation of validation_messages.description">
-                                            <div class="text-danger" *ngIf="proyectForm.get('description').hasError(validation.type) && 
-                                            proyectForm.get('description').dirty">{{validation.message}}</div>
+                                            <div class="text-danger" *ngIf="description.hasError(validation.type) && 
+                                            description.dirty">{{validation.message}}</div>
                                         </ng-container>
                                     </div>
                                 </div>
@@ -155,8 +155,8 @@
                                         <input [ngClass]="{'border-bottom border-danger': formValid === false && dateStart.errors}" 
                                         formControlName="dateStart" class="form-control" type="date">
                                         <ng-container *ngFor="let validation of validation_messages.dateStart">
-                                            <div class="text-danger" *ngIf="proyectForm.get('dateStart').hasError(validation.type) && 
-                                            proyectForm.get('dateStart').dirty">{{validation.message}}</div>
+                                            <div class="text-danger" *ngIf="dateStart.hasError(validation.type) && 
+                                            dateStart.dirty">{{validation.message}}</div>
                                         </ng-container>
                                     </div>
                                     <div class="col-6">
@@ -164,8 +164,8 @@
                                         <input [ngClass]="{'border-bottom border-danger': formValid === false && dateEnd.errors}" 
                                         formControlName="dateEnd" class="form-control" type="date">
                                         <ng-container *ngFor="let validation of validation_messages.dateEnd">
-                                            <div class="text-danger" *ngIf="proyectForm.get('dateEnd').hasError(validation.type) && 
-                                            proyectForm.get('dateEnd').dirty">{{validation.message}}</div>
+                                            <div class="text-danger" *ngIf="dateEnd.hasError(validation.type) && 
+                                            dateEnd.dirty">{{validation.message}}</div>
                                         </ng-container>
                                     </div>
                                 </div>

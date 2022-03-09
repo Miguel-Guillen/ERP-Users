@@ -28,6 +28,7 @@ export class ProyectComponent implements OnInit {
   closeResult = '';
   format = 'dd/MM/yyyy';
 
+  typeEstatus = types.TypeEstatus;
 
   validation_messages = {
     name: [
@@ -93,11 +94,13 @@ export class ProyectComponent implements OnInit {
   newProyect(values: Proyect){
     if(this.proyectForm.valid){
       this.send = true;
-      const proyect: Proyect = values;
+      let proyect = values;
+      proyect.estatus = this.typeEstatus.En_progreso;
 
       this._service.add(proyect).then(() => {
-        this.toast.success('El proyecto ha sido añadido con exito', 'Proyecto añadido', 
-        { positionClass: 'toast-bottom-right' })        
+        this.toast.success('El proyecto ha sido añadido con exito', '', 
+        { positionClass: 'toast-bottom-right' });
+        this.modal.dismissAll('Save click');
         this.getProyects();
         this.reset();
       }).catch(err => {
