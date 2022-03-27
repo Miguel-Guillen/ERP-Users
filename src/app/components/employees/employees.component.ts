@@ -45,6 +45,9 @@ export class EmployeesComponent implements OnInit {
     area: [
       { type: 'required', message: 'Area de trabajo requerida' }
     ],
+    salary: [
+      { type: 'required', message: 'Salario requerido' }
+    ],
     email: [
       { type: 'required', message: 'Correo requerido' },
       { type: "pattern", message: 'El correo no es valido' }
@@ -72,6 +75,10 @@ export class EmployeesComponent implements OnInit {
       surnames: [employeeForm.surnames, Validators.required],
       job: [employeeForm.job, Validators.required],
       area: [employeeForm.area, Validators.required],
+      salary: [employeeForm.salary, Validators.compose([
+        Validators.required,
+        Validators.min(1000)
+      ])],
       email: [
         employeeForm.email,
         Validators.compose([
@@ -123,6 +130,7 @@ export class EmployeesComponent implements OnInit {
         name: data.name,
         surnames: data.surnames,
         job: data.job,
+        salary: data.salary ? data.salary : 0,
         area: data.area,
         email: data.email,
         password: '',
@@ -235,6 +243,10 @@ export class EmployeesComponent implements OnInit {
 
   get area(){
     return this.employeeForm.get('area');
+  }
+
+  get salary(){
+    return this.employeeForm.get('salary');
   }
 
   get email(){

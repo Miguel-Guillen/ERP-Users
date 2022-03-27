@@ -44,6 +44,7 @@
                                             <th class="col-3 text-center">Nombre</th>
                                             <th class="col-2 text-center">Puesto</th>
                                             <th class="col-2 text-center">Area</th>
+                                            <th class="col-2 text-center">Sueldo</th>
                                             <th class="col-2 text-center">Correo</th>
                                             <th class="col-1 text-center">Permisos</th>
                                             <th class="col-2 text-center">Detalles</th>
@@ -54,6 +55,7 @@
                                             <td class="col-3 text-center">{{employee.name}} {{employee.surnames}}</td>
                                             <td class="col-2 text-center">{{employee.job}}</td>
                                             <td class="col-2 text-center">{{employee.area}}</td>
+                                            <td class="col-2 text-center">${{employee.salary}}</td>
                                             <td class="col-2 text-center">{{employee.email}}</td>
                                             <td class="col-1 text-center">{{ (employee.rol) == '0' ? 'Usuario' : 'Administrador' }}</td>
                                             <td class="col-2 d-flex">
@@ -141,6 +143,20 @@
                                 </div>
                                 <div class="row my-md-2">
                                     <div class="col-md-6">
+                                        <small class="form-label">Sueldo*</small>
+                                        <input [ngClass]="{'border-bottom border-danger': formValid === false && salary.errors}"
+                                        formControlName="salary" class="form-control" type="number" 
+                                        placeholder="Inserte el salario">
+                                        <ng-container *ngFor="let validation of validation_messages.salary">
+                                            <div *ngIf="salary.hasError(validation.type) && salary.dirty"
+                                            class="text-danger">{{validation.message}}</div>
+                                        </ng-container>
+                                        <div *ngIf="salary.hasError('min') && (salary.dirty || formValid === false)"
+                                        class="text-danger">
+                                            El sueldo minimo debe ser de 1000
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
                                         <small class="form-label">Correo*</small>
                                         <input [ngClass]="{'border-bottom border-danger': formValid === false && email.errors}"
                                         formControlName="email" class="form-control" type="email" 
@@ -150,6 +166,8 @@
                                             class="text-danger">{{validation.message}}</div>
                                         </ng-container>
                                     </div>
+                                </div>
+                                <div class="row my-md-2">
                                     <div class="col-md-6">
                                         <small class="form-label">Contraseña*</small>
                                         <input [ngClass]="{'border-bottom border-danger': formValid === false && password.errors}"
@@ -163,9 +181,7 @@
                                             La contraseña debe contener minimo 8 caracteres
                                         </div>
                                     </div>
-                                </div>
-                                <div class="roy my-md-2 px-0">
-                                    <div class="col px-0">
+                                    <div class="col-md-6">
                                         <small class="form-label">Privilegios*</small>
                                         <select [ngClass]="{'border-bottom border-danger': formValid === false && rol.errors}" 
                                         formControlName="rol" class="form-select custom-select">
@@ -235,6 +251,7 @@
                         <th class="col-3 text-center">Nombre</th>
                         <th class="col-2 text-center">Puesto</th>
                         <th class="col-2 text-center">Area</th>
+                        <th class="col-2 text-center">Sueldo</th>
                         <th class="col-1 text-center">Permisos</th>
                         <th class="col-2 text-center">Reactivar</th>
                     </tr>
@@ -244,6 +261,7 @@
                         <td class="col-3 text-center">{{remployee.name}} {{remployee.surnames}}</td>
                         <td class="col-2 text-center">{{remployee.job}}</td>
                         <td class="col-2 text-center">{{remployee.area}}</td>
+                        <td class="col-2 text-center">${{remployee.salary}}</td>
                         <td class="col-1 text-center">{{ (remployee.rol) == '0' ? 'Usuario' : 'Administrador' }}</td>
                         <td class="col-2 text-center">
                             <button class="btn btn-outline-warning" (click)="openModal(reactiveModal); idEmployee = remployee._id">

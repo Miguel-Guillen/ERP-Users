@@ -6,6 +6,7 @@ export class Employee {
     surnames: string;
     job: string;
     area: types.TypeAreas;
+    salary: number;
     email: string;
     password: string;
     rol: types.TypeUsers;
@@ -18,6 +19,7 @@ export class Employee {
         this.surnames = '',
         this.job = '',
         this.area = types.TypeAreas.Select,
+        this.salary = 0;
         this.email = '',
         this.password = '',
         this.rol = types.TypeUsers.A0
