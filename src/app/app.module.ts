@@ -5,9 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http'
-
+//componentes internos
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+//componentes creados
 import { DashboardComponent } from './components/dashboard/home/dashboard.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ProyectComponent } from './components/proyects/proyect/proyect.component';
@@ -21,7 +22,7 @@ import { SidebarComponent } from './components/shared/sidebar/sidebar.component'
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { AcercadeComponent } from './components/dashboard/acercade/acercade.component';
 import { AuthGuard } from './core/guards/auth.guard';
-
+//pipes externos
 import { ProyectsPipe } from './core/pipes/proyects.pipe';
 import { EmployeePipe } from './core/pipes/employee.pipe';
 import { DetailsTaskComponent } from './components/dashboard/details-task/details-task.component';

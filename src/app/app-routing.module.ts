@@ -12,7 +12,7 @@ import { AcercadeComponent } from './components/dashboard/acercade/acercade.comp
 import { MyProyectsComponent } from './components/dashboard/my-proyects/my-proyects.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { DetailsTaskComponent } from './components/dashboard/details-task/details-task.component';
-
+//ruteo  con authenticacion de los componentes
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'employee', component: EmployeesComponent, canActivate: [AuthGuard] },
